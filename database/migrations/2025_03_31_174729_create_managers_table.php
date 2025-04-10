@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('managers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tasca_id')->constrained('tascas')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

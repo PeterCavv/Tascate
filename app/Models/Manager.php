@@ -7,14 +7,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Manager extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'user_id'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function employees()
     {
         return $this->hasMany(Employee::class);
+    }
+
+    public function tasca()
+    {
+        return $this->belongsTo(Tasca::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -87,18 +88,30 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * Return the user's friends.
+     * @return BelongsToMany
+     */
     public function friends()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
             ->wherePivot('status', 'accepted');
     }
 
+    /**
+     * Return the user's friend requests.
+     * @return BelongsToMany
+     */
     public function pendingFriends()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
             ->wherePivot('status', 'pending');
     }
 
+    /**
+     * Return the user's blocked friends.
+     * @return BelongsToMany
+     */
     public function blockedFriends()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')

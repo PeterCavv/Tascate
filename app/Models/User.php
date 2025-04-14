@@ -71,4 +71,22 @@ class User extends Authenticatable
     {
         return $this->hasOne(Owner::class);
     }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
+            ->wherePivot('status', 'accepted');
+    }
+
+    public function pendingFriends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
+            ->wherePivot('status', 'pending');
+    }
+
+    public function blockedFriends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
+            ->wherePivot('status', 'blocked');
+    }
 }

@@ -47,12 +47,5 @@ jobs:
       - name: Generate app key
         run: php artisan key:generate
 
-      - name: Wait for MySQL
-        run: |
-           until mysqladmin ping -h 127.0.0.1 --silent; do
-             echo "Waiting for database connection..."
-            sleep 5
-          done
-
       - name: Run migrations
         run: php artisan migrate --force

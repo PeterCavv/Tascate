@@ -8,7 +8,7 @@ class Picture extends Model
 {
     protected $fillable = [
         'post_id',
-        'picture_url',
+        'picture_path',
     ];
 
     public function post()

@@ -91,6 +91,11 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function tascasFav()
+    {
+        return $this->belongsToMany(Tasca::class, 'favs', 'user_id', 'tascas_id');
+    }
+
     /**
      * Return the user's friends.
      * @return BelongsToMany

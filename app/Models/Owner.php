@@ -18,9 +18,9 @@ class Owner extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function properties()
+    public function tascas()
     {
-        return $this->belongsToMany(Property::class, 'properties', 'owner_id', 'tasca_id');
+        return $this->belongsToMany(Tasca::class, 'properties', 'owner_id', 'tasca_id');
     }
 
 }

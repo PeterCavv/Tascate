@@ -38,9 +38,9 @@ class Tasca extends Model
         return $this->hasOne(Manager::class);
     }
 
-    public function properties(): BelongsToMany
+    public function owners()
     {
-        return $this->belongsToMany(Property::class, 'properties', 'tasca_id', 'owner_id');
+        return $this->belongsToMany(Owner::class, 'properties', 'tasca_id', 'owner_id');
     }
 
     public function reviews(): HasMany

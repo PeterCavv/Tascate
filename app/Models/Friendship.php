@@ -4,9 +4,11 @@ namespace App\Models;
 
 use App\Enums\FriendshipStatus;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Friendship extends Pivot
 {
+    use HasFactory;
     protected $table = 'friendships';
 
     protected $casts = [

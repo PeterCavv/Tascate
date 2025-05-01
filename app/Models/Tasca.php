@@ -3,9 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Tasca extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
       'user_id',
       'name',
@@ -16,17 +23,17 @@ class Tasca extends Model
       'address'
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function employee()
+    public function employee(): HasMany
     {
         return $this->hasMany(Employee::class);
     }
 
-    public function manager()
+    public function manager(): HasOne
     {
         return $this->hasOne(Manager::class);
     }
@@ -36,12 +43,12 @@ class Tasca extends Model
         return $this->belongsToMany(Owner::class, 'properties', 'tasca_id', 'owner_id');
     }
 
-    public function reviews()
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
-    public function reservations()
+    public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
     }

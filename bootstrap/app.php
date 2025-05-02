@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AlwaysAcceptJsonMiddleware;
+use Cassandra\Exception\UnauthorizedException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -32,7 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ], 422);
         });
 
-        $exceptions->renderable(function (NotFoundHttpException $e, $request) {
+        $exceptions->renderable(function (NotFoundHttpException $e, Request $request) {
             return response()->json([
                 'error' => 'Not found',
                 'message' => $e->getMessage(),
@@ -46,12 +47,12 @@ return Application::configure(basePath: dirname(__DIR__))
             ], 500);
         });
 
-//        $exceptions->renderable(function (UnauthorizedException $e) {
-//            return response()->json([
-//                'error' => 'Unauthorized',
-//                'message' => $e->getMessage(),
-//            ], 403);
-//        });
+        $exceptions->renderable(function (UnauthorizedException $e) {
+            return response()->json([
+                'error' => 'Unauthorized',
+                'message' => $e->getMessage(),
+            ], 403);
+        });
 
         return response()->json([
             'error' => 'Internal Server Error'

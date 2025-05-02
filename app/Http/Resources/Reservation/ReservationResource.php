@@ -26,14 +26,14 @@ class ReservationResource extends JsonResource
     private function detailedFormat()
     {
         return [
-            'customer_info' => [
-                'id' => $this->customer->id,
-                'name' => $this->customer->user->name,
-                'email' => $this->customer->user->email,
+            'customer' => [
+                'id' => $this->customer?->id,
+                'name' => $this->customer?->user?->name,
+                'email' => $this->customer?->user?->email,
             ],
-            'reservation_info' => [
+            'reservation' => [
                 'id' => $this->id,
-                'tasca' => $this->tasca->name,
+                'tasca' => $this->tasca?->name,
                 'reservation_price' => $this->reservation_price,
                 'reservation_date' => $this->reservation_date,
             ],

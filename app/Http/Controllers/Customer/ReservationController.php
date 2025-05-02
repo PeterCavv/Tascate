@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Reservation\ReservationCollection;
+use App\Http\Requests\Reservation\StoreReservationRequest;
 use App\Http\Resources\Reservation\ReservationResource;
-use App\Models\Customer;
 use App\Models\Reservation;
-use function Pest\Laravel\get;
 
 class ReservationController extends Controller
 {
-    public function index($id)
+    /**
+     * Create a new Reservation.
+     * @param StoreReservationRequest $request
+     * @return ReservationResource
+     */
+    public function store(StoreReservationRequest $request)
     {
-        $customer = Customer::findOrFail($id);
+        $data = $request->validated();
 
-        return new ReservationCollection(
-            $customer->reservations()->paginate(10)
+        return new ReservationResource(
+            Reservation::create($data)
         );
     }
 }

@@ -50,14 +50,14 @@ jobs:
           # Elimina claves duplicadas sin valor (como APP_NAME= al final)
           awk -F= '/=/ && NF>2 || $2!=""' .env > .env.tmp && mv .env.tmp .env
 
-      - name: Clear artisan caches
-        run: |
-          php artisan config:clear
-          php artisan cache:clear
-          php artisan route:clear
-
       - name: Generate application key
         run: php artisan key:generate
 
       - name: Run migrations
         run: php artisan migrate --force
+
+      - name: Clear artisan caches
+        run: |
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan route:clear

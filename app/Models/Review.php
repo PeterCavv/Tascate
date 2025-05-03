@@ -15,11 +15,21 @@ class Review extends Model
         'rating'
     ];
 
+    /**
+     * The 'Customer' that the review belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
 
+    /**
+     * The 'Tasca' that the review belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function tasca()
     {
         return $this->belongsTo(Tasca::class);

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Reservation;
+namespace App\Http\Resources\Review;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReservationResource extends JsonResource
+class ReviewResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -22,9 +22,10 @@ class ReservationResource extends JsonResource
     private function basicFormat(): array
     {
         return [
-            'id' => $this->id,
-            'tasca' => $this->tasca->name,
-            'customer' => $this->customer->user->name,
+            'customer' => $this->customer?->user?->name,
+            'tasca' => $this->tasca?->name,
+            'rating' => $this->rating,
+            'body' => $this->body,
         ];
     }
 
@@ -33,7 +34,7 @@ class ReservationResource extends JsonResource
      *
      * @return array
      */
-    private function detailedFormat()
+    private function detailedFormat(): array
     {
         return [
             'customer' => [
@@ -41,11 +42,14 @@ class ReservationResource extends JsonResource
                 'name' => $this->customer?->user?->name,
                 'email' => $this->customer?->user?->email,
             ],
-            'reservation' => [
+            'tasca' => [
+                'id' => $this->tasca?->id,
+                'name' => $this->tasca?->name,
+            ],
+            'review' => [
                 'id' => $this->id,
-                'tasca' => $this->tasca?->name,
-                'reservation_price' => $this->reservation_price,
-                'reservation_date' => $this->reservation_date,
+                'body' => $this->body,
+                'rating' => $this->rating,
             ],
         ];
     }

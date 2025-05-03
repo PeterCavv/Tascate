@@ -35,7 +35,7 @@ class ReservationController extends Controller
         $reservationData = $request->validated();
 
         $updateData = Arr::only($reservationData, 'reservation_price');
-        
+
         $reservation->update($updateData);
 
         return new ReservationResource($reservation);

@@ -91,7 +91,7 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function tascasFav()
+    public function tascasFav(): BelongsToMany
     {
         return $this->belongsToMany(Tasca::class, 'favs', 'user_id', 'tascas_id');
     }

@@ -52,4 +52,9 @@ class Tasca extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function usersFav(): BelongsToMany
+    {
+        return $this->belongsToMany(Tasca::class, 'favs', 'tasca_id', 'user_id');
+    }
 }

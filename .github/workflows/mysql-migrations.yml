@@ -7,6 +7,7 @@ on:
 jobs:
   migration-check:
     runs-on: ubuntu-latest
+
     services:
       mysql:
         image: mysql:8
@@ -38,14 +39,25 @@ jobs:
         with:
           php-version: '8.2'
 
-      - name: Install dependencies
-        run: composer install
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-interaction
 
       - name: Copy .env.example
         run: cp .env.example .env
 
-      - name: Generate app key
+      - name: Fix empty duplicates in .env
+        run: |
+          # Elimina claves duplicadas sin valor (como APP_NAME= al final)
+          awk -F= '/=/ && NF>2 || $2!=""' .env > .env.tmp && mv .env.tmp .env
+
+      - name: Generate application key
         run: php artisan key:generate
 
       - name: Run migrations
         run: php artisan migrate --force
+
+      - name: Clear artisan caches
+        run: |
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan route:clear

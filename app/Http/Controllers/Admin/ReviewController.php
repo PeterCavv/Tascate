@@ -4,32 +4,34 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Review\ReviewCollection;
+use App\Http\Resources\Review\ReviewResource;
 use App\Models\Review;
 
 class ReviewController extends Controller
 {
     /**
-     * Display a listing of all the existing reviews.
+     * Get all the existing reviews.
      *
      * @return ReviewCollection
      */
     public function index()
     {
         return new ReviewCollection(
-            Review::paginate(10)
+            Review::withTrashed()->paginate(10)
         );
     }
 
     /**
-     * Get a review searched by its ID.
+     * Get a review searched by its ID, even if the review
+     * is deleted.
      *
      * @param $id Review's ID
-     * @return ReviewCollection
+     * @return ReviewResource
      */
     public function show($id)
     {
-        return new ReviewCollection(
-            Review::findOrFail($id)
+        return new ReviewResource(
+            Review::withTrashed()->findOrFail($id)
         );
     }
 }

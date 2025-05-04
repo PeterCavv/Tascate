@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 defineProps({
     canLogin: {
@@ -18,6 +19,72 @@ defineProps({
     },
 });
 
+// Component showcase data
+const textValue = ref('');
+const dateValue = ref(null);
+const selectedOption = ref(null);
+const checkboxValue = ref(false);
+const numberValue = ref(null);
+const maskValue = ref('');
+const multiSelectValue = ref([]);
+const selectValue = ref(null);
+const passwordValue = ref('');
+const radioValue = ref(null);
+const textareaValue = ref('');
+
+// Data Display Components
+const dataTableValue = ref([]);
+const dataTableColumns = ref([
+    { field: 'name', header: 'Name' },
+    { field: 'age', header: 'Age' },
+    { field: 'address', header: 'Address' }
+]);
+const dataTableData = ref([
+    { name: 'John', age: 30, address: 'New York' },
+    { name: 'Jane', age: 25, address: 'London' },
+    { name: 'Bob', age: 35, address: 'Paris' }
+]);
+
+// Panel Components
+const activeIndex = ref(0);
+const accordionItems = ref([
+    { header: 'Header 1', content: 'Content 1' },
+    { header: 'Header 2', content: 'Content 2' },
+    { header: 'Header 3', content: 'Content 3' }
+]);
+
+// Progress Components
+const progressValue = ref(50);
+
+// Dialog Components
+const dialogVisible = ref(false);
+
+// Toast
+const toast = ref(null);
+const showToast = () => {
+    toast.value.add({ severity: 'success', summary: 'Success', detail: 'Message sent', life: 3000 });
+};
+
+const options = [
+    { name: 'Option 1', code: '1' },
+    { name: 'Option 2', code: '2' },
+    { name: 'Option 3', code: '3' }
+];
+
+const multiSelectOptions = [
+    { name: 'New York', code: 'NY' },
+    { name: 'London', code: 'LDN' },
+    { name: 'Paris', code: 'PRS' },
+    { name: 'Rome', code: 'RM' }
+];
+
+const selectOptions = [
+    { label: 'Select City', value: null },
+    { label: 'New York', value: 'NY' },
+    { label: 'London', value: 'LDN' },
+    { label: 'Paris', value: 'PRS' }
+];
+
 function handleImageError() {
     document.getElementById('screenshot-container')?.classList.add('!hidden');
     document.getElementById('docs-card')?.classList.add('!row-span-1');
@@ -29,11 +96,176 @@ function handleImageError() {
 <template>
     <Head title="Welcome" />
     <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-        <img
-            id="background"
-            class="absolute -left-20 top-0 max-w-[877px]"
-            src="https://laravel.com/assets/img/welcome/background.svg"
-        />
+        <!-- Component Showcase Section -->
+        <div class="py-12">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="p-6">
+                        <h2 class="mb-6 text-2xl font-semibold">PrimeVue Components Showcase</h2>
+
+                        <div class="grid gap-6 md:grid-cols-2">
+                            <!-- Form Components Section -->
+                            <Card class="p-4">
+                                <template #title>Form Components</template>
+                                <template #content>
+                                    <div class="space-y-4">
+                                        <!-- Text Input -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Text Input</h3>
+                                            <InputText v-model="textValue" class="w-full" />
+                                        </div>
+
+                                        <!-- Calendar -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Calendar</h3>
+                                            <Calendar v-model="dateValue" class="w-full" />
+                                        </div>
+
+                                        <!-- Dropdown -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Dropdown</h3>
+                                            <Dropdown v-model="selectedOption" :options="options" optionLabel="name" class="w-full" />
+                                        </div>
+
+                                        <!-- Checkbox -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Checkbox</h3>
+                                            <div class="flex items-center">
+                                                <Checkbox v-model="checkboxValue" :binary="true" />
+                                                <label class="ml-2">Accept terms</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Number Input -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Number Input</h3>
+                                            <InputNumber v-model="numberValue" class="w-full" />
+                                        </div>
+
+                                        <!-- Mask Input -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Mask Input</h3>
+                                            <InputMask v-model="maskValue" mask="99-999999" class="w-full" />
+                                        </div>
+
+                                        <!-- MultiSelect -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">MultiSelect</h3>
+                                            <MultiSelect v-model="multiSelectValue" :options="multiSelectOptions" optionLabel="name" class="w-full" />
+                                        </div>
+
+                                        <!-- Select -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Select</h3>
+                                            <Select v-model="selectValue" :options="selectOptions" class="w-full" />
+                                        </div>
+
+                                        <!-- Password -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Password</h3>
+                                            <Password v-model="passwordValue" toggleMask class="w-full" />
+                                        </div>
+
+                                        <!-- RadioButton -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">RadioButton</h3>
+                                            <div class="flex gap-4">
+                                                <div class="flex items-center">
+                                                    <RadioButton v-model="radioValue" value="Option 1" inputId="option1" />
+                                                    <label for="option1" class="ml-2">Option 1</label>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <RadioButton v-model="radioValue" value="Option 2" inputId="option2" />
+                                                    <label for="option2" class="ml-2">Option 2</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Textarea -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Textarea</h3>
+                                            <Textarea v-model="textareaValue" rows="3" class="w-full" />
+                                        </div>
+                                    </div>
+                                </template>
+                            </Card>
+
+                            <!-- Data Display Components Section -->
+                            <Card class="p-4">
+                                <template #title>Data Display Components</template>
+                                <template #content>
+                                    <div class="space-y-4">
+                                        <!-- DataTable -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">DataTable</h3>
+                                            <DataTable :value="dataTableData" :paginator="true" :rows="5">
+                                                <Column v-for="col in dataTableColumns" :key="col.field" :field="col.field" :header="col.header"></Column>
+                                            </DataTable>
+                                        </div>
+
+                                        <!-- ProgressBar -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">ProgressBar</h3>
+                                            <ProgressBar :value="progressValue" />
+                                        </div>
+
+                                        <!-- ProgressSpinner -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">ProgressSpinner</h3>
+                                            <ProgressSpinner />
+                                        </div>
+                                    </div>
+                                </template>
+                            </Card>
+
+                            <!-- Panel Components Section -->
+                            <Card class="p-4">
+                                <template #title>Panel Components</template>
+                                <template #content>
+                                    <div class="space-y-4">
+                                        <!-- Accordion -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Accordion</h3>
+                                            <Accordion :activeIndex="activeIndex">
+                                                <AccordionTab v-for="item in accordionItems" :key="item.header" :header="item.header">
+                                                    {{ item.content }}
+                                                </AccordionTab>
+                                            </Accordion>
+                                        </div>
+                                    </div>
+                                </template>
+                            </Card>
+
+                            <!-- Dialog Components Section -->
+                            <Card class="p-4">
+                                <template #title>Dialog Components</template>
+                                <template #content>
+                                    <div class="space-y-4">
+                                        <!-- Dialog -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Dialog</h3>
+                                            <Button label="Show Dialog" @click="dialogVisible = true" />
+                                            <Dialog v-model:visible="dialogVisible" header="Header" :style="{ width: '50vw' }">
+                                                <p>Dialog content goes here</p>
+                                            </Dialog>
+                                        </div>
+
+                                        <!-- Toast -->
+                                        <div>
+                                            <h3 class="mb-2 text-lg font-semibold">Toast</h3>
+                                            <Button label="Show Toast" @click="showToast" />
+                                            <Toast ref="toast" />
+                                        </div>
+                                    </div>
+                                </template>
+                            </Card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Welcome Content -->
         <div
             class="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
         >
@@ -384,3 +616,434 @@ function handleImageError() {
         </div>
     </div>
 </template>
+
+<!--<style>-->
+<!--.p-float-label {-->
+<!--    display: flex;-->
+<!--    flex-direction: column;-->
+<!--}-->
+
+<!--.p-float-label label {-->
+<!--    margin-top: 0.5rem;-->
+<!--    color: #6B7280;-->
+<!--}-->
+
+<!--.card {-->
+<!--    padding: 1rem;-->
+<!--    border: 1px solid #E5E7EB;-->
+<!--    border-radius: 0.5rem;-->
+<!--    background-color: white;-->
+<!--}-->
+
+<!--/* PrimeVue specific styles */-->
+<!--.p-inputtext,-->
+<!--.p-calendar,-->
+<!--.p-dropdown,-->
+<!--.p-inputnumber,-->
+<!--.p-inputmask,-->
+<!--.p-multiselect,-->
+<!--.p-select {-->
+<!--    width: 100%;-->
+<!--}-->
+
+<!--.p-checkbox {-->
+<!--    margin-right: 0.5rem;-->
+<!--}-->
+
+<!--.p-button {-->
+<!--    margin-right: 0.5rem;-->
+<!--}-->
+
+<!--/* Custom Red Theme */-->
+<!--:root {-->
+<!--    &#45;&#45;primary-color: #dc2626;-->
+<!--    &#45;&#45;primary-hover: #b91c1c;-->
+<!--    &#45;&#45;primary-light: #fecaca;-->
+<!--}-->
+
+<!--/* Button styles */-->
+<!--.p-button {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-button:hover {-->
+<!--    background-color: var(&#45;&#45;primary-hover) !important;-->
+<!--    border-color: var(&#45;&#45;primary-hover) !important;-->
+<!--}-->
+
+<!--/* Input focus styles */-->
+<!--.p-inputtext:focus,-->
+<!--.p-calendar:focus,-->
+<!--.p-dropdown:focus,-->
+<!--.p-inputnumber:focus,-->
+<!--.p-inputmask:focus,-->
+<!--.p-multiselect:focus,-->
+<!--.p-select:focus {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    box-shadow: 0 0 0 2px var(&#45;&#45;primary-light) !important;-->
+<!--}-->
+
+<!--/* Checkbox styles */-->
+<!--.p-checkbox .p-checkbox-box.p-highlight {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Calendar styles */-->
+<!--.p-calendar .p-datepicker-header button {-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-datepicker .p-datepicker-header button:hover {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--}-->
+
+<!--.p-datepicker .p-datepicker-today > span {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-datepicker .p-datepicker-today > span.p-highlight {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: white !important;-->
+<!--}-->
+
+<!--/* Dropdown styles */-->
+<!--.p-dropdown:not(.p-disabled).p-focus {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    box-shadow: 0 0 0 2px var(&#45;&#45;primary-light) !important;-->
+<!--}-->
+
+<!--.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Progress bar styles */-->
+<!--.p-progressbar .p-progressbar-value {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Toast styles */-->
+<!--.p-toast .p-toast-message.p-toast-message-success {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon,-->
+<!--.p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close {-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Dialog styles */-->
+<!--.p-dialog .p-dialog-header {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: white !important;-->
+<!--    padding: 1.5rem !important;-->
+<!--    border-top-left-radius: 8px !important;-->
+<!--    border-top-right-radius: 8px !important;-->
+<!--    border-bottom: 2px solid var(&#45;&#45;primary-hover) !important;-->
+<!--}-->
+
+<!--.p-dialog .p-dialog-header .p-dialog-title {-->
+<!--    font-size: 1.25rem !important;-->
+<!--    font-weight: 600 !important;-->
+<!--    letter-spacing: 0.025em !important;-->
+<!--}-->
+
+<!--.p-dialog .p-dialog-content {-->
+<!--    padding: 2rem !important;-->
+<!--    background-color: white !important;-->
+<!--    border-bottom-left-radius: 8px !important;-->
+<!--    border-bottom-right-radius: 8px !important;-->
+<!--    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;-->
+<!--}-->
+
+<!--.p-dialog .p-dialog-content p {-->
+<!--    font-size: 1rem !important;-->
+<!--    line-height: 1.5 !important;-->
+<!--    color: #374151 !important;-->
+<!--    margin-bottom: 1rem !important;-->
+<!--}-->
+
+<!--.p-dialog .p-dialog-header-icons {-->
+<!--    margin-left: 1rem !important;-->
+<!--}-->
+
+<!--.p-dialog .p-dialog-header-icon {-->
+<!--    color: white !important;-->
+<!--    transition: all 0.2s ease-in-out !important;-->
+<!--}-->
+
+<!--.p-dialog .p-dialog-header-icon:hover {-->
+<!--    background-color: var(&#45;&#45;primary-hover) !important;-->
+<!--    transform: scale(1.1) !important;-->
+<!--}-->
+
+<!--.p-dialog .p-dialog-header-icon:focus {-->
+<!--    box-shadow: 0 0 0 2px var(&#45;&#45;primary-light) !important;-->
+<!--}-->
+
+<!--/* Dialog animation */-->
+<!--.p-dialog-enter-active,-->
+<!--.p-dialog-leave-active {-->
+<!--    transition: all 0.3s ease-in-out !important;-->
+<!--}-->
+
+<!--.p-dialog-enter-from,-->
+<!--.p-dialog-leave-to {-->
+<!--    opacity: 0 !important;-->
+<!--    transform: scale(0.95) !important;-->
+<!--}-->
+
+<!--/* Accordion styles */-->
+<!--.p-accordion .p-accordion-header-link {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-accordion .p-accordion-header-link:hover {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: white !important;-->
+<!--}-->
+
+<!--/* Success state colors */-->
+<!--.p-button.p-button-success {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-button.p-button-success:hover {-->
+<!--    background-color: var(&#45;&#45;primary-hover) !important;-->
+<!--    border-color: var(&#45;&#45;primary-hover) !important;-->
+<!--}-->
+
+<!--/* Message success state */-->
+<!--.p-message.p-message-success {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-message.p-message-success .p-message-icon {-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Badge success state */-->
+<!--.p-badge.p-badge-success {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: white !important;-->
+<!--}-->
+
+<!--/* Tag success state */-->
+<!--.p-tag.p-tag-success {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: white !important;-->
+<!--}-->
+
+<!--/* Rating success state */-->
+<!--.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Timeline success state */-->
+<!--.p-timeline-event-content,-->
+<!--.p-timeline-event-opposite,-->
+<!--.p-timeline-event-connector {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Card success state */-->
+<!--.p-card.p-card-success {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-card.p-card-success .p-card-header {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Override any remaining green colors */-->
+<!--[class*="success"],-->
+<!--[class*="Success"] {-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--[class*="success"] [class*="bg-"],-->
+<!--[class*="Success"] [class*="bg-"] {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--}-->
+
+<!--[class*="success"] [class*="border-"],-->
+<!--[class*="Success"] [class*="border-"] {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Dropdown hover and focus states */-->
+<!--.p-dropdown:not(.p-disabled):hover {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* MultiSelect hover and focus states */-->
+<!--.p-multiselect:not(.p-disabled):hover {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-multiselect-panel .p-multiselect-items .p-multiselect-item:hover {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Select hover and focus states */-->
+<!--.p-select:not(.p-disabled):hover {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-select-panel .p-select-items .p-select-item:hover {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Radio button styles */-->
+<!--.p-radiobutton .p-radiobutton-box.p-highlight {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {-->
+<!--    border-color: var(&#45;&#45;primary-hover) !important;-->
+<!--    background-color: var(&#45;&#45;primary-hover) !important;-->
+<!--}-->
+
+<!--/* Textarea hover and focus states */-->
+<!--.p-inputtextarea:hover {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--.p-inputtextarea:focus {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    box-shadow: 0 0 0 2px var(&#45;&#45;primary-light) !important;-->
+<!--    outline: none !important;-->
+<!--}-->
+
+<!--.p-inputtextarea.p-focus {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    box-shadow: 0 0 0 2px var(&#45;&#45;primary-light) !important;-->
+<!--}-->
+
+<!--/* Override any default focus styles */-->
+<!--.p-inputtextarea:focus-visible {-->
+<!--    border-color: var(&#45;&#45;primary-color) !important;-->
+<!--    box-shadow: 0 0 0 2px var(&#45;&#45;primary-light) !important;-->
+<!--    outline: none !important;-->
+<!--}-->
+
+<!--/* DataTable pagination */-->
+<!--.p-datatable .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {-->
+<!--    background-color: var(&#45;&#45;primary-color) !important;-->
+<!--    color: white !important;-->
+<!--}-->
+
+<!--.p-datatable .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {-->
+<!--    background-color: var(&#45;&#45;primary-light) !important;-->
+<!--    color: var(&#45;&#45;primary-color) !important;-->
+<!--}-->
+
+<!--/* Restore proper state colors */-->
+<!--:root {-->
+<!--    &#45;&#45;success-color: #22c55e;-->
+<!--    &#45;&#45;success-hover: #16a34a;-->
+<!--    &#45;&#45;success-light: #dcfce7;-->
+<!--    &#45;&#45;info-color: #3b82f6;-->
+<!--    &#45;&#45;info-hover: #2563eb;-->
+<!--    &#45;&#45;info-light: #dbeafe;-->
+<!--    &#45;&#45;warning-color: #f59e0b;-->
+<!--    &#45;&#45;warning-hover: #d97706;-->
+<!--    &#45;&#45;warning-light: #fef3c7;-->
+<!--    &#45;&#45;danger-color: #ef4444;-->
+<!--    &#45;&#45;danger-hover: #dc2626;-->
+<!--    &#45;&#45;danger-light: #fee2e2;-->
+<!--}-->
+
+<!--/* Success state styles */-->
+<!--.p-toast .p-toast-message.p-toast-message-success,-->
+<!--.p-message.p-message-success {-->
+<!--    background-color: var(&#45;&#45;success-light) !important;-->
+<!--    border-color: var(&#45;&#45;success-color) !important;-->
+<!--    color: var(&#45;&#45;success-color) !important;-->
+<!--}-->
+
+<!--.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon,-->
+<!--.p-message.p-message-success .p-message-icon {-->
+<!--    color: var(&#45;&#45;success-color) !important;-->
+<!--}-->
+
+<!--.p-button.p-button-success {-->
+<!--    background-color: var(&#45;&#45;success-color) !important;-->
+<!--    border-color: var(&#45;&#45;success-color) !important;-->
+<!--}-->
+
+<!--.p-button.p-button-success:hover {-->
+<!--    background-color: var(&#45;&#45;success-hover) !important;-->
+<!--    border-color: var(&#45;&#45;success-hover) !important;-->
+<!--}-->
+
+<!--/* Info state styles */-->
+<!--.p-toast .p-toast-message.p-toast-message-info,-->
+<!--.p-message.p-message-info {-->
+<!--    background-color: var(&#45;&#45;info-light) !important;-->
+<!--    border-color: var(&#45;&#45;info-color) !important;-->
+<!--    color: var(&#45;&#45;info-color) !important;-->
+<!--}-->
+
+<!--.p-button.p-button-info {-->
+<!--    background-color: var(&#45;&#45;info-color) !important;-->
+<!--    border-color: var(&#45;&#45;info-color) !important;-->
+<!--}-->
+
+<!--/* Warning state styles */-->
+<!--.p-toast .p-toast-message.p-toast-message-warn,-->
+<!--.p-message.p-message-warn {-->
+<!--    background-color: var(&#45;&#45;warning-light) !important;-->
+<!--    border-color: var(&#45;&#45;warning-color) !important;-->
+<!--    color: var(&#45;&#45;warning-color) !important;-->
+<!--}-->
+
+<!--.p-button.p-button-warning {-->
+<!--    background-color: var(&#45;&#45;warning-color) !important;-->
+<!--    border-color: var(&#45;&#45;warning-color) !important;-->
+<!--}-->
+
+<!--/* Danger state styles */-->
+<!--.p-toast .p-toast-message.p-toast-message-error,-->
+<!--.p-message.p-message-error {-->
+<!--    background-color: var(&#45;&#45;danger-light) !important;-->
+<!--    border-color: var(&#45;&#45;danger-color) !important;-->
+<!--    color: var(&#45;&#45;danger-color) !important;-->
+<!--}-->
+
+<!--.p-button.p-button-danger {-->
+<!--    background-color: var(&#45;&#45;danger-color) !important;-->
+<!--    border-color: var(&#45;&#45;danger-color) !important;-->
+<!--}-->
+
+<!--/* Badge and Tag states */-->
+<!--.p-badge.p-badge-success { background-color: var(&#45;&#45;success-color) !important; }-->
+<!--.p-badge.p-badge-info { background-color: var(&#45;&#45;info-color) !important; }-->
+<!--.p-badge.p-badge-warning { background-color: var(&#45;&#45;warning-color) !important; }-->
+<!--.p-badge.p-badge-danger { background-color: var(&#45;&#45;danger-color) !important; }-->
+
+<!--.p-tag.p-tag-success { background-color: var(&#45;&#45;success-color) !important; }-->
+<!--.p-tag.p-tag-info { background-color: var(&#45;&#45;info-color) !important; }-->
+<!--.p-tag.p-tag-warning { background-color: var(&#45;&#45;warning-color) !important; }-->
+<!--.p-tag.p-tag-danger { background-color: var(&#45;&#45;danger-color) !important; }-->
+<!--</style>-->

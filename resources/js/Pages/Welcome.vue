@@ -1,5 +1,9 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
+import { usePublicTasca }from '@/Controllers/Public/PublicTascaController.js';
+
+const { tascas, error, getTascas } = usePublicTasca();
 
 defineProps({
     canLogin: {
@@ -24,6 +28,10 @@ function handleImageError() {
     document.getElementById('docs-card-content')?.classList.add('!flex-row');
     document.getElementById('background')?.classList.add('!hidden');
 }
+
+onMounted(() =>{
+    getTascas();
+});
 </script>
 
 <template>

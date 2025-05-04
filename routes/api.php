@@ -6,6 +6,10 @@ use App\Http\Controllers\Customer\FavController;
 use App\Http\Controllers\Customer\ReservationController as CustomerReservationController;
 use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
 use \App\Http\Controllers\public\TascaController as PublicTascaController;
+use \App\Http\Controllers\common\PostController;
+use \App\Http\Controllers\common\LikeController;
+use \App\Http\Controllers\common\CommentController;
+use \App\Http\Controllers\common\PictureController;
 use \App\Http\Controllers\tasca\TascaController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +19,24 @@ use Illuminate\Support\Facades\Route;
  */
 Route::prefix('public')->group(function () {
     Route::apiResource('tascas', PublicTascaController::class);
+});
+
+/**
+ * Common routes
+ * Only a logged in user can access these routes.
+ */
+Route::prefix('common')->group(function () {
+    Route::apiResource('posts', PostController::class);
+    
+    // Likes
+    Route::post('posts/{post}/like', [LikeController::class, 'store']);
+    Route::delete('posts/{post}/like', [LikeController::class, 'destroy']);
+    
+    // Comments
+    Route::apiResource('posts.comments', CommentController::class);
+    
+    // Pictures
+    Route::apiResource('posts.pictures', PictureController::class)->except(['update']);
 });
 
 /**

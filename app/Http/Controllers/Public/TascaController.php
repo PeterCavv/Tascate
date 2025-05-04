@@ -7,7 +7,7 @@ use App\Http\Resources\Tasca\TascaCollection;
 use App\Http\Resources\Tasca\TascaResource;
 use App\Models\Tasca;
 
-class tascacontroller extends Controller
+class TascaController extends Controller
 {
     /**
      * Get all the operational tascas.

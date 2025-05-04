@@ -20,6 +20,9 @@ class TascaFactory extends Factory
             'opening_time' => $this->faker->time(),
             'closing_time' => $this->faker->time(),
             'capacity' => $this->faker->numberBetween(1, 100),
+            'reservation' => $this->faker->boolean(),
+            'reservation_price' => $this->faker->numberBetween(0, 100),
+            'telephone' => $this->faker->numerify('6########')
         ];
     }
 }

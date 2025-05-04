@@ -20,7 +20,10 @@ class Tasca extends Model
       'closing_time',
       'capacity',
       'menu',
-      'address'
+      'address',
+      'reservation',
+      'reservation_price',
+      'telephone'
     ];
 
     public function user(): BelongsTo

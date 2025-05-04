@@ -25,11 +25,14 @@ class TascaResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'address' => $this->address,
+            'telephone' => $this->telephone,
             'data' => [
                 'opening_time' => $this->opening_time,
                 'closing_time' => $this->closing_time,
                 'capacity' => $this->capacity,
                 'menu' => $this->menu,
+                'reservation' => $this->reservation,
+                'reservation_price' => !$this->reservation ? 0 : $this->reservation_price,
             ],
         ];
     }
@@ -45,6 +48,7 @@ class TascaResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'address' => $this->address,
+            'telephone' => $this->telephone,
         ];
     }
 }

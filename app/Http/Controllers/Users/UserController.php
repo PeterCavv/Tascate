@@ -8,11 +8,13 @@ use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
     public function store(RegisterUserRequest $request)
     {
         // Validate the request
@@ -70,7 +72,13 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-
+        try {
+            $this->authorize('update', $user);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'message' => 'This action is unauthorized.',
+            ], 403);
+        }
 
         $data = $request->validated();
 
@@ -98,6 +106,14 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        try {
+            $this->authorize('delete', $user);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'message' => 'This action is unauthorized.',
+            ], 403);
+        }
+
         $user->delete();
 
         return response()->json([

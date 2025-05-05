@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AlwaysAcceptJsonMiddleware;
 use Cassandra\Exception\UnauthorizedException;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -52,6 +53,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 'error' => 'Unauthorized',
                 'message' => $e->getMessage(),
             ], 403);
+        });
+
+        $exceptions->renderable(function (\Illuminate\Auth\AuthenticationException $e) {
+            return response()->json([
+                'error' => 'Unauthorized',
+                'message' => $e->getMessage(),
+            ], 401);
         });
 
         return response()->json([

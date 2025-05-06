@@ -58,6 +58,7 @@ const progressValue = ref(50);
 
 // Dialog Components
 const dialogVisible = ref(false);
+const visible = ref(false);
 
 // Toast
 const toast = ref(null);
@@ -213,6 +214,14 @@ function handleImageError() {
                                         <div>
                                             <h3 class="mb-2 text-lg font-semibold">ProgressSpinner</h3>
                                             <ProgressSpinner />
+                                        </div>
+
+                                        <!-- Drawer -->                                    
+                                        <div class="card flex justify-center">
+                                            <Drawer v-model:visible="visible" header="Drawer">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                            </Drawer>
+                                            <Button icon="pi pi-arrow-right" @click="visible = true" />
                                         </div>
                                     </div>
                                 </template>

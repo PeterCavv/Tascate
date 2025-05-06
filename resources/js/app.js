@@ -1,5 +1,6 @@
 import '../css/app.css';
 import './bootstrap';
+import 'primeicons/primeicons.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -29,6 +30,8 @@ import Toast from 'primevue/toast';
 import ProgressBar from 'primevue/progressbar';
 import ProgressSpinner from 'primevue/progressspinner';
 import Avatar from 'primevue/avatar';
+import Drawer from 'primevue/drawer';
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -78,6 +81,7 @@ createInertiaApp({
         app.component('ProgressBar', ProgressBar);
         app.component('ProgressSpinner', ProgressSpinner);
         app.component('Avatar', Avatar);
+        app.component('Drawer', Drawer);
 
         app.mount(el);
     },

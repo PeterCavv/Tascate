@@ -1,9 +1,9 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
-import { usePublicTasca }from '@/Controllers/Public/PublicTascaController.js';
+import { useTasca } from "@/Composables/useTasca.js";
 
-const { tascas, error, getTascas } = usePublicTasca();
+const { tascas, fetchTascas } = useTasca();
 
 defineProps({
     canLogin: {
@@ -30,7 +30,7 @@ function handleImageError() {
 }
 
 onMounted(() =>{
-    getTascas();
+    fetchTascas();
 });
 </script>
 
@@ -42,6 +42,9 @@ onMounted(() =>{
             class="absolute -left-20 top-0 max-w-[877px]"
             src="https://laravel.com/assets/img/welcome/background.svg"
         />
+        <div v-for="tasca in tascas" :key="tasca.id">
+            <h1>{{ tasca.name }}</h1>
+        </div>
         <div
             class="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
         >

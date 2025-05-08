@@ -1,6 +1,10 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+
+import { onMounted } from 'vue';
+import { useTasca } from "@/Composables/useTasca.js";
+
+const { tascas, fetchTascas } = useTasca();
 
 defineProps({
     canLogin: {
@@ -91,11 +95,16 @@ function handleImageError() {
     document.getElementById('docs-card-content')?.classList.add('!flex-row');
     document.getElementById('background')?.classList.add('!hidden');
 }
+
+onMounted(() =>{
+    fetchTascas();
+});
 </script>
 
 <template>
     <Head title="Welcome" />
     <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+
         <!-- Component Showcase Section -->
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -266,6 +275,7 @@ function handleImageError() {
         </div>
 
         <!-- Existing Welcome Content -->
+
         <div
             class="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white"
         >

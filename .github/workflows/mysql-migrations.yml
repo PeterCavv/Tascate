@@ -1,0 +1,63 @@
+name: Check MySQL Migrations
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  migration-check:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: tascate
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: tascate
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-interaction
+
+      - name: Copy .env.example
+        run: cp .env.example .env
+
+      - name: Fix empty duplicates in .env
+        run: |
+          # Elimina claves duplicadas sin valor (como APP_NAME= al final)
+          awk -F= '/=/ && NF>2 || $2!=""' .env > .env.tmp && mv .env.tmp .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: Clear artisan caches
+        run: |
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan route:clear

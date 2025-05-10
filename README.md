@@ -1,8 +1,10 @@
-<picture>
-  <source srcset="https://github.com/user-attachments/assets/0f384e22-cf27-4559-8a9b-5549a79e774d" media="(prefers-color-scheme: dark)" />
-  <source srcset="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" media="(prefers-color-scheme: light)" />
-  <img src="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" width="700" alt="Tascate" />
-</picture>
+<div style="display: flex; justify-content: center; width: 100%;">
+  <picture style="width: 100%; max-width: 100%;">
+    <source srcset="https://github.com/user-attachments/assets/0f384e22-cf27-4559-8a9b-5549a79e774d" media="(prefers-color-scheme: dark)" />
+    <source srcset="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" media="(prefers-color-scheme: light)" />
+    <img src="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" style="width: 100%; max-width: 100%; display: block; margin: 0 auto;" alt="Tascate" />
+  </picture>
+</div>
 
 ## Acerca de 🍋Tascate🍋
 
@@ -15,7 +17,16 @@
 
 ## Software
 
-[![Frontend Skills](https://skillicons.dev/icons?i=vue,html,tailwind,laravel,php,phpstorm,postman,visualstudio)](https://skillicons.dev)
+<div style="display: flex; justify-content: center;">
+  <a href="https://vuejs.org/" target="_blank"><img src="https://skillicons.dev/icons?i=vue" alt="Vue.js" title="Vue.js"></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank"><img src="https://skillicons.dev/icons?i=html" alt="HTML" title="HTML"></a>
+  <a href="https://tailwindcss.com/" target="_blank"><img src="https://skillicons.dev/icons?i=tailwind" alt="Tailwind CSS" title="Tailwind CSS"></a>
+  <a href="https://laravel.com/" target="_blank"><img src="https://skillicons.dev/icons?i=laravel" alt="Laravel" title="Laravel"></a>
+  <a href="https://www.php.net/" target="_blank"><img src="https://skillicons.dev/icons?i=php" alt="PHP" title="PHP"></a>
+  <a href="https://www.jetbrains.com/phpstorm/" target="_blank"><img src="https://skillicons.dev/icons?i=phpstorm" alt="PHPStorm" title="PHPStorm"></a>
+  <a href="https://www.postman.com/" target="_blank"><img src="https://skillicons.dev/icons?i=postman" alt="Postman" title="Postman"></a>
+  <a href="https://code.visualstudio.com/" target="_blank"><img src="https://skillicons.dev/icons?i=visualstudio" alt="Visual Studio Code" title="Visual Studio Code"></a>
+</div>
 
 ## Miembros del Equipo
 

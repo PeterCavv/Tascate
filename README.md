@@ -1,10 +1,10 @@
-<div style="display: flex; justify-content: center; width: 100%;">
-  <picture style="width: 100%; max-width: 100%;">
+<p align="center">
+  <picture>
     <source srcset="https://github.com/user-attachments/assets/0f384e22-cf27-4559-8a9b-5549a79e774d" media="(prefers-color-scheme: dark)" />
     <source srcset="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" media="(prefers-color-scheme: light)" />
-    <img src="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" style="width: 100%; max-width: 100%; display: block; margin: 0 auto;" alt="Tascate" />
+    <img src="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" width="350" alt="Tascate" />
   </picture>
-</div>
+</p>
 
 ## Acerca de 🍋Tascate🍋
 

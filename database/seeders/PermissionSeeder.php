@@ -24,6 +24,7 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'view tasca hours']);
         Permission::create(['name' => 'edit tasca hours']);
         Permission::create(['name' => 'delete tasca hours']);
+        Permission::create(['name' => 'approve tasca registration']);
 
         // Employee Management Permissions
         Permission::create(['name' => 'edit employees']);
@@ -71,7 +72,8 @@ class PermissionSeeder extends Seeder
             'edit reviews',
             'edit posts',
             'edit users',
-            'edit system'
-        ])->count() === 9;
+            'edit system',
+            'approve tasca registration'
+        ])->count() === 10;
     }
 }

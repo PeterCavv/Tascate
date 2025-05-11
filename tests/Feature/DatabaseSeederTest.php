@@ -15,7 +15,7 @@ it('adds all permissions', function () {
     $this->artisan('db:seed');
 
     // Assert
-    $this->assertDatabaseCount(Permission::class, 32);
+    $this->assertDatabaseCount(Permission::class, 33);
     $this->assertDatabaseHas(Permission::class, ['name' => 'delete tasca']);
     $this->assertDatabaseHas(Permission::class, ['name' => 'edit tasca settings']);
     $this->assertDatabaseHas(Permission::class, ['name' => 'delete tasca settings']);
@@ -26,6 +26,7 @@ it('adds all permissions', function () {
     $this->assertDatabaseHas(Permission::class, ['name' => 'view tasca hours']);
     $this->assertDatabaseHas(Permission::class, ['name' => 'edit tasca hours']);
     $this->assertDatabaseHas(Permission::class, ['name' => 'delete tasca hours']);
+    $this->assertDatabaseHas(Permission::class, ['name' => 'approve tasca registration']);
     $this->assertDatabaseHas(Permission::class, ['name' => 'edit employees']);
     $this->assertDatabaseHas(Permission::class, ['name' => 'delete employees']);
     $this->assertDatabaseHas(Permission::class, ['name' => 'view employees']);
@@ -56,7 +57,7 @@ it('adds permissions only once', function () {
     $this->artisan('db:seed');
 
     // Assert
-    $this->assertDatabaseCount(Permission::class, 32);
+    $this->assertDatabaseCount(Permission::class, 33);
 });
 
 it('adds all roles', function () {

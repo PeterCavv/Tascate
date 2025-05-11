@@ -57,7 +57,7 @@ it('adds permissions only once', function () {
 
     // Assert
     $this->assertDatabaseCount(Permission::class, 32);
-})->todo();
+});
 
 it('adds all roles', function () {
     // Assert
@@ -82,7 +82,7 @@ it('adds roles only once', function () {
 
     // Assert
     $this->assertDatabaseCount(Role::class, 5);
-})->todo();
+});
 
 it('creates default admin user', function () {
     // Assert
@@ -109,4 +109,4 @@ it('creates default admin user only once', function () {
 
     // Assert
     $this->assertDatabaseCount(User::class, 1);
-})->todo();
+});

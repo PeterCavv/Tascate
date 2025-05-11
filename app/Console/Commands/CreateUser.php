@@ -15,11 +15,15 @@ class CreateUser extends Command
      *
      * @var string
      */
-    protected $signature = 'user:create 
+    protected $signature = 'user:create
         {--name= : The name of the user}
         {--email= : The email of the user}
         {--password= : The password for the user}
         {--role= : The role to assign to the user (Admin, Owner, Manager, Employee, Tasca)}';
+
+    // Example usage:
+    // php artisan user:create --name=test --email=test@gmail.com --password=12345678 --role=Tasca
+    // php artisan user:create
 
     /**
      * The console command description.

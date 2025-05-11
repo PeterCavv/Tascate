@@ -54,7 +54,7 @@ class RoleSeeder extends Seeder
             'create posts',
             'view posts',
         ]);
-        
+
         // Manager permissions
         $manager->givePermissionTo([
             'view tasca statistics',
@@ -71,7 +71,7 @@ class RoleSeeder extends Seeder
             'delete posts',
             'view posts',
         ]);
-        
+
         // Employee permissions
         $employee->givePermissionTo([
             'view tasca menu',
@@ -82,7 +82,7 @@ class RoleSeeder extends Seeder
             'create reviews',
             'view posts',
         ]);
-        
+
         // Tasca permissions
         $tasca->givePermissionTo([
             'delete tasca',
@@ -114,13 +114,21 @@ class RoleSeeder extends Seeder
 
     private function isDataAlreadyGiven(): bool
     {
-        return Role::whereIn('name', [
-            'Admin',
-            'Owner',
-            'Manager',
-            'Employee',
-            'Tasca'
-        ])->count() === 5;
+        // Check if all required roles exist
+        $requiredRoles = ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'];
+        $existingRoles = Role::whereIn('name', $requiredRoles)->pluck('name')->toArray();
+        
+        if (count($existingRoles) !== count($requiredRoles)) {
+            return false;
+        }
+
+        // Check if Admin role has all permissions (as it should have all)
+        $adminRole = Role::where('name', 'Admin')->first();
+        if (!$adminRole || $adminRole->permissions->count() !== Permission::count()) {
+            return false;
+        }
+
+        return true;
     }
 }
 

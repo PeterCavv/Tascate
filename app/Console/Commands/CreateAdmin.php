@@ -16,6 +16,10 @@ class CreateAdmin extends Command
      */
     protected $signature = 'admin:create {--name= : The name of the admin user} {--email= : The email of the admin user} {--password= : The password for the admin user}';
 
+    // Example usage:
+    // php artisan admin:create --name=test --email=test@gmail.com --password=12345678
+    // php artisan admin:create
+
     /**
      * The console command description.
      *

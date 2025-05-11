@@ -13,6 +13,10 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        if ($this->isDataAlreadyGiven()) {
+            return;
+        }
+
         // Create roles
         $admin = Role::create(['name' => 'Admin']);
         $owner = Role::create(['name' => 'Owner']);
@@ -106,7 +110,17 @@ class RoleSeeder extends Seeder
             'create posts',
             'view posts',
         ]);
-        
+    }
+
+    private function isDataAlreadyGiven(): bool
+    {
+        return Role::whereIn('name', [
+            'Admin',
+            'Owner',
+            'Manager',
+            'Employee',
+            'Tasca'
+        ])->count() === 5;
     }
 }
 

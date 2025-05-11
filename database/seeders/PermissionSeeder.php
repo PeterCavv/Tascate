@@ -9,6 +9,10 @@ class PermissionSeeder extends Seeder
 {
     public function run(): void
     {
+        if ($this->isDataAlreadyGiven()) {
+            return;
+        }
+
         // Tasca Management Permissions
         Permission::create(['name' => 'delete tasca']);
         Permission::create(['name' => 'edit tasca settings']);
@@ -56,4 +60,18 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'view system logs']);
     }
 
+    private function isDataAlreadyGiven(): bool
+    {
+        return Permission::whereIn('name', [
+            'delete tasca',
+            'edit tasca settings',
+            'view tasca statistics',
+            'edit employees',
+            'edit reservations',
+            'edit reviews',
+            'edit posts',
+            'edit users',
+            'edit system'
+        ])->count() === 9;
+    }
 }

@@ -9,7 +9,11 @@ import { Link } from '@inertiajs/vue3';
     >
         <div>
             <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
+                <img
+                    src="/images/tascate-192x192px.png"
+                    alt="Tascate Logo"
+                    class="h-20 w-auto"
+                />
             </Link>
         </div>
 

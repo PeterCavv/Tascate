@@ -12,7 +12,7 @@ it('adds all permissions', function () {
     $this->assertDatabaseCount(Permission::class, 0);
 
     // Act
-    $this->artisan('db:seed');
+    $this->artisan('db:seed --class=PermissionSeeder');
 
     // Assert
     $this->assertDatabaseCount(Permission::class, 33);
@@ -53,8 +53,8 @@ it('adds all permissions', function () {
 
 it('adds permissions only once', function () {
     // Act
-    $this->artisan('db:seed');
-    $this->artisan('db:seed');
+    $this->artisan('db:seed --class=PermissionSeeder');
+    $this->artisan('db:seed --class=PermissionSeeder');
 
     // Assert
     $this->assertDatabaseCount(Permission::class, 33);

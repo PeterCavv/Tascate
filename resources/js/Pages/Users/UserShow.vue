@@ -1,19 +1,12 @@
 <script setup>
-
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-
-import { Head, Link } from '@inertiajs/vue3';
-
-import {route} from "ziggy-js";
-
-import { defineProps } from 'vue';
+import { Head, Link, router } from "@inertiajs/vue3";
+import { route } from "ziggy-js";
+import { defineProps } from "vue";
 
 defineOptions({
     layout: MainLayoutTemp,
 });
-
-window.csrfToken = "{{ csrf_token() }}";
-const csrfToken = window.csrfToken;
 
 const props = defineProps({
     user: {
@@ -24,9 +17,24 @@ const props = defineProps({
         type: [Number, null],
         required: false,
     },
+    csrfToken: {
+        type: String,
+        required: true,
+    },
 });
 
-
+const deleteUser = () => {
+    if (confirm("¿Seguro que quieres eliminar este usuario?")) {
+        router.delete(route("users.destroy", props.user.id), {
+            onSuccess: () => {
+                alert("Usuario eliminado exitosamente.");
+            },
+            onError: (errors) => {
+                console.error(errors);
+            },
+        });
+    }
+};
 </script>
 
 <template>
@@ -49,24 +57,12 @@ const props = defineProps({
             >
                 Editar
             </Link>
-            <form
-                :action="route('users.destroy', user.id)"
-                method="POST"
-                @submit.prevent="$event.target.submit()"
+            <button
+                @click="deleteUser"
+                class="px-4 py-2 bg-red-500 text-black rounded hover:bg-red-600 transition"
             >
-                <input type="hidden" name="_method" value="DELETE" />
-                <input type="hidden" name="_token" :value="csrfToken" />
-                <button
-                    type="submit"
-                    class="px-4 py-2 bg-red-500 text-black rounded hover:bg-red-600 transition"
-                >
-                    Eliminar
-                </button>
-            </form>
+                Eliminar
+            </button>
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

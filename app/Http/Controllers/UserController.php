@@ -26,15 +26,20 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        if ($user->avatar) {
+            $user->avatar = asset('storage/' . $user->avatar);
+        }
 
         if (auth()->check()) {
             $authUserId = auth()->user()->id;
         } else {
             $authUserId = null;
         }
+
         return Inertia::render('Users/UserShow', [
             'user' => $user,
-            'authUserId' => $authUserId,
+            'authUserId' => auth()->id(),
+            'csrfToken' => csrf_token(),
         ]);
     }
 
@@ -51,7 +56,6 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        dd($request->all());
         if (auth()->user()->id !== $user->id) {
             return redirect()->route('users.index')->with('error', 'No tienes permiso para editar este usuario.');
         }

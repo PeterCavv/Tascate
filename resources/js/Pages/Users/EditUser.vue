@@ -26,8 +26,11 @@ const handleFileUpload = (event) => {
 };
 
 const submitForm = () => {
-    form.patch(route("users.update", props.user.id), {
+    form._method = 'PATCH';
+
+    form.submit("post", route("users.update", props.user.id), {
         preserveScroll: true,
+        forceFormData: true,
         onSuccess: () => {
             alert("Usuario actualizado exitosamente.");
         },
@@ -39,53 +42,50 @@ const submitForm = () => {
 </script>
 
 <template>
-    <div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
-        <h1 class="text-2xl font-bold mb-6">Actualizar Usuario</h1>
-        <form @submit.prevent="submitForm" enctype="multipart/form-data">
-            <!-- Nombre -->
-            <div class="mb-4">
+    <div class="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Actualizar Usuario</h1>
+        <form @submit.prevent="submitForm" class="space-y-6">
+            <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
                 <input
-                    type="text"
                     id="name"
+                    type="text"
                     v-model="form.name"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    required
+                    placeholder="Nombre"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
             </div>
 
-            <!-- Email -->
-            <div class="mb-4">
+            <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
                 <input
-                    type="email"
                     id="email"
+                    type="email"
                     v-model="form.email"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    required
+                    placeholder="Correo Electrónico"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
             </div>
 
-            <!-- Avatar -->
-            <div class="mb-4">
+            <div>
                 <label for="avatar" class="block text-sm font-medium text-gray-700">Avatar</label>
                 <input
-                    type="file"
                     id="avatar"
+                    type="file"
                     @change="handleFileUpload"
-                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
                 />
+                <div v-if="form.avatar" class="mt-2 text-sm text-gray-600">
+                    <p>{{ form.avatar.name }}</p>
+                </div>
             </div>
 
-            <!-- Botón de Enviar -->
-            <div class="mt-6">
-                <button
-                    type="submit"
-                    class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                    Actualizar
-                </button>
-            </div>
+            <button
+                type="submit"
+                class="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+                Actualizar
+            </button>
         </form>
     </div>
 </template>

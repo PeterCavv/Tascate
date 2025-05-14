@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->role === Role::TASCA;
     }
 
+    public function isEmployee(): bool
+    {
+        return $this->role === Role::EMPLOYEE;
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -83,17 +88,17 @@ class User extends Authenticatable
         ];
     }
 
-    public function employee()
+    public function employee(): HasOne
     {
         return $this->hasOne(Employee::class);
     }
 
-    public function manager()
+    public function manager(): HasOne
     {
         return $this->hasOne(Manager::class);
     }
 
-    public function customer()
+    public function customer(): HasOne
     {
         return $this->hasOne(Customer::class);
     }

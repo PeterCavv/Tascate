@@ -53,6 +53,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Return if the user is a customer.
+     * @return bool
+     */
+    public function isCustomer(): bool
+    {
+        return $this->role === Role::CUSTOMER;
+    }
+
+    /**
+     * Return if the user is a tasca.
+     * @return bool
+     */
+    public function isTasca(): bool
+    {
+        return $this->role === Role::TASCA;
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

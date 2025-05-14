@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum FriendshipStatus
+enum FriendshipStatus: string
 {
     const PENDING = 'pending';
     const ACCEPTED = 'accepted';

@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
@@ -12,22 +15,27 @@ class Post extends Model
        'content'
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function pictures()
+    public function pictures(): HasMany
     {
         return $this->hasMany(Picture::class);
     }
 
-    public function likes()
+    /**
+     * The users that liked the post.
+     *
+     * @return BelongsToMany
+     */
+    public function likedByUsers(): BelongsToMany
     {
-        return $this->hasMany(Like::class);
+        return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
     }
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }

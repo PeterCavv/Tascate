@@ -3,8 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -12,6 +15,10 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $casts = [
+        'role' => Role::class,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +29,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar'
+        'avatar',
+        'role'
     ];
 
     /**
@@ -34,6 +42,15 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /**
+     * Return if the user is an admin.
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::ADMIN;
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -63,27 +80,35 @@ class User extends Authenticatable
         return $this->hasOne(Customer::class);
     }
 
-    public function tasca()
+    public function tasca(): HasOne
     {
         return $this->hasOne(Tasca::class);
     }
 
-    public function owner()
+    public function owner(): HasOne
     {
         return $this->hasOne(Owner::class);
     }
 
-    public function posts()
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
-    public function likes()
+    /**
+     * Return the user's liked posts.
+     * @return BelongsToMany
+     */
+    public function likedPosts(): BelongsToMany
     {
-        return $this->hasMany(Like::class);
+        return $this->belongsToMany(Post::class, 'likes', 'user_id', 'post_id');
     }
 
-    public function comments()
+    /**
+     * Return the user's comments.
+     * @return HasMany
+     */
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
@@ -92,7 +117,7 @@ class User extends Authenticatable
      * Return the user's friends.
      * @return BelongsToMany
      */
-    public function friends()
+    public function friends(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
             ->wherePivot('status', 'accepted');
@@ -102,7 +127,7 @@ class User extends Authenticatable
      * Return the user's friend requests.
      * @return BelongsToMany
      */
-    public function pendingFriends()
+    public function pendingFriends(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
             ->wherePivot('status', 'pending');
@@ -112,7 +137,7 @@ class User extends Authenticatable
      * Return the user's blocked friends.
      * @return BelongsToMany
      */
-    public function blockedFriends()
+    public function blockedFriends(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
             ->wherePivot('status', 'blocked');

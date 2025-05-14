@@ -17,7 +17,9 @@ class UserPolicy
 
     public function delete(User $authUser, User $userToDelete): bool
     {
-        return $this->canManage($authUser, $userToDelete);
+        return !$userToDelete->isAdmin()
+            && ( $authUser->id === $userToDelete->id
+                    || $authUser->isTasca() && $userToDelete->isEmployee() );
     }
 
     public function update(User $authUser, User $userToUpdate): bool

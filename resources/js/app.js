@@ -14,6 +14,8 @@ import Aura from '@primeuix/themes/aura';
 import Checkbox from 'primevue/checkbox';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import FloatLabel from 'primevue/floatlabel';
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -46,6 +48,7 @@ createInertiaApp({
         app.component('InputText', InputText);
         app.component('Checkbox', Checkbox);
         app.component('Button', Button);
+        app.component('FloatLabel', FloatLabel);
 
         app.mount(el);
     },

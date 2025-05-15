@@ -29,24 +29,30 @@ const submit = () => {
         </div>
 
         <form @submit.prevent="submit" class="p-4 space-y-4 w-full max-w-md mx-auto">
+            <div class="p-1"></div>
+
             <!-- Email -->
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <InputText
-                    id="email"
-                    type="email"
-                    v-model="form.email"
-                    class="w-full"
-                    autocomplete="username"
-                    autofocus
-                    required
-                />
+                <FloatLabel >
+                    <InputText
+                        id="email"
+                        type="email"
+                        v-model="form.email"
+                        class="w-full"
+                        autocomplete="username"
+                        autofocus
+                        required
+                    />
+                    <label for="email">Username</label>
+                </FloatLabel>
                 <small v-if="form.errors.email" class="p-error block mt-1">{{ form.errors.email }}</small>
             </div>
 
+            <div class="p-1"></div>
+
             <!-- Password -->
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <FloatLabel>
                 <InputText
                     id="password"
                     type="password"
@@ -55,6 +61,8 @@ const submit = () => {
                     autocomplete="current-password"
                     required
                 />
+                <label for="password">Password</label>
+                </FloatLabel>
                 <small v-if="form.errors.password" class="p-error block mt-1">{{ form.errors.password }}</small>
             </div>
 

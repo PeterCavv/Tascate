@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use \App\Enums\Role as UseRole;
 
 class CreateUser extends Command
 {
@@ -40,10 +41,14 @@ class CreateUser extends Command
         $name = $this->option('name') ?? $this->ask('What is the user name?');
         $email = $this->option('email') ?? $this->ask('What is the user email?');
         $password = $this->option('password') ?? $this->secret('What is the user password?');
-        $role = $this->option('role') ?? $this->choice(
+
+        $roleOptions = array_map(fn(UseRole $r) => $r->value, UseRole::cases());
+
+        $role = $this->option('role')
+            ?? $this->choice(
             'What role should the user have?',
-            ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'],
-            'Employee'
+            $roleOptions,
+            UseRole::CUSTOMER->value
         );
 
         $validator = Validator::make([
@@ -55,7 +60,7 @@ class CreateUser extends Command
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['required', 'string', 'in:Admin,Owner,Manager,Employee,Tasca'],
+            'role' => ['required', 'string', 'in:'.implode(',', $roleOptions)],
         ]);
 
         if ($validator->fails()) {
@@ -72,7 +77,7 @@ class CreateUser extends Command
         }
 
         // If creating an Admin, show warning
-        if ($role === 'Admin') {
+        if ($role === UseRole::ADMIN->value) {
             $this->warn('You are creating an Admin user. This user will have full system access.');
             if (!$this->confirm('Do you wish to continue?')) {
                 return 0;

@@ -1,16 +1,23 @@
 <?php
 
-use App\Console\Commands\CreateUser;
+use \App\Enums\Role as UseRole;
 use App\Models\User;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Ensure roles exist
     $this->seed([
-        \Database\Seeders\PermissionSeeder::class,
-        \Database\Seeders\RoleSeeder::class,
+        PermissionSeeder::class,
+        RoleSeeder::class,
     ]);
+
+    $this->roles = array_map(fn(UseRole $r) => $r->value, UseRole::cases());
 });
 
 it('creates a new user successfully', function () {
@@ -18,14 +25,16 @@ it('creates a new user successfully', function () {
     $name = 'Test User';
     $email = 'test@tascate.com';
     $password = 'password123';
-    $role = 'Employee';
+    $role = UseRole::EMPLOYEE->value;
+
+    $roles = array_map(fn(UseRole $r) => $r->value, UseRole::cases());
 
     // Act
     $this->artisan('user:create')
         ->expectsQuestion('What is the user name?', $name)
         ->expectsQuestion('What is the user email?', $email)
         ->expectsQuestion('What is the user password?', $password)
-        ->expectsChoice('What role should the user have?', $role, ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'])
+        ->expectsChoice('What role should the user have?', $role, $roles)
         ->assertExitCode(0);
 
     // Assert
@@ -42,7 +51,7 @@ it('creates user with command options', function () {
     $name = 'Test User';
     $email = 'test@tascate.com';
     $password = 'password123';
-    $role = 'Manager';
+    $role = UseRole::MANAGER->value;
 
     // Act
     $this->artisan('user:create', [
@@ -62,12 +71,13 @@ it('creates user with command options', function () {
 });
 
 it('validates required fields', function () {
+
     // Act & Assert
     $this->artisan('user:create')
         ->expectsQuestion('What is the user name?', '')
         ->expectsQuestion('What is the user email?', '')
         ->expectsQuestion('What is the user password?', '')
-        ->expectsChoice('What role should the user have?', 'Employee', ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'])
+        ->expectsChoice('What role should the user have?', UseRole::EMPLOYEE->value, $this->roles)
         ->assertExitCode(1)
         ->expectsOutput('The name field is required.')
         ->expectsOutput('The email field is required.')
@@ -80,7 +90,7 @@ it('validates email format', function () {
         ->expectsQuestion('What is the user name?', 'Test User')
         ->expectsQuestion('What is the user email?', 'invalid-email')
         ->expectsQuestion('What is the user password?', 'password123')
-        ->expectsChoice('What role should the user have?', 'Employee', ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'])
+        ->expectsChoice('What role should the user have?', UseRole::EMPLOYEE->value, $this->roles)
         ->assertExitCode(1)
         ->expectsOutput('The email field must be a valid email address.');
 });
@@ -91,39 +101,40 @@ it('validates password length', function () {
         ->expectsQuestion('What is the user name?', 'Test User')
         ->expectsQuestion('What is the user email?', 'test@tascate.com')
         ->expectsQuestion('What is the user password?', 'short')
-        ->expectsChoice('What role should the user have?', 'Employee', ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'])
+        ->expectsChoice('What role should the user have?', UseRole::EMPLOYEE->value, $this->roles)
         ->assertExitCode(1)
         ->expectsOutput('The password field must be at least 8 characters.');
 });
 
 it('validates role exists', function () {
     // Arrange
-    Role::where('name', 'Admin')->delete();
+    Role::where('name', UseRole::ADMIN->value)->delete();
 
     // Act & Assert
     $this->artisan('user:create', [
         '--name' => 'Test User',
         '--email' => 'test@tascate.com',
         '--password' => 'password123',
-        '--role' => 'Admin',
+        '--role' => UseRole::ADMIN->value,
     ])->assertExitCode(1)
-        ->expectsOutput("Role 'Admin' does not exist. Please run the database seeders first.");
+        ->expectsOutput("Role '".UseRole::ADMIN->value."' does not exist. Please run the database seeders first.");
 });
 
 it('shows warning when creating admin user', function () {
+
     // Act & Assert
     $this->artisan('user:create')
         ->expectsQuestion('What is the user name?', 'Admin User')
         ->expectsQuestion('What is the user email?', 'admin@tascate.com')
         ->expectsQuestion('What is the user password?', 'password123')
-        ->expectsChoice('What role should the user have?', 'Admin', ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'])
+        ->expectsChoice('What role should the user have?', UseRole::ADMIN->value, $this->roles)
         ->expectsConfirmation('Do you wish to continue?', 'yes')
         ->assertExitCode(0);
 
     // Assert
     $user = User::where('email', 'admin@tascate.com')->first();
     expect($user)->not->toBeNull()
-        ->and($user->hasRole('Admin'))->toBeTrue();
+        ->and($user->hasRole(UseRole::ADMIN->value))->toBeTrue();
 });
 
 it('prevents admin creation without confirmation', function () {
@@ -132,10 +143,10 @@ it('prevents admin creation without confirmation', function () {
         ->expectsQuestion('What is the user name?', 'Admin User')
         ->expectsQuestion('What is the user email?', 'admin@tascate.com')
         ->expectsQuestion('What is the user password?', 'password123')
-        ->expectsChoice('What role should the user have?', 'Admin', ['Admin', 'Owner', 'Manager', 'Employee', 'Tasca'])
+        ->expectsChoice('What role should the user have?', UseRole::ADMIN->value, $this->roles)
         ->expectsConfirmation('Do you wish to continue?', 'no')
         ->assertExitCode(0);
 
     // Assert no admin was created
     expect(User::where('email', 'admin@tascate.com')->exists())->toBeFalse();
-}); 
+});

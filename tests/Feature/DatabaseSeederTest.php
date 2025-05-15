@@ -4,6 +4,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Enums\Role as UseRole;
 
 uses(RefreshDatabase::class);
 
@@ -67,13 +68,16 @@ it('adds all roles', function () {
     // Act
     $this->artisan('db:seed');
 
+    $roles = UseRole::cases();
+    $this->assertDatabaseCount(Role::class, count($roles));
+
     // Assert
-    $this->assertDatabaseCount(Role::class, 5);
-    $this->assertDatabaseHas(Role::class, ['name' => 'Admin']);
-    $this->assertDatabaseHas(Role::class, ['name' => 'Owner']);
-    $this->assertDatabaseHas(Role::class, ['name' => 'Manager']);
-    $this->assertDatabaseHas(Role::class, ['name' => 'Employee']);
-    $this->assertDatabaseHas(Role::class, ['name' => 'Tasca']);
+    foreach($roles as $role){
+        $this->assertDatabaseHas(Role::class, [
+            'name' => $role->value
+        ]);
+    }
+
 });
 
 it('adds roles only once', function () {
@@ -82,7 +86,8 @@ it('adds roles only once', function () {
     $this->artisan('db:seed');
 
     // Assert
-    $this->assertDatabaseCount(Role::class, 5);
+    $roles = UseRole::cases();
+    $this->assertDatabaseCount(Role::class, count($roles));
 });
 
 it('creates default admin user', function () {
@@ -100,7 +105,7 @@ it('creates default admin user', function () {
     ]);
 
     $admin = User::where('email', 'test@example.com')->first();
-    expect($admin->hasRole('Admin'))->toBeTrue();
+    expect($admin->hasRole(UseRole::ADMIN->value))->toBeTrue();
 });
 
 it('creates default admin user only once', function () {

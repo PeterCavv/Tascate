@@ -1,8 +1,6 @@
-name: Laravel Pest Tests
+name: Laravel CI
 
-on:
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -10,48 +8,53 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: tascate
+        image: mysql:8.0
         ports:
           - 3306:3306
+        env:
+          MYSQL_DATABASE: test
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
         options: >-
-          --health-cmd="mysqladmin ping --silent"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u laravel -psecret"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
-
-  env:
-    DB_CONNECTION: mysql
-    DB_HOST: 127.0.0.1
-    DB_PORT: 3306
-    DB_DATABASE: tascate
-    DB_USERNAME: root
-    DB_PASSWORD: root
+          --health-retries=5
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-          extensions: mbstring, bcmath, mysql
+          php-version: '8.2'
+          extensions: mbstring, bcmath, pdo, pdo_mysql
+          coverage: none
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+        run: composer install --prefer-dist --no-progress --no-scripts
 
-      - name: Copy .env example
-        run: cp .env.example .env
-
-      - name: Generate application key
-        run: php artisan key:generate
-
-      - name: Set database configuration
+      - name: Copy .env and set key
         run: |
-          php artisan config:cache
-          php artisan migrate --force
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Configure database
+        run: |
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
+          sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=test/' .env
+          sed -i 's/DB_USERNAME=.*/DB_USERNAME=laravel/' .env
+          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=secret/' .env
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: Cache Laravel config
+        run: php artisan config:cache
 
       - name: Run Pest tests
-        run: vendor/bin/pest --verbose
+        run: ./vendor/bin/pest

@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Enums\Role;
 use App\Models\Review;
 use App\Models\User;
+use App\Traits\OwnershipPolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Policies\Traits\OwnershipPolicy;
 
 class ReviewPolicy
 {

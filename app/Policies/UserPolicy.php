@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Policies\Traits\OwnershipPolicy;
+use App\Traits\OwnershipPolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy

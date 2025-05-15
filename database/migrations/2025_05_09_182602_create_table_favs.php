@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('favs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('tascas_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained();
+            $table->foreignId('tasca_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

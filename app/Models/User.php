@@ -18,6 +18,8 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasRoles;
 
     protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
         'role' => Role::class,
     ];
 
@@ -74,6 +76,16 @@ class User extends Authenticatable
     public function isEmployee(): bool
     {
         return $this->role === Role::EMPLOYEE;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === Role::MANAGER;
+    }
+
+    public function isOwner(): bool
+    {
+        return $this->role === Role::OWNER;
     }
 
     /**

@@ -21,7 +21,7 @@ import { Link } from '@inertiajs/vue3';
 <!--    </div>-->
     <div
         class="w-screen h-[100vh] bg-cover bg-center bg-no-repeat flex items-center justify-center"
-        style="background-image: url('/images/login_v2.svg');"
+        style="background-image: url('/images/login_v3.svg');"
     >
         <div style="transform: translateX(-50vh) translateY(-10vh);">
                     <div>

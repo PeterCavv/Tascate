@@ -6,8 +6,14 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
+// PrimeVue imports
+import PrimeVue from 'primevue/config';
+import 'primeicons/primeicons.css';
+import Aura from '@primeuix/themes/aura';
 
-// import Checkbox from 'primevue/checkbox';
+import Checkbox from 'primevue/checkbox';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -19,10 +25,29 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
+        const app = createApp({ render: () => h(App, props) });
+
+        app.use(plugin)
             .use(ZiggyVue)
-            .mount(el);
+            .use(PrimeVue, {
+                ripple: true,
+                unstyled: false,
+                theme: {
+                    preset: Aura,
+                    options: {
+                        prefix: 'p',
+                        darkModeSelector: 'system',
+                        cssLayer: false
+                    }
+                }
+            });
+
+        // Register PrimeVue components globally
+        app.component('InputText', InputText);
+        app.component('Checkbox', Checkbox);
+        app.component('Button', Button);
+
+        app.mount(el);
     },
     progress: {
         color: '#4B5563',

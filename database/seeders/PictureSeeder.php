@@ -2,14 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Post;
 use App\Models\Picture;
+use App\Traits\HasDataCheck;
+use Illuminate\Database\Seeder;
 
 class PictureSeeder extends Seeder
 {
+    use HasDataCheck;
+
     public function run(): void
     {
-        Picture::factory()->count(10)->create();
+        if ($this->isDataAlreadyGiven(Picture::class)) {
+            return;
+        }
+
+        Picture::factory()->count(20)->create();
     }
 }

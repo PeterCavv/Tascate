@@ -14,8 +14,8 @@ class ManagerFactory extends Factory
     public function definition(): array
     {
         return [
-            'tasca_id' => Tasca::factory()->create()->id,
-            'user_id' => User::factory()->create()->id,
+            'tasca_id' => Tasca::factory(),
+            'user_id' => User::factory(),
         ];
     }
 }

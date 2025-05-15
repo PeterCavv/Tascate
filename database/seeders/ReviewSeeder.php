@@ -2,13 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Review;
+use App\Traits\HasDataCheck;
+use Illuminate\Database\Seeder;
 
 class ReviewSeeder extends Seeder
 {
+    use HasDataCheck;
+
     public function run(): void
     {
-        Review::factory()->count(10)->create();
+        if ($this->isDataAlreadyGiven(Review::class)) {
+            return;
+        }
+
+        Review::factory()->count(20)->create();
     }
 }

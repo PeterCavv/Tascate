@@ -14,8 +14,8 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'tasca_id' => Tasca::factory()->create()->id,
-            'customer_id' => Customer::factory()->create()->id,
+            'tasca_id' => Tasca::factory(),
+            'customer_id' => Customer::factory(),
             'body' => $this->faker->text(200),
             'rating' => $this->faker->numberBetween(1, 5),
         ];

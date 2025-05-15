@@ -14,8 +14,8 @@ class ReservationFactory extends Factory
     public function definition(): array
     {
         return [
-            'tasca_id' => Tasca::factory()->create()->id,
-            'customer_id' => Customer::factory()->create()->id,
+            'tasca_id' => Tasca::factory(),
+            'customer_id' => Customer::factory(),
             'reservation_price' => $this->faker->numberBetween(0, 100),
             'reservation_date' => $this->faker->dateTimeBetween('now', '+1 month'),
         ];

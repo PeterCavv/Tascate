@@ -13,7 +13,7 @@ class PictureFactory extends Factory
     public function definition(): array
     {
         return [
-            'post_id' => Post::factory()->create()->id,
+            'post_id' => Post::factory(),
             'picture_path' => $this->faker->imageUrl(640, 480, 'cats', true),
         ];
     }

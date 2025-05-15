@@ -28,6 +28,5 @@ class UserSeeder extends Seeder
     private function isDataAlreadyGiven(): bool
     {
         return User::where('email', 'test@example.com')->exists();
-
     }
 }

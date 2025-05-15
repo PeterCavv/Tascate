@@ -13,7 +13,7 @@ class TascaFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->create()->id,
+            'user_id' => User::factory(),
             'name' => $this->faker->sentence(3),
             'address' => $this->faker->address(),
             'menu' => $this->faker->sentence(5),

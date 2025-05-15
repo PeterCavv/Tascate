@@ -3,14 +3,19 @@
 namespace Database\Seeders;
 
 use App\Models\Friendship;
+use App\Traits\HasDataCheck;
 use Illuminate\Database\Seeder;
 
 class FriendshipSeeder extends Seeder
 {
+    use HasDataCheck;
+
     public function run(): void
     {
-        Friendship::factory()
-            ->count(10)
-            ->create();
+        if ($this->isDataAlreadyGiven(Friendship::class)) {
+            return;
+        }
+
+        Friendship::factory()->count(15)->create();
     }
 }

@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class UserSeeder extends Seeder
 {
@@ -21,7 +20,7 @@ class UserSeeder extends Seeder
         User::factory()->create([
             'name' => 'Admin Test User',
             'email' => 'test@example.com',
-        ])->assignRole('Admin');;
+        ])->assignRole(Role::ADMIN->value);
 
 
     }
@@ -29,9 +28,5 @@ class UserSeeder extends Seeder
     private function isDataAlreadyGiven(): bool
     {
         return User::where('email', 'test@example.com')->exists();
-
     }
 }
-
-
-

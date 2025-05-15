@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
@@ -18,29 +17,23 @@ class RoleSeeder extends Seeder
         }
 
         // Create roles
-        $admin = Role::create(['name' => 'Admin']);
-        $owner = Role::create(['name' => 'Owner']);
-        $manager = Role::create(['name' => 'Manager']);
-        $employee = Role::create(['name' => 'Employee']);
-        $tasca = Role::create(['name' => 'Tasca']);
+        $admin = Role::create(['name' => \App\Enums\Role::ADMIN->value]);
+        $owner = Role::create(['name' => \App\Enums\Role::OWNER->value]);
+        $manager = Role::create(['name' => \App\Enums\Role::MANAGER->value]);
+        $employee = Role::create(['name' => \App\Enums\Role::EMPLOYEE->value]);
+        $tasca = Role::create(['name' => \App\Enums\Role::TASCA->value]);
+        $customer = Role::create(['name' => \App\Enums\Role::CUSTOMER->value]);
 
     }
 
     private function isDataAlreadyGiven(): bool
     {
-        return Role::where('name', 'Admin')->exists()
-            && Role::where('name', 'Owner')->exists()
-            && Role::where('name', 'Manager')->exists()
-            && Role::where('name', 'Employee')->exists()
-            && Role::where('name', 'Tasca')->exists();
+        return Role::where('name', \App\Enums\Role::ADMIN->value)->exists()
+            && Role::where('name', \App\Enums\Role::OWNER->value)->exists()
+            && Role::where('name', \App\Enums\Role::MANAGER->value)->exists()
+            && Role::where('name', \App\Enums\Role::EMPLOYEE->value)->exists()
+            && Role::where('name', \App\Enums\Role::TASCA->value)->exists()
+            && Role::where('name', \App\Enums\Role::CUSTOMER->value)->exists();
 
     }
 }
-
-
-
-
-
-
-
-

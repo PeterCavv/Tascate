@@ -2,11 +2,11 @@
 
 namespace App\Enums;
 
-enum FriendshipStatus
+enum FriendshipStatus: string
 {
-    const PENDING = 'pending';
-    const ACCEPTED = 'accepted';
-    const BLOCKED = 'blocked';
+    case PENDING = 'pending';
+    case ACCEPTED = 'accepted';
+    case BLOCKED = 'blocked';
 
     public static function getValues(): array
     {

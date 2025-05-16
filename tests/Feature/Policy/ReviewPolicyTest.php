@@ -77,6 +77,19 @@ it('allows an Admin to delete a Review', function (){
     expect($admin->can('delete', $review))->toBeTrue();
 });
 
+it('allows a Tasca to delete one of his reviews', function (){
+    $user = User::factory()->create(['role' => Role::TASCA]);
+    $tasca = Tasca::factory()->create(['user_id' => $user->id]);
+
+    $review = $tasca->reviews()->create([
+        'customer_id' => $this->customer->id,
+        'body' => 'Test',
+        'rating' => 4,
+    ]);
+
+    expect($user->can('delete', $review))->toBeTrue();
+});
+
 it('denies a Customer to delete a Review not written by him', function (){
     $user = User::factory()->create(['role' => Role::CUSTOMER]);
 

@@ -29,7 +29,7 @@ class ReviewPolicy
 
     public function delete(User $user, Review $review): bool
     {
-        return $this->canManage($user, $review);
+        return $this->canManage($user, $review) || $user->tasca?->id === $review->tasca_id;
     }
 
     public function update(User $user, Review $review): bool

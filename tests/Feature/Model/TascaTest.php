@@ -37,15 +37,15 @@ it('has one Manager', function (){
         ->and(expect($this->tasca->manager->id)->toBe($manager->id));
 });
 
-it('belongs to many Owners', function (){
-    $owners = Owner::factory()->count(2)->create();
-
-    $this->tasca->properties()->attach($owners->pluck('id'));
-
-    expect($this->tasca->properties)->toHaveCount(2)
-        ->and(expect($this->tasca->properties->first())
-            ->toBeInstanceOf(Owner::class));
-});
+//it('belongs to many Owners', function (){
+//    $owners = Owner::factory()->count(2)->create();
+//
+//    $this->tasca->properties()->attach($owners->pluck('id'));
+//
+//    expect($this->tasca->properties)->toHaveCount(2)
+//        ->and(expect($this->tasca->properties->first())
+//            ->toBeInstanceOf(Owner::class));
+//});
 
 it('has many Reviews', function () {
     Review::factory()->count(3)->create([

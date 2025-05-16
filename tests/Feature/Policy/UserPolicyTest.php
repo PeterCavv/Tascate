@@ -24,8 +24,8 @@ it('allows to create a user being an admin or a tasca', function () {
         ->and($this->tasca->can('create', User::class))->toBeTrue();
 });
 
-it('denies to create a user being an owner or a customer', function () {
-    $user = User::factory()->create(['role' => Role::OWNER->value]);
+it('denies to create a user not being a admin or a tasca', function () {
+    $user = User::factory()->create(['role' => Role::CUSTOMER->value]);
     expect($user->can('create', User::class))->toBeFalse()
         ->and($this->customer->can('create', User::class))->toBeFalse();
 });

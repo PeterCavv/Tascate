@@ -18,7 +18,6 @@ class RoleSeeder extends Seeder
 
         // Create roles
         $admin = Role::create(['name' => \App\Enums\Role::ADMIN->value]);
-        $owner = Role::create(['name' => \App\Enums\Role::OWNER->value]);
         $manager = Role::create(['name' => \App\Enums\Role::MANAGER->value]);
         $employee = Role::create(['name' => \App\Enums\Role::EMPLOYEE->value]);
         $tasca = Role::create(['name' => \App\Enums\Role::TASCA->value]);
@@ -29,7 +28,6 @@ class RoleSeeder extends Seeder
     private function isDataAlreadyGiven(): bool
     {
         return Role::where('name', \App\Enums\Role::ADMIN->value)->exists()
-            && Role::where('name', \App\Enums\Role::OWNER->value)->exists()
             && Role::where('name', \App\Enums\Role::MANAGER->value)->exists()
             && Role::where('name', \App\Enums\Role::EMPLOYEE->value)->exists()
             && Role::where('name', \App\Enums\Role::TASCA->value)->exists()

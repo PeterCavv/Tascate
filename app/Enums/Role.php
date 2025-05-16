@@ -9,7 +9,6 @@ enum Role: string
     case TASCA = 'tasca';
     case EMPLOYEE = 'employee';
     case MANAGER = 'manager';
-    case OWNER = 'owner';
 
     public static function getValues(): array
     {
@@ -19,7 +18,6 @@ enum Role: string
             self::TASCA,
             self::EMPLOYEE,
             self::MANAGER,
-            self::OWNER,
         ];
     }
 

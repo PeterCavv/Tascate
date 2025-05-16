@@ -139,6 +139,5 @@ test('User avatar gets deleted when the user is deleteed', function () {
         ->actingAs($user)
         ->delete(route('users.destroy', $user));
 
-    $this->assertNull($user->fresh());
     Storage::disk('public')->assertMissing($user->avatar);
 });

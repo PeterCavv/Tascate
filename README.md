@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source srcset="https://github.com/user-attachments/assets/0f384e22-cf27-4559-8a9b-5549a79e774d" media="(prefers-color-scheme: dark)" />
-    <source srcset="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" media="(prefers-color-scheme: light)" />
-    <img src="https://github.com/user-attachments/assets/6ebd8b5b-caa9-4f2e-917e-c4017a9693e6" width="350" alt="Tascate" />
+    <source srcset="./public/images/tascate-letra-clara-v3.svg" media="(prefers-color-scheme: dark)" />
+    <source srcset="./public/images/tascate-letra-oscura-v3.svg" media="(prefers-color-scheme: light)" />
+    <img src="./public/images/tascate-letra-oscura-v3.svg" width="350" alt="Tascate" />
   </picture>
 </p>
 

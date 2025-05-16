@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
+
+    use AuthorizesRequests;
 
     public function index()
     {
@@ -45,9 +48,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        if (auth()->user()->id !== $user->id) {
-            return redirect()->route('users.index')->with('error', 'No tienes permiso para editar este usuario.');
-        }
+        $this->authorize('update', $user);
 
         return Inertia::render('Users/EditUser', [
             'user' => $user,
@@ -56,9 +57,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        if (auth()->user()->id !== $user->id) {
-            return redirect()->route('users.index')->with('error', 'No tienes permiso para editar este usuario.');
-        }
+        $this->authorize('update', $user);
 
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
@@ -75,9 +74,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if (auth()->user()->id !== $user->id) {
-            return redirect()->route('users.index')->with('error', 'No tienes permiso para eliminar este usuario.');
-        }
+        $this->authorize('delete', $user);
 
         $user->delete();
 

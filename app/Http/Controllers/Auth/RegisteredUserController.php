@@ -44,6 +44,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $user->assignRole(Role::CUSTOMER->value);
+        $user->customer()->create([]);
 
         event(new Registered($user));
 

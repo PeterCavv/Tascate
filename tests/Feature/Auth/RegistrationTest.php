@@ -1,5 +1,7 @@
 <?php
 
+use function Pest\Laravel\artisan;
+
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
 
@@ -7,6 +9,9 @@ test('registration screen can be rendered', function () {
 });
 
 test('new users can register', function () {
+
+    artisan('db:seed --class="RoleSeeder"');
+
     $response = $this->post('/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -14,6 +19,8 @@ test('new users can register', function () {
         'password_confirmation' => 'password',
     ]);
 
+
     $this->assertAuthenticated();
+
     $response->assertRedirect(route('dashboard', absolute: false));
 });

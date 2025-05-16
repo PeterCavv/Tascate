@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -39,22 +38,24 @@ const verificationLinkSent = computed(
             provided during registration.
         </div>
 
-        <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
+        <form @submit.prevent="submit" class="p-4 space-y-4 w-full max-w-md mx-auto">
+            <!-- Actions -->
+            <div class="flex items-center justify-between mt-6">
+                <Button
+                    type="submit"
+                    label="Resend Verification Email"
+                    :loading="form.processing"
                     :disabled="form.processing"
-                >
-                    Resend Verification Email
-                </PrimaryButton>
+                />
 
                 <Link
                     :href="route('logout')"
                     method="post"
                     as="button"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >Log Out</Link
+                    class="text-sm text-blue-600 hover:underline"
                 >
+                    Log Out
+                </Link>
             </div>
         </form>
     </GuestLayout>

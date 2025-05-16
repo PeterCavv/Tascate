@@ -15,6 +15,7 @@ import Checkbox from 'primevue/checkbox';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import FloatLabel from 'primevue/floatlabel';
+import Toast from 'primevue/toast';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -49,6 +50,7 @@ createInertiaApp({
         app.component('Checkbox', Checkbox);
         app.component('Button', Button);
         app.component('FloatLabel', FloatLabel);
+        app.component('Toast', Toast);
 
         app.mount(el);
     },

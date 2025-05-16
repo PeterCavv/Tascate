@@ -19,7 +19,7 @@ it('belongs to a User', function (){
 
 it('has many reviews', function (){
     Review::factory()->count(3)->create([
-        'customer_id', $this->customer->id
+        'customer_id' => $this->customer->id
     ]);
 
     expect($this->customer->reviews)->toHaveCount(3);

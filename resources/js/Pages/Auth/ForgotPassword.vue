@@ -25,7 +25,7 @@ const submit = () => {
             <section aria-labelledby="forgot-password-heading" class="space-y-4">
                 <h2 id="forgot-password-heading" class="sr-only">Forgot Password</h2>
 
-                <div 
+                <div
                     class="mb-3 text-sm text-gray-600 leading-relaxed max-w-md mx-auto text-center"
                     role="alert"
                     aria-live="polite"
@@ -44,8 +44,8 @@ const submit = () => {
                     {{ status }}
                 </div>
 
-                <form 
-                    @submit.prevent="submit" 
+                <form
+                    @submit.prevent="submit"
                     class="p-2 space-y-2 w-full max-w-sm mx-auto"
                     aria-label="Password reset request form"
                 >
@@ -67,10 +67,10 @@ const submit = () => {
                             />
                             <label for="email">Email</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.email" 
+                        <small
+                            v-if="form.errors.email"
                             id="email-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.email }}
@@ -85,7 +85,7 @@ const submit = () => {
                             :loading="form.processing"
                             :disabled="form.processing"
                             size="small"
-                            class="w-full sm:w-auto"
+                            class="w-full sm:w-full"
                             aria-busy="form.processing"
                         />
                     </div>

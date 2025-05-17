@@ -18,9 +18,6 @@ defineProps({
 </script>
 
 <template>
-    <div v-if="$page.props.flash.success" class="mb-4 p-4 bg-green-100 text-green-800 rounded">
-        {{ $page.props.flash.success }}
-    </div>
     <h1 class="text-2xl font-bold">Lista de Posts</h1>
     <div class="mt-10">
         <Link

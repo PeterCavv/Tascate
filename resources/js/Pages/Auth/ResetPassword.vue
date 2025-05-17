@@ -31,71 +31,111 @@ const submit = () => {
     <GuestLayout>
         <Head title="Reset Password" />
 
-        <form @submit.prevent="submit" class="p-4 space-y-4 w-full max-w-md mx-auto">
-            <div class="p-1"></div>
+        <main class="w-full max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+            <section aria-labelledby="reset-password-heading" class="space-y-4">
+                <h2 id="reset-password-heading" class="sr-only">Reset Password</h2>
 
-            <!-- Email -->
-            <div>
-                <FloatLabel>
-                    <InputText
-                        id="email"
-                        type="email"
-                        v-model="form.email"
-                        class="w-full"
-                        autocomplete="username"
-                        autofocus
-                        required
-                    />
-                    <label for="email">Email</label>
-                </FloatLabel>
-                <small v-if="form.errors.email" class="p-error block mt-1">{{ form.errors.email }}</small>
-            </div>
+                <form 
+                    @submit.prevent="submit" 
+                    class="p-2 space-y-2 w-full max-w-sm mx-auto"
+                    aria-label="Password reset form"
+                >
+                    <!-- Email -->
+                    <div class="p-1"></div>
+                    <div class="space-y-1">
+                        <FloatLabel>
+                            <InputText
+                                id="email"
+                                type="email"
+                                v-model="form.email"
+                                class="w-full"
+                                autocomplete="username"
+                                autofocus
+                                required
+                                aria-required="true"
+                                aria-invalid="!!form.errors.email"
+                                aria-describedby="email-error"
+                            />
+                            <label for="email">Email</label>
+                        </FloatLabel>
+                        <small 
+                            v-if="form.errors.email" 
+                            id="email-error"
+                            class="p-error block mt-1 text-xs" 
+                            role="alert"
+                        >
+                            {{ form.errors.email }}
+                        </small>
+                    </div>
 
-            <div class="p-1"></div>
+                    <!-- Password -->
+                    <div class="p-1"></div>
+                    <div class="space-y-1">
+                        <FloatLabel>
+                            <InputText
+                                id="password"
+                                type="password"
+                                v-model="form.password"
+                                class="w-full"
+                                autocomplete="new-password"
+                                required
+                                aria-required="true"
+                                aria-invalid="!!form.errors.password"
+                                aria-describedby="password-error"
+                            />
+                            <label for="password">Password</label>
+                        </FloatLabel>
+                        <small 
+                            v-if="form.errors.password" 
+                            id="password-error"
+                            class="p-error block mt-1 text-xs" 
+                            role="alert"
+                        >
+                            {{ form.errors.password }}
+                        </small>
+                    </div>
 
-            <!-- Password -->
-            <div>
-                <FloatLabel>
-                    <InputText
-                        id="password"
-                        type="password"
-                        v-model="form.password"
-                        class="w-full"
-                        autocomplete="new-password"
-                        required
-                    />
-                    <label for="password">Password</label>
-                </FloatLabel>
-                <small v-if="form.errors.password" class="p-error block mt-1">{{ form.errors.password }}</small>
-            </div>
+                    <!-- Confirm Password -->
+                    <div class="p-1"></div>
+                    <div class="space-y-1">
+                        <FloatLabel>
+                            <InputText
+                                id="password_confirmation"
+                                type="password"
+                                v-model="form.password_confirmation"
+                                class="w-full"
+                                autocomplete="new-password"
+                                required
+                                aria-required="true"
+                                aria-invalid="!!form.errors.password_confirmation"
+                                aria-describedby="password-confirmation-error"
+                            />
+                            <label for="password_confirmation">Confirm Password</label>
+                        </FloatLabel>
+                        <small 
+                            v-if="form.errors.password_confirmation" 
+                            id="password-confirmation-error"
+                            class="p-error block mt-1 text-xs" 
+                            role="alert"
+                        >
+                            {{ form.errors.password_confirmation }}
+                        </small>
+                    </div>
 
-            <div class="p-1"></div>
-
-            <!-- Confirm Password -->
-            <div>
-                <FloatLabel>
-                    <InputText
-                        id="password_confirmation"
-                        type="password"
-                        v-model="form.password_confirmation"
-                        class="w-full"
-                        autocomplete="new-password"
-                        required
-                    />
-                    <label for="password_confirmation">Confirm Password</label>
-                </FloatLabel>
-                <small v-if="form.errors.password_confirmation" class="p-error block mt-1">{{ form.errors.password_confirmation }}</small>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex items-center justify-end mt-6">
-                <Button
-                    type="submit"
-                    label="Reset Password"
-                    :loading="form.processing"
-                    :disabled="form.processing"
-                />
-            </div>
-        </form>
+                    <!-- Actions -->
+                    <div class="flex items-center justify-end mt-3">
+                        <Button
+                            type="submit"
+                            label="Reset Password"
+                            :loading="form.processing"
+                            :disabled="form.processing"
+                            size="small"
+                            class="w-full sm:w-auto"
+                            aria-busy="form.processing"
+                        />
+                    </div>
+                </form>
+            </section>
+        </main>
     </GuestLayout>
 </template>

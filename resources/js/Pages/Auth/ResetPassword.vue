@@ -35,8 +35,8 @@ const submit = () => {
             <section aria-labelledby="reset-password-heading" class="space-y-4">
                 <h2 id="reset-password-heading" class="sr-only">Reset Password</h2>
 
-                <form 
-                    @submit.prevent="submit" 
+                <form
+                    @submit.prevent="submit"
                     class="p-2 space-y-2 w-full max-w-sm mx-auto"
                     aria-label="Password reset form"
                 >
@@ -58,10 +58,10 @@ const submit = () => {
                             />
                             <label for="email">Email</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.email" 
+                        <small
+                            v-if="form.errors.email"
                             id="email-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.email }}
@@ -85,10 +85,10 @@ const submit = () => {
                             />
                             <label for="password">Password</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.password" 
+                        <small
+                            v-if="form.errors.password"
                             id="password-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.password }}
@@ -112,10 +112,10 @@ const submit = () => {
                             />
                             <label for="password_confirmation">Confirm Password</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.password_confirmation" 
+                        <small
+                            v-if="form.errors.password_confirmation"
                             id="password-confirmation-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.password_confirmation }}

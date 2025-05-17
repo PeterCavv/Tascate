@@ -26,7 +26,7 @@ const submit = () => {
                 <h2 id="forgot-password-heading" class="sr-only">Forgot Password</h2>
 
                 <div
-                    class="mb-3 text-sm text-gray-600 leading-relaxed max-w-md mx-auto text-center"
+                    class="mb-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-md mx-auto text-center"
                     role="alert"
                     aria-live="polite"
                 >
@@ -37,7 +37,7 @@ const submit = () => {
 
                 <div
                     v-if="status"
-                    class="mb-3 text-sm font-medium text-green-600 text-center"
+                    class="mb-3 text-sm font-medium text-green-600 dark:text-green-400 text-center"
                     role="alert"
                     aria-live="polite"
                 >
@@ -57,7 +57,7 @@ const submit = () => {
                                 id="email"
                                 type="email"
                                 v-model="form.email"
-                                class="w-full"
+                                class="w-full dark:text-gray-100 dark:placeholder-gray-400"
                                 autocomplete="username"
                                 autofocus
                                 required
@@ -65,12 +65,12 @@ const submit = () => {
                                 aria-invalid="!!form.errors.email"
                                 aria-describedby="email-error"
                             />
-                            <label for="email">Email</label>
+                            <label for="email" class="dark:text-gray-300">Email</label>
                         </FloatLabel>
                         <small
                             v-if="form.errors.email"
                             id="email-error"
-                            class="p-error block mt-1 text-xs"
+                            class="p-error block mt-1 text-xs dark:text-red-300"
                             role="alert"
                         >
                             {{ form.errors.email }}

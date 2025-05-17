@@ -28,8 +28,8 @@ const verificationLinkSent = computed(
             <section aria-labelledby="verification-heading" class="space-y-4">
                 <h2 id="verification-heading" class="sr-only">Email Verification</h2>
 
-                <div 
-                    class="mb-3 text-sm text-gray-600 leading-relaxed max-w-md mx-auto text-center"
+                <div
+                    class="mb-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-md mx-auto text-center"
                     role="alert"
                     aria-live="polite"
                 >
@@ -40,7 +40,7 @@ const verificationLinkSent = computed(
 
                 <div
                     v-if="verificationLinkSent"
-                    class="mb-3 text-sm font-medium text-green-600 text-center"
+                    class="mb-3 text-sm font-medium text-green-600 dark:text-green-400 text-center"
                     role="alert"
                     aria-live="polite"
                 >
@@ -48,8 +48,8 @@ const verificationLinkSent = computed(
                     provided during registration.
                 </div>
 
-                <form 
-                    @submit.prevent="submit" 
+                <form
+                    @submit.prevent="submit"
                     class="p-2 space-y-2 w-full max-w-sm mx-auto"
                     aria-label="Email verification form"
                 >
@@ -69,7 +69,7 @@ const verificationLinkSent = computed(
                             :href="route('logout')"
                             method="post"
                             as="button"
-                            class="text-xs text-blue-600 hover:underline w-full sm:w-auto text-center"
+                            class="text-xs text-blue-600 dark:text-blue-400 hover:underline w-full sm:w-auto text-center"
                             aria-label="Log out of your account"
                         >
                             Log Out

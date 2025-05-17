@@ -24,8 +24,8 @@ const submit = () => {
             <section aria-labelledby="register-heading" class="space-y-4">
                 <h2 id="register-heading" class="sr-only">Register</h2>
 
-                <form 
-                    @submit.prevent="submit" 
+                <form
+                    @submit.prevent="submit"
                     class="p-2 space-y-2 w-full max-w-sm mx-auto"
                     aria-label="Registration form"
                 >
@@ -47,10 +47,10 @@ const submit = () => {
                             />
                             <label for="name">Name</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.name" 
+                        <small
+                            v-if="form.errors.name"
                             id="name-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.name }}
@@ -74,10 +74,10 @@ const submit = () => {
                             />
                             <label for="email">Email</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.email" 
+                        <small
+                            v-if="form.errors.email"
                             id="email-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.email }}
@@ -101,10 +101,10 @@ const submit = () => {
                             />
                             <label for="password">Password</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.password" 
+                        <small
+                            v-if="form.errors.password"
                             id="password-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.password }}
@@ -128,10 +128,10 @@ const submit = () => {
                             />
                             <label for="password_confirmation">Confirm Password</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.password_confirmation" 
+                        <small
+                            v-if="form.errors.password_confirmation"
                             id="password-confirmation-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs"
                             role="alert"
                         >
                             {{ form.errors.password_confirmation }}
@@ -142,7 +142,7 @@ const submit = () => {
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-3">
                         <Link
                             :href="route('login')"
-                            class="text-xs text-blue-600 hover:underline w-full sm:w-auto text-center"
+                            class="text-xs text-blue-600 dark:text-blue-400 hover:underline w-full sm:w-auto text-center"
                             aria-label="Go to login page"
                         >
                             Already registered?

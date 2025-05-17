@@ -28,17 +28,17 @@ const submit = () => {
             <section aria-labelledby="login-heading" class="space-y-4">
                 <h2 id="login-heading" class="sr-only">Log in</h2>
 
-                <div 
-                    v-if="status" 
-                    class="mb-3 text-sm font-medium text-green-600 text-center"
+                <div
+                    v-if="status"
+                    class="mb-3 text-sm font-medium text-green-600 dark:text-green-400 text-center"
                     role="alert"
                     aria-live="polite"
                 >
                     {{ status }}
                 </div>
 
-                <form 
-                    @submit.prevent="submit" 
+                <form
+                    @submit.prevent="submit"
                     class="p-2 space-y-2 w-full max-w-sm mx-auto"
                     aria-label="Login form"
                 >
@@ -50,7 +50,7 @@ const submit = () => {
                                 id="email"
                                 type="email"
                                 v-model="form.email"
-                                class="w-full"
+                                class="w-full dark:text-gray-100 dark:placeholder-gray-400"
                                 autocomplete="username"
                                 autofocus
                                 required
@@ -58,12 +58,12 @@ const submit = () => {
                                 aria-invalid="!!form.errors.email"
                                 aria-describedby="email-error"
                             />
-                            <label for="email">Email</label>
+                            <label for="email" class="dark:text-gray-300">Email</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.email" 
+                        <small
+                            v-if="form.errors.email"
                             id="email-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs dark:text-red-300"
                             role="alert"
                         >
                             {{ form.errors.email }}
@@ -78,19 +78,19 @@ const submit = () => {
                                 id="password"
                                 type="password"
                                 v-model="form.password"
-                                class="w-full"
+                                class="w-full dark:text-gray-100 dark:placeholder-gray-400"
                                 autocomplete="current-password"
                                 required
                                 aria-required="true"
                                 aria-invalid="!!form.errors.password"
                                 aria-describedby="password-error"
                             />
-                            <label for="password">Password</label>
+                            <label for="password" class="dark:text-gray-300">Password</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.password" 
+                        <small
+                            v-if="form.errors.password"
                             id="password-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs dark:text-red-300"
                             role="alert"
                         >
                             {{ form.errors.password }}
@@ -105,9 +105,9 @@ const submit = () => {
                             :binary="true"
                             aria-label="Remember me"
                         />
-                        <label 
-                            for="remember" 
-                            class="text-xs text-gray-700"
+                        <label
+                            for="remember"
+                            class="text-xs text-gray-700 dark:text-gray-300"
                         >
                             Remember me
                         </label>
@@ -118,7 +118,7 @@ const submit = () => {
                         <Link
                             v-if="canResetPassword"
                             :href="route('password.request')"
-                            class="text-xs text-blue-600 hover:underline w-full sm:w-auto text-center"
+                            class="text-xs text-blue-600 dark:text-blue-400 hover:underline w-full sm:w-auto text-center"
                             aria-label="Reset your password"
                         >
                             Forgot your password?

@@ -21,8 +21,8 @@ const submit = () => {
             <section aria-labelledby="confirm-password-heading" class="space-y-4">
                 <h2 id="confirm-password-heading" class="sr-only">Confirm Password</h2>
 
-                <div 
-                    class="mb-3 text-sm text-gray-600 leading-relaxed max-w-md mx-auto text-center"
+                <div
+                    class="mb-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-md mx-auto text-center"
                     role="alert"
                     aria-live="polite"
                 >
@@ -30,8 +30,8 @@ const submit = () => {
                     password before continuing.
                 </div>
 
-                <form 
-                    @submit.prevent="submit" 
+                <form
+                    @submit.prevent="submit"
                     class="p-2 space-y-2 w-full max-w-sm mx-auto"
                     aria-label="Password confirmation form"
                 >
@@ -43,7 +43,7 @@ const submit = () => {
                                 id="password"
                                 type="password"
                                 v-model="form.password"
-                                class="w-full"
+                                class="w-full dark:text-gray-100 dark:placeholder-gray-400"
                                 autocomplete="current-password"
                                 autofocus
                                 required
@@ -51,12 +51,12 @@ const submit = () => {
                                 aria-invalid="!!form.errors.password"
                                 aria-describedby="password-error"
                             />
-                            <label for="password">Password</label>
+                            <label for="password" class="dark:text-gray-300">Password</label>
                         </FloatLabel>
-                        <small 
-                            v-if="form.errors.password" 
+                        <small
+                            v-if="form.errors.password"
                             id="password-error"
-                            class="p-error block mt-1 text-xs" 
+                            class="p-error block mt-1 text-xs dark:text-red-300"
                             role="alert"
                         >
                             {{ form.errors.password }}

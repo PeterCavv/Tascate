@@ -1,15 +1,19 @@
 <?php
 
-use App\Console\Commands\CreateAdmin;
 use App\Models\User;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
+use App\Enums\Role as UseRole;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Ensure roles exist
     $this->seed([
-        \Database\Seeders\PermissionSeeder::class,
-        \Database\Seeders\RoleSeeder::class,
+        PermissionSeeder::class,
+        RoleSeeder::class,
     ]);
 });
 
@@ -32,7 +36,7 @@ it('creates a new admin user successfully', function () {
         ->and($user->name)->toBe($name)
         ->and($user->email)->toBe($email)
         ->and(Hash::check($password, $user->password))->toBeTrue()
-        ->and($user->hasRole('Admin'))->toBeTrue();
+        ->and($user->hasRole(UseRole::ADMIN->value))->toBeTrue();
 });
 
 it('creates admin user with command options', function () {
@@ -54,7 +58,7 @@ it('creates admin user with command options', function () {
         ->and($user->name)->toBe($name)
         ->and($user->email)->toBe($email)
         ->and(Hash::check($password, $user->password))->toBeTrue()
-        ->and($user->hasRole('Admin'))->toBeTrue();
+        ->and($user->hasRole(UseRole::ADMIN->value))->toBeTrue();
 });
 
 it('validates required fields', function () {
@@ -92,7 +96,7 @@ it('validates password length', function () {
 it('prevents duplicate admin creation without confirmation', function () {
     // Arrange
     $admin = User::factory()->create();
-    $admin->assignRole('Admin');
+    $admin->assignRole(UseRole::ADMIN->value);
 
     // Act & Assert
     $this->artisan('admin:create')
@@ -104,4 +108,4 @@ it('prevents duplicate admin creation without confirmation', function () {
 
     // Assert no new admin was created
     expect(User::where('email', 'newadmin@tascate.com')->exists())->toBeFalse();
-}); 
+});

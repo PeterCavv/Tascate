@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Enums\FriendshipStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Friendship extends Pivot
 {
+    use HasFactory;
+
     protected $table = 'friendships';
 
     protected $casts = [

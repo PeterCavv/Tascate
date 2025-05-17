@@ -32,16 +32,33 @@ import { Link } from '@inertiajs/vue3';
                     Usuarios
                 </Link>
                 <Link
+                    href="/posts"
+                    class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                >
+                    Posts
+                </Link>
+                <Link
+                    v-if="!$page.props.auth.user"
                     href="/login"
                     class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                 >
                     Login
                 </Link>
                 <Link
+                    v-if="!$page.props.auth.user"
                     href="/register"
                     class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                 >
                     Registro
+                </Link>
+                <Link
+                    v-else
+                    href="/logout"
+                    method="post"
+                    as="button"
+                    class="block px-4 py-2 rounded hover:bg-gray-700 transition text-red-600"
+                >
+                    Logout
                 </Link>
             </nav>
         </aside>

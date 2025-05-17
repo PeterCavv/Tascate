@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\WelcomePageController;
+use App\Http\Controllers\PostController;
 
 Route::get('/', WelcomePageController::class)->name('welcome');
 
@@ -26,5 +27,11 @@ Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show')
 Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('auth');
 Route::post('/users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('auth');
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('auth');
+
+// Posts Routes
+
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/create-post', [PostController::class, 'create'])->name('posts.create')->middleware('auth');
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth');
 
 require __DIR__.'/auth.php';

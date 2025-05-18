@@ -6,9 +6,11 @@ use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use Inertia\Inertia;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     public function index()
     {
         $posts = Post::with('user', 'pictures')->get();
@@ -24,6 +26,8 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
+
+        $this->authorize('create', Post::class);
 
         $validated = $request->validated();
 
@@ -55,6 +59,8 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        $this->authorize('update', $post);
+
         return Inertia::render('Posts/PostEdit', [
             'post' => $post,
         ]);
@@ -62,6 +68,9 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post)
     {
+
+        $this->authorize('update', $post);
+
         $validated = $request->validated();
 
         $post->update([
@@ -74,6 +83,9 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+
+        $this->authorize('delete', $post);
+
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post eliminado exitosamente.');

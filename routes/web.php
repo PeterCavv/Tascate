@@ -39,3 +39,13 @@ Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.up
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware('auth');
 
 require __DIR__.'/auth.php';
+
+// RUTAS
+
+require __DIR__.'/roles/admin.php';
+require __DIR__.'/roles/manager.php';
+require __DIR__.'/roles/employee.php';
+require __DIR__.'/roles/tasca.php';
+require __DIR__.'/roles/customer.php';
+
+

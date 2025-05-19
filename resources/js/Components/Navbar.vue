@@ -6,13 +6,13 @@
 <!--        <span class="logo-text">Tascate</span>-->
           <img
                                               v-if="isDarkMode"
-                                              src="/images/tascate-light.png"
+                                              src="/images/tascate-letra-clara-v3.svg"
                                               alt="Logo Dark Mode"
                                               class="h-12 w-auto"
                                           />
                                           <img
                                               v-else
-                                              src="/images/tascate-dark.png"
+                                              src="/images/tascate-letra-oscura-v3.svg"
                                               alt="Logo Light Mode"
                                               class=" h-12 w-auto"
                                           />

@@ -26,6 +26,12 @@ import { Link } from '@inertiajs/vue3';
                     About Us
                 </Link>
                 <Link
+                    href="/tascas"
+                    class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                >
+                    Tascas
+                </Link>
+                <Link
                     href="/users"
                     class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                 >

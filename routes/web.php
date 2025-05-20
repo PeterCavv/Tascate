@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TascaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,11 @@ Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.up
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware('auth');
 
 require __DIR__.'/auth.php';
+
+// Tascas Routes
+
+Route::get('/tascas', [TascaController::class, 'index'])->name('tascas.index');
+Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.show');
 
 // RUTAS
 

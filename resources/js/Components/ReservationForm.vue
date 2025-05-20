@@ -75,6 +75,19 @@ const today = new Date().toISOString().split('T')[0]
                 <textarea id="observations" class="border border-gray-300 rounded-md p-2 w-full resize-none" rows="4" />
             </div>
 
+            <div class="flex items-center space-x-4">
+                <button
+                    class="px-5 py-1.5 rounded-full bg-green-600 text-white font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
+                >
+                    Reservar
+                </button>
+
+                <p class="font-bold text-green-950">Precio de la reserva: {{ tasca.reservation_price }}€</p>
+            </div>
+
+            <p class="text-xs text-gray-500 leading-relaxed"> El pago de la reserva se realiza a través de una plataforma segura. <br /> Si decides cancelar con más de 24 horas de antelación, te reembolsaremos el importe total de la reserva. En caso de cancelar con menos de 24 horas de margen, no será posible realizar el reembolso. </p>
+
+
         </div>
     </div>
 </template>

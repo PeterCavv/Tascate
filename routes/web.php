@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TascaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
@@ -45,6 +46,16 @@ require __DIR__.'/auth.php';
 
 Route::get('/tascas', [TascaController::class, 'index'])->name('tascas.index');
 Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.show');
+
+// Reservations Routes
+
+Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+
+// Accesibilidad
+
+Route::get('/accessibility', function () {
+    return Inertia::render('Accessibility');
+})->name('accessibility');
 
 // RUTAS
 

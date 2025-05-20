@@ -1,5 +1,5 @@
 <script setup>
-import { router } from '@inertiajs/vue3'
+import {Head, router} from '@inertiajs/vue3'
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 
 const {tascas} = defineProps({
@@ -34,7 +34,8 @@ function getRoundedRating(tasca) {
 </script>
 
 <template>
-    <!-- Lista de Tascas -->
+    <Head title="Tascas" />
+
     <div>
         <h1 class="text-2xl font-bold mb-6">Lista de Tascas</h1>
 

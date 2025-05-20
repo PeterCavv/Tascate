@@ -1,7 +1,7 @@
 <script setup>
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import ReservationForm from "@/Components/ReservationForm.vue";
-import {router, usePage} from '@inertiajs/vue3';
+import {Head, router, usePage} from '@inertiajs/vue3';
 import {ref} from "vue";
 
 const { auth } = usePage().props
@@ -19,6 +19,8 @@ defineOptions({
 </script>
 
 <template>
+    <Head :title="tasca.name" />
+
     <div class="max-w-full mx-4">
         <div
             class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-end h-48 w-full"

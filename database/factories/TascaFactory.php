@@ -22,7 +22,8 @@ class TascaFactory extends Factory
             'capacity' => $this->faker->numberBetween(1, 100),
             'reservation' => $this->faker->boolean(),
             'reservation_price' => $this->faker->numberBetween(0, 100),
-            'telephone' => $this->faker->numerify('6########')
+            'telephone' => $this->faker->numerify('6########'),
+            'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
         ];
     }
 }

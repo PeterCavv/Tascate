@@ -13,11 +13,16 @@ class ReservationFactory extends Factory
 
     public function definition(): array
     {
+        $tasca = Tasca::factory()->create();
+
         return [
-            'tasca_id' => Tasca::factory(),
+            'tasca_id' => $tasca->id,
             'customer_id' => Customer::factory(),
-            'reservation_price' => $this->faker->numberBetween(0, 100),
+            'reservation_price' => $tasca->reservation_price,
             'reservation_date' => $this->faker->dateTimeBetween('now', '+1 month'),
+            'reservation_time' => $this->faker->time(),
+            'people' => $this->faker->numberBetween(1, $tasca->capacity),
+            'observations' => $this->faker->sentence(),
         ];
     }
 }

@@ -6,8 +6,9 @@ import {ref} from "vue";
 
 const { auth } = usePage().props
 
-const { tasca, reservation } = defineProps({
+const { tasca } = defineProps({
     tasca: Object,
+    tasca_picture_path: String,
 });
 
 const openReservation = ref(false);
@@ -22,55 +23,58 @@ defineOptions({
     <Head :title="tasca.name" />
 
     <div class="max-w-full mx-4">
-        <div
-            class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-end h-48 w-full"
+        <div class="relative h-44 rounded-xl overflow-hidden shadow-lg mb-4">
+            <img
+                :src="tasca_picture_path"
+                alt="Foto de la tasca"
+                class="absolute inset-0 object-cover w-full h-full"
+            />
+            <div class="absolute inset-0 bg-black bg-opacity-40 p-4 flex flex-col justify-end text-white">
+                <h2 class="text-3xl font-bold">{{ tasca.name }}</h2>
+                <p class="text-sm">{{ tasca.address }}</p>
+
+                <div class="mt-2 flex items-center justify-between flex-wrap gap-2">
+        <span
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+            :class="tasca.reservation ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
         >
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-1">
-                    {{ tasca.name }}
-                </h2>
-                <p class="text-sm text-gray-500">{{ tasca.address }}</p>
-            </div>
+          {{ tasca.reservation ? 'Permite reservas' : 'No permite reservas' }}
+        </span>
 
-            <div class="flex items-center justify-between mt-1">
-                <span
-                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mt-2"
-                    :class="tasca.reservation ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
-                >
-                  {{ tasca.reservation ? 'Permite reservas' : 'No permite reservas' }}
-                </span>
-
-                <div v-if="tasca.reservation">
-                    <button
-                        v-if="auth.user"
-                        @click="openReservation = true"
-                        class="px-5 py-1.5 rounded-full bg-green-600 text-white font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
-                    >
-                        Realizar Reserva
-                    </button>
-                    <button
-                        v-else
-                        @click="router.visit('/login')"
-                        class="px-5 py-1.5 rounded-full bg-green-600 text-white font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
-                    >
-                        Inicia sesión para reservar
-                    </button>
-
+                    <div v-if="tasca.reservation">
+                        <button
+                            v-if="auth.user"
+                            @click="openReservation = true"
+                            class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
+                        >
+                            Realizar Reserva
+                        </button>
+                        <button
+                            v-else
+                            @click="router.visit('/login')"
+                            class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
+                        >
+                            Inicia sesión para reservar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="py-5">
+
+    <div class="max-w-full mx-4">
+        <div class="py-1">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Horario</h3>
             <span class="font-medium">{{ tasca.opening_time }} - </span>
             <span class="font-medium">{{ tasca.closing_time }}</span>
         </div>
 
-        <div>
+        <div class="py-3">
             <h3 class="text-lg font-semibold text-gray-700 mb-2">Reseñas</h3>
             <div v-if="tasca.reviews.length > 0">
                 <ul class="divide-y divide-gray-200">
-                    <li v-for="review in tasca.reviews" :key="review.id" class="py-3">
+                    <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
                         <template v-for="i in 5" :key="i">
                             <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
                             <span v-else class="text-gray-300 text-xl">☆</span>

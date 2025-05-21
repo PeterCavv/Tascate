@@ -38,7 +38,7 @@ const submitReservation = () => {
         onError: (errors) => {
             console.error(errors);
         },
-    }) : form.put(route('reservations.update', reservation), {
+    }) : form.patch(route('reservations.update', reservation), {
         forceFormData: true,
         onSuccess: () => {
             form.reset();

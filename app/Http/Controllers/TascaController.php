@@ -18,8 +18,14 @@ class TascaController extends Controller
 
     public function show(Tasca $tasca)
     {
+        if ($tasca->picture) {
+            $tasca->picture = asset($tasca->picture);
+        }
+        $tasca_picture_path = $tasca->picture;
+
         return Inertia::render('Tascas/TascaShow', [
             'tasca' => $tasca->load('user', 'reservations', 'reviews.customer.user'),
+            'tasca_picture_path' => $tasca_picture_path,
         ]);
     }
 }

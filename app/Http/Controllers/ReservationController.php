@@ -43,10 +43,10 @@ class ReservationController extends Controller
         $validated = $request->validated();
         $validated['customer_id'] = auth()->user()->customer->id;
 
-        Reservation::create($validated);
+        $reservation = Reservation::create($validated);
 
-        return redirect()->route('tascas.index')->with('success',
-            'Reserva realizada correctamente. ¡Disfruta de la experiencia!');
+        return redirect()->route('reservations.show', $reservation)->with('success',
+            'Reserva creada correctamente. ¡Disfruta de la experiencia!');
     }
 
     public function destroy($id)
@@ -57,7 +57,8 @@ class ReservationController extends Controller
 
         $reservation->delete();
 
-        return redirect()->route('reservations.index')->with('success',
+        return redirect()->route('reservations.index',
+        )->with('success',
             'Reserva cancelada correctamente. :(');
     }
 

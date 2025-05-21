@@ -67,4 +67,9 @@ class Tasca extends Model
             'customer_id'
         );
     }
+
+    public function getPictureUrlAttribute(): ?string
+    {
+        return $this->picture ? asset($this->picture) : null;
+    }
 }

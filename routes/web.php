@@ -53,7 +53,7 @@ Route::get('/reservations', [ReservationController::class, 'index'])->name('rese
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store')->middleware('auth');
 Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
 Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy')->middleware('auth');
-Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update')->middleware('auth');
+Route::patch('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update')->middleware('auth');
 
 // Accesibilidad
 

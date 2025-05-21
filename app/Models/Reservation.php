@@ -14,7 +14,10 @@ class Reservation extends Model
         'tasca_id',
         'customer_id',
         'reservation_price',
-        'reservation_date'
+        'reservation_date',
+        'reservation_time',
+        'people',
+        'observations',
     ];
 
     public function customer(): BelongsTo

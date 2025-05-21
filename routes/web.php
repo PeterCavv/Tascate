@@ -50,6 +50,7 @@ Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.sh
 // Reservations Routes
 
 Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store')->middleware('auth');
 
 // Accesibilidad
 

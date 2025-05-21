@@ -26,11 +26,13 @@ class ReservationController extends Controller
     {
 
         if ($reservation->tasca->picture) {
-            $reservation->tasca->picture = asset('storage/' . $reservation->tasca->picture);
+            $reservation->tasca->picture = asset($reservation->tasca->picture);
         }
+        $reservation_path = $reservation->tasca->picture;
 
         return inertia('Reservations/ReservationShow', [
             'reservation' => $reservation->load('customer', 'tasca'),
+            'reservation_path' => $reservation_path,
         ]);
     }
 

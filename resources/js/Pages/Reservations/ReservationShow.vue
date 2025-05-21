@@ -6,6 +6,7 @@ import {ref} from "vue";
 
 const {reservation} = defineProps({
     reservation: Object,
+    reservation_path: String,
 });
 
 const openReservation = ref(false);
@@ -41,7 +42,7 @@ function cancelReservation(){
 
             <div class="relative h-44 rounded-xl overflow-hidden shadow-lg mb-4">
                 <img
-                    :src="reservation.tasca.picture"
+                    :src="reservation_path"
                     alt="Foto de la tasca"
                     class="absolute inset-0 object-cover w-full h-full"
                 />

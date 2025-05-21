@@ -6,7 +6,7 @@ import {ref} from "vue";
 
 const { auth } = usePage().props
 
-const { tasca } = defineProps({
+const { tasca, reservation } = defineProps({
     tasca: Object,
 });
 
@@ -32,7 +32,7 @@ defineOptions({
                 <p class="text-sm text-gray-500">{{ tasca.address }}</p>
             </div>
 
-            <div class="flex items-center justify-between mt-4">
+            <div class="flex items-center justify-between mt-1">
                 <span
                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mt-2"
                     :class="tasca.reservation ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
@@ -104,7 +104,7 @@ defineOptions({
             >
                 ✕
             </button>
-            <ReservationForm :tasca="tasca"/>
+            <ReservationForm :tasca="tasca" :isEdit="false" :reservation="null"/>
         </div>
     </transition>
 </template>

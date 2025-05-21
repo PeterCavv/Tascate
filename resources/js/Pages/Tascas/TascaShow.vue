@@ -104,7 +104,7 @@ defineOptions({
             >
                 ✕
             </button>
-            <ReservationForm :tasca="tasca" />
+            <ReservationForm :tasca="tasca"/>
         </div>
     </transition>
 </template>

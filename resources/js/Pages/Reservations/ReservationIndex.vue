@@ -23,6 +23,14 @@ defineOptions({
             :key="reservation.id"
             class="w-1/2 px-2 mb-4 cursor-pointer"
         >
+            <div class="bg-white shadow-md rounded-xl p-4 h-40 hover:shadow-lg transition flex items-end">
+                <div class="text-left">
+                    <h2 class="text-2xl font-extrabold mb-1 text-gray-900">
+                        Reserva en {{ reservation.tasca.name }}
+                    </h2>
+                    <p class="text-sm text-gray-500">{{ reservation.tasca.address }}</p>
+                </div>
+            </div>
         </div>
     </div>
     <div v-else>

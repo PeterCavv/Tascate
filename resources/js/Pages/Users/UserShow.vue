@@ -51,26 +51,36 @@ const deleteUser = () => {
                 <p class="text-gray-600">{{ user.role }}</p>
             </div>
         </div>
-        <div v-if="authUserId === user.id || $page.props.auth.user.role === 'admin'" class="mt-4 flex space-x-2">
+
+        <div class="mt-4 flex space-x-2">
+            <div v-if="authUserId === user.id || $page.props.auth.user.role === 'admin'">
+                <Link
+                    class="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 transition"
+                    :href="route('users.edit', user.id)"
+                >
+                    Editar
+                </Link>
+                <button
+                    @click="deleteUser"
+                    class="px-4 py-2 bg-red-500 text-black rounded hover:bg-red-600 transition"
+                >
+                    Eliminar
+                </button>
+                <Link
+                    v-if="!$page.props.auth.impersonating && user.role !== 'admin'"
+                    :href="route('impersonate.start', user.id)"
+                    method="get"
+                    class="btn px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-600 transition"
+                    preserveState
+                >Impersonar</Link>
+            </div>
             <Link
-                class="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 transition"
-                :href="route('users.edit', user.id)"
+                v-if="user.customer.reviews && user.customer.reviews.length > 0"
+                :href="route('reviews.index', { user: user.id })"
+                class="px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600 transition"
             >
-                Editar
+                Ver Reseñas
             </Link>
-            <button
-                @click="deleteUser"
-                class="px-4 py-2 bg-red-500 text-black rounded hover:bg-red-600 transition"
-            >
-                Eliminar
-            </button>
-            <Link
-                v-if="!$page.props.auth.impersonating && user.role !== 'admin'"
-                :href="route('impersonate.start', user.id)"
-                method="get"
-                class="btn px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-600 transition"
-                preserveState
-            >Impersonar</Link>
         </div>
     </div>
 </template>

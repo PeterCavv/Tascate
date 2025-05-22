@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TascaController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
@@ -66,6 +67,10 @@ Route::post('/reservations', [ReservationController::class, 'store'])->name('res
 Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
 Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy')->middleware('auth');
 Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update')->middleware('auth');
+
+// Reviews Routes
+
+Route::get('/users/{user}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 
 // Accesibilidad
 

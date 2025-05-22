@@ -18,7 +18,19 @@ const sidebarOpen = ref(false);
                   ]"
             >
                 <nav class="flex-1 space-y-2 overflow-y-auto">
-                    <Link href="/" class="flex items-center px-4 py-2 text-lg font-semibold hover:bg-gray-700 transition">Welcome</Link>
+                    <div class="flex items-center space-x-4">
+                        <Link href="/" class="flex items-center px-4 py-2 text-lg font-semibold hover:bg-gray-700 transition">
+                            Welcome
+                        </Link>
+
+                        <Link
+                            v-if="$page.props.auth.user"
+                            :href="`/users/${$page.props.auth.user.id}`"
+                            class="block px-4 py-2 underline hover:text-gray-300 transition text-xs"
+                        >
+                            Ver Perfil
+                        </Link>
+                    </div>
                     <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"

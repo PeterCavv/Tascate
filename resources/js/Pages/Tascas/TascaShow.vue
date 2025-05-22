@@ -34,12 +34,12 @@ defineOptions({
                 <p class="text-sm">{{ tasca.address }}</p>
 
                 <div class="mt-2 flex items-center justify-between flex-wrap gap-2">
-        <span
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
-            :class="tasca.reservation ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
-        >
-          {{ tasca.reservation ? 'Permite reservas' : 'No permite reservas' }}
-        </span>
+                    <span
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                        :class="tasca.reservation ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                    >
+                        {{ tasca.reservation ? 'Permite reservas' : 'No permite reservas' }}
+                    </span>
 
                     <div v-if="tasca.reservation">
                         <button
@@ -62,30 +62,71 @@ defineOptions({
         </div>
     </div>
 
-
-    <div class="max-w-full mx-4">
-        <div class="py-1">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Horario</h3>
-            <span class="font-medium">{{ tasca.opening_time }} - </span>
-            <span class="font-medium">{{ tasca.closing_time }}</span>
+    <div class="relative max-w-full mx-4">
+        <div class="hidden sm:block absolute top-0 right-0 w-40">
+            <div class="p-4 text-center">
+                <div class="text-2xl font-bold text-gray-800">4.3</div>
+                <div class="flex justify-center mt-1">
+                    <template v-for="i in 5" :key="i">
+                        <span v-if="i <= 4" class="text-yellow-400 text-lg">★</span>
+                        <span v-else class="text-gray-300 text-lg">☆</span>
+                    </template>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">123 reseñas</div>
+            </div>
         </div>
 
-        <div class="py-3">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Reseñas</h3>
-            <div v-if="tasca.reviews.length > 0">
-                <ul class="divide-y divide-gray-200">
-                    <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
-                        <template v-for="i in 5" :key="i">
-                            <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
-                            <span v-else class="text-gray-300 text-xl">☆</span>
-                        </template>
-                        <p class="text-sm text-gray-800">"{{ review.body }}"</p>
-                        <p class="text-xs text-gray-500 mt-1">– {{ review.customer.user.name }}</p>
-                    </li>
-                </ul>
+        <div class="pr-0 sm:pr-44">
+            <!-- Horario -->
+            <div class="py-1">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Horario</h3>
+                <span class="font-medium">{{ tasca.opening_time }} - </span>
+                <span class="font-medium">{{ tasca.closing_time }}</span>
             </div>
-            <div v-else>
-                <p class="text-gray-500">No hay reseñas disponibles.</p>
+
+            <div class="py-3">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">Reseñas</h3>
+                <button
+                    v-if="auth.user"
+                    @click="openReservation = true"
+                    class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
+                >
+                    Dejar una reseña
+                </button>
+
+                <!-- PHONE ONLY -->
+                <div class="block sm:hidden mb-4 w-full">
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-md text-center w-4/5 mx-auto">
+                        <div class="text-2xl font-bold text-gray-800">4.3</div>
+                        <div class="flex justify-center mt-1">
+                            <template v-for="i in 5" :key="i">
+                                <span v-if="i <= 4" class="text-yellow-400 text-lg">★</span>
+                                <span v-else class="text-gray-300 text-lg">☆</span>
+                            </template>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">123 reseñas</div>
+                    </div>
+                </div>
+
+                <div v-if="tasca.reviews.length > 0">
+                    <ul class="divide-y divide-gray-200">
+                        <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
+                            <template v-for="i in 5" :key="i">
+                                <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
+                                <span v-else class="text-gray-300 text-xl">☆</span>
+                            </template>
+                            <p class="text-sm text-gray-800">"{{ review.body }}"</p>
+                            <p
+                                @click="router.visit(`/users/${review.customer.user.id}`)"
+                                class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
+                                – {{ review.customer.user.name }}
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <div v-else>
+                    <p class="text-gray-500">No hay reseñas disponibles.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -108,13 +149,14 @@ defineOptions({
             >
                 ✕
             </button>
-            <ReservationForm :tasca="tasca" :isEdit="false" :reservation="null"/>
+            <ReservationForm :tasca="tasca" :isEdit="false" :reservation="null" />
         </div>
     </transition>
 </template>
 
+
+
 <style>
-/* Fondo: solo fade */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.3s ease;
@@ -128,7 +170,6 @@ defineOptions({
     opacity: 1;
 }
 
-/* Panel: slide horizontal */
 .slide-enter-active,
 .slide-leave-active {
     transition: transform 0.3s ease;

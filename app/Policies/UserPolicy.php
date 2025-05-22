@@ -32,4 +32,5 @@ class UserPolicy
     {
         return $this->canManage($authUser, $userToUpdate);
     }
+
 }

@@ -5,10 +5,16 @@ namespace App\Policies;
 use App\Models\User;
 use App\Traits\OwnershipPolicy;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Gate;
 
 class UserPolicy
 {
     use OwnershipPolicy, HandlesAuthorization;
+
+    public function impersonate(User $authUser, User $targetUser)
+    {
+        return $authUser->isAdmin() && ! $targetUser->isAdmin();
+    }
 
     public function create(User $user): bool
     {

@@ -29,6 +29,7 @@ defineProps({
         >
             <h3 class="text-lg font-semibold">{{ user.name }}</h3>
             <p class="text-sm text-gray-600">{{ user.email }}</p>
+            <p class="text-sm text-gray-600">{{ user.role }}</p>
             <p v-if="authUserId === user.id" class="text-green-600 font-bold">Este es tu usuario</p>
         </Link>
     </div>

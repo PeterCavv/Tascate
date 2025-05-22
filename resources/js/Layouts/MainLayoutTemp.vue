@@ -20,7 +20,13 @@ const sidebarOpen = ref(false);
                 <nav class="flex-1 space-y-2 overflow-y-auto">
                     <Link href="/" class="flex items-center px-4 py-2 text-lg font-semibold hover:bg-gray-700 transition">Welcome</Link>
                     <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
-                    <Link href="/users" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Usuarios</Link>
+                    <Link
+                        v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
+                        href="/users"
+                        class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                    >
+                        Usuarios
+                    </Link>
                     <Link href="/posts" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Posts</Link>
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
@@ -46,12 +52,21 @@ const sidebarOpen = ref(false);
                         <Link href="/accessibility" class="block text-xs text-gray-400 hover:text-gray-200 hover:underline transition">
                             Declaración de accesibilidad
                         </Link>
+                        <div v-if="$page.props.auth.impersonating" class="py-2 block text-xs text-yellow-400">
+                            Impersonificando a <strong>{{ $page.props.auth.user.name }}</strong>
+                            <Link
+                                href="/impersonate/stop"
+                                method="get"
+                                as="button"
+                                class="underline block text-xs text-yellow-400 hover:text-yellow-200 hover:underline transition"
+                                preserveState
+                            >Volver a mi cuenta</Link>
+                        </div>
                     </div>
                 </nav>
             </aside>
         </transition>
 
-        <!-- Main Content -->
         <div
             v-if="sidebarOpen"
             @click="sidebarOpen = false"
@@ -61,7 +76,7 @@ const sidebarOpen = ref(false);
             <!-- Top bar -->
             <header class="bg-white shadow-md px-4 py-3 flex items-center justify-between md:hidden">
                 <button @click="sidebarOpen = !sidebarOpen" class="text-gray-600 hover:text-gray-800 focus:outline-none">
-                    <!-- icono hamburguesa -->
+
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>

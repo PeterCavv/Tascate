@@ -3,6 +3,8 @@ import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {useForm, usePage} from '@inertiajs/vue3';
 import {computed} from "vue";
 
+const emit = defineEmits(['close']);
+
 const {tasca, isEdit, reservation} = defineProps({
     tasca: Object,
     isEdit: Boolean,
@@ -26,10 +28,16 @@ const closingTimeFormatted = computed(() => tasca.closing_time?.slice(0, 5))
 const today = new Date().toISOString().split('T')[0]
 
 defineOptions({
-layout: MainLayoutTemp,
+    layout: MainLayoutTemp,
 });
 
+/**
+ * Submits the reservation form.
+ * @returns {number} media (decimal)
+ */
 const submitReservation = () => {
+    form.reservation_time = form.reservation_time?.slice(0, 5);
+
     !isEdit ? form.post(route('reservations.store'), {
         forceFormData: true,
         onSuccess: () => {
@@ -38,9 +46,10 @@ const submitReservation = () => {
         onError: (errors) => {
             console.error(errors);
         },
-    }) : form.patch(route('reservations.update', reservation), {
-        forceFormData: true,
+    }) : form.put(route('reservations.update', reservation.id), {
+        method: 'patch',
         onSuccess: () => {
+            emit('close');
             form.reset();
         },
         onError: (errors) => {
@@ -48,7 +57,6 @@ const submitReservation = () => {
         },
     });
 };
-
 </script>
 
 <template>

@@ -24,7 +24,7 @@ function cancelReservation(){
 <template>
     <Head title="Reserva" />
 
-    <div class="flex flex-col lg:flex-row gap-8 p-4">
+    <div class="flex flex-col-reverse lg:flex-row gap-8 p-4">
         <div class="bg-white rounded-xl shadow-lg p-6 w-full lg:w-1/3 min-h-[300px] flex flex-col items-center justify-center">
             <h3 class="text-gray-800 text-xl font-semibold mb-3">
                 📅
@@ -61,7 +61,7 @@ function cancelReservation(){
                 <p><strong>Observaciones:</strong> {{ reservation.observations || '—' }}</p>
             </div>
 
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                 <button
                     @click="openReservation = true"
                     class="flex-1 px-4 py-2 rounded-full bg-green-600 text-white font-semibold shadow-md hover:bg-green-700 transition"
@@ -96,13 +96,17 @@ function cancelReservation(){
             >
                 ✕
             </button>
-            <ReservationForm :tasca="reservation.tasca" :isEdit="true" :reservation="reservation"/>
+            <ReservationForm
+                :tasca="reservation.tasca"
+                :isEdit="true"
+                :reservation="reservation"
+                @close="openReservation = false"
+            />
         </div>
     </transition>
 </template>
 
 <style>
-/* Fondo: solo fade */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.3s ease;
@@ -116,7 +120,6 @@ function cancelReservation(){
     opacity: 1;
 }
 
-/* Panel: slide horizontal */
 .slide-enter-active,
 .slide-leave-active {
     transition: transform 0.3s ease;

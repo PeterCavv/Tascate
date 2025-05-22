@@ -6,13 +6,20 @@ use App\Http\Requests\Reservation\StoreReservationRequest;
 use App\Http\Requests\Reservation\UpdateReservationRequest;
 use App\Models\Reservation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Inertia\Inertia;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class ReservationController extends Controller
 {
 
     use AuthorizesRequests;
 
+    /**
+     * Display a listing of Reservations of the authenticated customer.
+     *
+     * @return Response|ResponseFactory
+     */
     public function index()
     {
         $reservations = auth()->user()->customer->reservations()->get();
@@ -22,6 +29,12 @@ class ReservationController extends Controller
         ]);
     }
 
+    /**
+     * Display the specified reservation.
+     *
+     * @param Reservation $reservation
+     * @return Response|ResponseFactory
+     */
     public function show(Reservation $reservation)
     {
 
@@ -36,6 +49,11 @@ class ReservationController extends Controller
         ]);
     }
 
+    /**
+     * Saves a new reservation.
+     *
+     * @return RedirectResponse
+     */
     public function store(StoreReservationRequest $request)
     {
         $this->authorize('create', Reservation::class);
@@ -49,7 +67,13 @@ class ReservationController extends Controller
             'Reserva creada correctamente. ¡Disfruta de la experiencia!');
     }
 
-    public function destroy($id)
+    /**
+     * Deletes the specified reservation.
+     *
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function destroy(int $id)
     {
         $reservation = Reservation::where('id', $id)->firstOrFail();
 
@@ -62,6 +86,13 @@ class ReservationController extends Controller
             'Reserva cancelada correctamente. :(');
     }
 
+    /**
+     * Updates the specified reservation.
+     *
+     * @param UpdateReservationRequest $request
+     * @param Reservation $reservation
+     * @return void
+     */
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
         $validated = $request->validated();
@@ -69,10 +100,6 @@ class ReservationController extends Controller
         $this->authorize('update', $reservation);
 
         $reservation->update($validated);
-
-        $this->show($reservation);
     }
-
-
 
 }

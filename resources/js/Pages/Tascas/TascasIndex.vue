@@ -11,7 +11,7 @@ defineOptions({
 });
 
 /**
- * Devuelve la media de las valoraciones de una tasca.
+ * Reurns the average rating of a tasca
  * @param {Object} tasca
  * @returns {number} media (decimal)
  */
@@ -23,7 +23,7 @@ function getAverageRating(tasca) {
 }
 
 /**
- * Media redondeada al entero más cercano
+ * Returns the rounded rating of a tasca
  * @param {Object} tasca
  * @returns {number} entero entre 0 y 5
  */
@@ -39,12 +39,12 @@ function getRoundedRating(tasca) {
     <div>
         <h1 class="text-2xl font-bold mb-6">Lista de Tascas</h1>
 
-        <div class="flex flex-wrap -mx-2 mt-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
             <div
                 v-for="tasca in tascas"
                 :key="tasca.id"
                 @click="router.visit(`/tascas/${tasca.id}`, { preserveState: true, preserveScroll: true })"
-                class="w-1/2 px-2 mb-4 cursor-pointer relative"
+                class="mb-4 cursor-pointer relative"
             >
                 <div class="bg-white shadow-md rounded-xl p-4 h-40 hover:shadow-lg transition flex items-end relative">
 

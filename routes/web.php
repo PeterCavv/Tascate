@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TascaController;
@@ -20,6 +21,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Admin Routes
+
+Route::middleware('auth')->group(function () {
+    Route::get('/impersonate/stop', [ImpersonationController::class, 'stop'])
+        ->name('impersonate.stop');
+
+    Route::get('impersonate/{user}', [ImpersonationController::class, 'start'])
+        ->middleware('can:impersonate,user')
+        ->name('impersonate.start');
 });
 
 //User Routes
@@ -53,7 +65,7 @@ Route::get('/reservations', [ReservationController::class, 'index'])->name('rese
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store')->middleware('auth');
 Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
 Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy')->middleware('auth');
-Route::patch('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update')->middleware('auth');
+Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update')->middleware('auth');
 
 // Accesibilidad
 

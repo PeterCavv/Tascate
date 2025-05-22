@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -29,10 +30,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $shared = parent::share($request);
+
         return [
-            ...parent::share($request),
+            ...$shared,
             'auth' => [
-                'user' => $request->user(),
+                ...($shared['auth'] ?? []),
+                'user'          => $request->user(),
+                'impersonating' => Session::has('impersonator_id'),
             ],
         ];
     }

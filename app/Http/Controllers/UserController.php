@@ -9,7 +9,6 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-
     use AuthorizesRequests;
 
     public function index()

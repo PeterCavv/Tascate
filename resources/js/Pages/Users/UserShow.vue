@@ -77,7 +77,7 @@ const deleteUser = () => {
                 >Impersonar</Link>
             </div>
             <Link
-                v-if="user.customer.reviews && user.customer.reviews.length > 0"
+                v-if="user.customer?.reviews && user.customer?.reviews.length > 0"
                 :href="route('reviews.index', { user: user.id })"
                 class="px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600 transition"
             >

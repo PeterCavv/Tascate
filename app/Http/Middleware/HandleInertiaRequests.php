@@ -36,7 +36,7 @@ class HandleInertiaRequests extends Middleware
             ...$shared,
             'auth' => [
                 ...($shared['auth'] ?? []),
-                'user'          => $request->user(),
+                'user'          => $request->user()?->load('tasca'),
                 'impersonating' => Session::has('impersonator_id'),
             ],
         ];

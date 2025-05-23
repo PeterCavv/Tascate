@@ -12,8 +12,9 @@ const sidebarOpen = ref(false);
         <transition name="slide">
             <aside
                 :class="[
-                    'fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 text-white p-4 flex flex-col transform transition-transform duration-300 ease-in-out',
+                    'fixed inset-y-0 left-0 z-30 w-64 text-white p-4 flex flex-col transform transition-transform duration-300 ease-in-out',
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+                    $page.props.auth.user?.role === 'tasca' ? 'bg-blue-950' : 'bg-gray-800',
                     'md:translate-x-0 md:static md:inset-0'
                   ]"
             >
@@ -31,34 +32,46 @@ const sidebarOpen = ref(false);
                             Ver Perfil
                         </Link>
                     </div>
-                    <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
-                    <Link
-                        v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
-                        href="/users"
-                        class="block px-4 py-2 rounded hover:bg-gray-700 transition"
-                    >
-                        Usuarios
-                    </Link>
-                    <Link href="/posts" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Posts</Link>
+
+                    <!-- Sidebar Links Common User -->
+                    <div v-if="$page.props.auth.user?.role !== 'tasca'">
+                        <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
+                        <Link
+                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
+                            href="/users"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Usuarios
+                        </Link>
+                        <Link href="/posts" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Posts</Link>
+                        <Link
+                            v-if="$page.props.auth.user"
+                            href="/liked-posts"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Posts Favoritos
+                        </Link>
+                        <Link
+                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
+                            href="/reservations"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Mis Reservas
+                        </Link>
+                        <Link href="" class="block px-4 py-2 rounded hover:bg-gray-700 transition">About Us</Link>
+                        <Link v-if="!$page.props.auth.user" href="/login" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Login</Link>
+                        <Link v-if="!$page.props.auth.user" href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Registro</Link>
+                    </div>
+
+                    <!-- Sidebar Links Tasca -->
+                    <div v-else>
+                        <Link :href="`/tascas/${$page.props.auth.user.tasca.id}`" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Mi Tasca</Link>
+                        <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Empleados</Link>
+                        <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Gestión Stock</Link>
+                    </div>
+
                     <Link
                         v-if="$page.props.auth.user"
-                        href="/liked-posts"
-                        class="block px-4 py-2 rounded hover:bg-gray-700 transition"
-                    >
-                        Posts Favoritos
-                    </Link>
-                    <Link
-                        v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
-                        href="/reservations"
-                        class="block px-4 py-2 rounded hover:bg-gray-700 transition"
-                    >
-                        Mis Reservas
-                    </Link>
-                    <Link href="" class="block px-4 py-2 rounded hover:bg-gray-700 transition">About Us</Link>
-                    <Link v-if="!$page.props.auth.user" href="/login" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Login</Link>
-                    <Link v-if="!$page.props.auth.user" href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Registro</Link>
-                    <Link
-                        v-else
                         href="/logout"
                         method="post"
                         as="button"

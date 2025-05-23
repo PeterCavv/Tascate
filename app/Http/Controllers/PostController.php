@@ -58,7 +58,8 @@ class PostController extends Controller
     public function show (Post $post)
     {
 
-        $post->load('user', 'pictures', 'likedByUsers');
+        $post->load('user', 'pictures', 'likedByUsers', 'comments');
+        $post->comments->load('user');
         $post->is_favorite = auth()->user() ? auth()->user()->likedPosts->contains($post->id) : false;
         $post->likedByUsers = $post->likedByUsers->count();
 

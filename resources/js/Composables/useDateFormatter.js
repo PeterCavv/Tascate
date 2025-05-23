@@ -13,6 +13,11 @@ export function useDateFormatter(){
         return `${day}-${month}-${year}`;
     }
 
+    /**
+     * Checks if the given date is today
+      * @param dateString
+     * @returns {boolean}
+     */
     function isToday(dateString) {
         const date = new Date(dateString);
         const today = new Date();
@@ -24,6 +29,11 @@ export function useDateFormatter(){
         );
     }
 
+    /**
+     * Checks if the given date is before today
+     * @param dateString
+     * @returns {boolean}
+     */
     function isBeforeToday(dateString) {
         const date = new Date(dateString);
         const today = new Date();
@@ -32,6 +42,11 @@ export function useDateFormatter(){
         return date < today;
     }
 
+    /**
+     * Checks if the given date is after today
+     * @param dateString
+     * @returns {boolean}
+     */
     function isAfterToday(dateString) {
         const date = new Date(dateString);
         const today = new Date();

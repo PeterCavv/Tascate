@@ -71,6 +71,11 @@ Route::put('/reservations/{reservation}', [ReservationController::class, 'update
 // Reviews Routes
 
 Route::get('/users/{user}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('/tascas/{tasca}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
+Route::post('/tascas/{tasca}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+Route::get('/tascas/{tasca}/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit')->middleware('auth');
+Route::put('/tascas/{tasca}/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
+Route::delete('/tascas/{tasca}/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
 
 // Accesibilidad
 

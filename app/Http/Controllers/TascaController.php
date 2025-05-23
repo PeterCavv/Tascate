@@ -26,6 +26,8 @@ class TascaController extends Controller
         return Inertia::render('Tascas/TascaShow', [
             'tasca' => $tasca->load('user', 'reservations', 'reviews.customer.user'),
             'tasca_picture_path' => $tasca_picture_path,
+            'user_review' => auth()->user() ?
+                auth()->user()->customer?->reviews?->where('tasca_id', $tasca->id) : null,
         ]);
     }
 }

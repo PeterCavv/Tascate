@@ -41,6 +41,13 @@ const sidebarOpen = ref(false);
                     </Link>
                     <Link href="/posts" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Posts</Link>
                     <Link
+                        v-if="$page.props.auth.user"
+                        href="/liked-posts"
+                        class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                    >
+                        Posts Favoritos
+                    </Link>
+                    <Link
                         v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
                         href="/reservations"
                         class="block px-4 py-2 rounded hover:bg-gray-700 transition"

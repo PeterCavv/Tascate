@@ -1,8 +1,9 @@
 <script setup>
 
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import {useForm} from "@inertiajs/vue3";
+import 'primeicons/primeicons.css';
 
 const form = useForm();
 defineOptions({
@@ -19,6 +20,19 @@ const { post } = defineProps({
 const deletePost = () => {
     form.delete(route('posts.destroy', post.id));
 };
+
+function toggleFavorite(post) {
+    // Optimistic UI update
+    post.is_favorite = !post.is_favorite;
+
+    router.post(`/posts/${post.id}/toggle-like`, {}, {
+        preserveScroll: true,
+        onError: () => {
+            // Revert in case of error
+            post.is_favorite = !post.is_favorite;
+        },
+    });
+}
 
 
 </script>
@@ -41,12 +55,23 @@ const deletePost = () => {
                 Editar
             </Link>
             <button
+                v-if="$page.props.auth && $page.props.auth.user && $page.props.auth.user.id === post.user_id"
                 class="text-red-600 hover:underline ml-4"
                 @click="deletePost"
             >
                 Eliminar
             </button>
         </div>
+        <button
+            @click="toggleFavorite(post)"
+            :class="post.is_favorite ? 'text-red-500' : 'text-gray-500'"
+            class="focus:outline-none"
+        >
+            <i :class="post.is_favorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+        </button>
+        <span class="ml-2 text-sm text-gray-500">
+            {{ post.likedByUsers }} {{ post.likedByUsers === 1 ? 'like' : 'likes' }}
+        </span>
 
         <div class="pictures">
             <h2 class="text-xl font-semibold mb-4">Pictures:</h2>

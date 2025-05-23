@@ -38,6 +38,8 @@ const deleteUser = () => {
 </script>
 
 <template>
+    <Head title="Mi Perfil" />
+
     <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
         <div class="flex items-center space-x-4">
             <img

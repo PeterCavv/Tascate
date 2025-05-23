@@ -36,4 +36,5 @@ class ReviewPolicy
     {
         return $this->canManage($user, $review);
     }
+
 }

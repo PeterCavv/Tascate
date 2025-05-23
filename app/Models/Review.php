@@ -14,7 +14,8 @@ class Review extends Model
         'customer_id',
         'tasca_id',
         'body',
-        'rating'
+        'rating',
+        'updated_at',
     ];
 
     public function customer(): BelongsTo

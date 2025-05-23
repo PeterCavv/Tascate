@@ -1,35 +1,18 @@
 <script setup>
 import {Head, router} from '@inertiajs/vue3'
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
 
 const {tascas} = defineProps({
     tascas: Array,
 })
 
+const { getRoundedRating } = useRatingCalculator();
+
 defineOptions({
         layout: MainLayoutTemp,
 });
 
-/**
- * Reurns the average rating of a tasca
- * @param {Object} tasca
- * @returns {number} media (decimal)
- */
-function getAverageRating(tasca) {
-    const reviews = tasca.reviews || []
-    if (reviews.length === 0) return 0
-    const sum = reviews.reduce((total, r) => total + r.rating, 0)
-    return sum / reviews.length
-}
-
-/**
- * Returns the rounded rating of a tasca
- * @param {Object} tasca
- * @returns {number} entero entre 0 y 5
- */
-function getRoundedRating(tasca) {
-    return Math.round(getAverageRating(tasca))
-}
 
 </script>
 

@@ -1,6 +1,8 @@
 <script setup>
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import ReservationForm from "@/Components/ReservationForm.vue";
+import { useDateFormatter } from "@/Composables/useDateFormatter.js";
+import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
 import {Head, router, usePage} from '@inertiajs/vue3';
 import {ref} from "vue";
 
@@ -9,7 +11,11 @@ const { auth } = usePage().props
 const { tasca } = defineProps({
     tasca: Object,
     tasca_picture_path: String,
+    user_review: Object,
 });
+
+const { formateDateToDDMMYYYY, isToday } = useDateFormatter();
+const { getRoundedRating } = useRatingCalculator();
 
 const openReservation = ref(false);
 
@@ -65,19 +71,21 @@ defineOptions({
     <div class="relative max-w-full mx-4">
         <div class="hidden sm:block absolute top-0 right-0 w-40">
             <div class="p-4 text-center">
-                <div class="text-2xl font-bold text-gray-800">4.3</div>
+                <div class="text-2xl font-bold text-gray-800">{{getRoundedRating(tasca)}}</div>
                 <div class="flex justify-center mt-1">
-                    <template v-for="i in 5" :key="i">
-                        <span v-if="i <= 4" class="text-yellow-400 text-lg">★</span>
-                        <span v-else class="text-gray-300 text-lg">☆</span>
+                    <template v-if="tasca.reviews.length > 0" v-for="i in 5" :key="i">
+                        <span v-if="i <= getRoundedRating(tasca)" class="text-yellow-400 text-base">★</span>
+                        <span v-else class="text-gray-300 text-base">☆</span>
+                    </template>
+                    <template v-else>
+                        <span class="text-sm text-gray-400 ml-2">Sin calificar</span>
                     </template>
                 </div>
-                <div class="text-sm text-gray-600 mt-1">123 reseñas</div>
+                <div class="text-sm text-gray-600 mt-1">{{ tasca.reviews.length }} reseña/s</div>
             </div>
         </div>
 
         <div class="pr-0 sm:pr-44">
-            <!-- Horario -->
             <div class="py-1">
                 <h3 class="text-lg font-semibold text-gray-700 mb-2">Horario</h3>
                 <span class="font-medium">{{ tasca.opening_time }} - </span>
@@ -87,8 +95,8 @@ defineOptions({
             <div class="py-3">
                 <h3 class="text-lg font-semibold text-gray-700 mb-2">Reseñas</h3>
                 <button
-                    v-if="auth.user"
-                    @click="openReservation = true"
+                    v-if="auth.user.role === 'customer' && user_review.length === 0"
+                    @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
                     class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
                 >
                     Dejar una reseña
@@ -115,17 +123,39 @@ defineOptions({
                                 <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
                                 <span v-else class="text-gray-300 text-xl">☆</span>
                             </template>
+                            <template v-if="review.customer.user.id === auth.user.id">
+                                <button
+                                    @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
+                                    class="ml-3 text-sm text-blue-500 hover:text-blue-700 underline"
+                                >
+                                    Editar reseña
+                                </button>
+                            </template>
                             <p class="text-sm text-gray-800">"{{ review.body }}"</p>
-                            <p
-                                @click="router.visit(`/users/${review.customer.user.id}`)"
-                                class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
-                                – {{ review.customer.user.name }}
-                            </p>
+                            <div class="mt-1 flex items-center flex-wrap gap-2">
+                                <p
+                                    @click="router.visit(`/users/${review.customer.user.id}`)"
+                                    class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
+                                    – {{ review.customer.user.name }}
+                                </p>
+                                <p
+                                    v-if="isToday(review.created_at)"
+                                    class="text-xs text-gray-500 mt-1"
+                                >
+                                    Publicado hoy
+                                </p>
+                                <p
+                                    v-else
+                                    class="text-xs text-gray-500 mt-1"
+                                >
+                                    {{ formateDateToDDMMYYYY(review.created_at) }}
+                                </p>
+                            </div>
                         </li>
                     </ul>
                 </div>
                 <div v-else>
-                    <p class="text-gray-500">No hay reseñas disponibles.</p>
+                    <p class="pt-3 text-gray-500">No hay reseñas disponibles.</p>
                 </div>
             </div>
         </div>

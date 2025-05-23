@@ -2,12 +2,15 @@
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {Head, router} from "@inertiajs/vue3";
 import ReservationForm from "@/Components/ReservationForm.vue";
+import { useDateFormatter } from "@/Composables/useDateFormatter.js";
 import {ref} from "vue";
 
 const {reservation} = defineProps({
     reservation: Object,
     reservation_path: String,
 });
+
+const { formateDateToDDMMYYYY } = useDateFormatter();
 
 const openReservation = ref(false);
 
@@ -37,7 +40,7 @@ function cancelReservation(){
 
         <div class="w-full lg:w-2/3">
             <div class="text-4xl font-bold text-gray-800 mb-4">
-                {{ reservation.reservation_date }} - {{ reservation.reservation_time }}
+                {{ formateDateToDDMMYYYY(reservation.reservation_date) }} - {{ reservation.reservation_time }}
             </div>
 
             <div class="relative h-44 rounded-xl overflow-hidden shadow-lg mb-4">
@@ -48,7 +51,7 @@ function cancelReservation(){
                 />
                 <div class="absolute inset-0 bg-black bg-opacity-40 p-4 flex flex-col justify-end text-white">
                     <h2
-                        class="text-xl font-bold underline hover:text-green-300 transition cursor-pointer"
+                        class="text-2xl font-bold underline hover:text-green-300 transition cursor-pointer"
                     @click="router.visit(`/tascas/${reservation.tasca.id}`, { preserveState: true, preserveScroll: true })">
                         {{ reservation.tasca.name }}
                     </h2>

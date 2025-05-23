@@ -13,6 +13,7 @@ class UpdateTascaRequest extends FormRequest
             'address' => 'required|string|max:255',
             'telephone' => 'required|digits:9',
             'reservation' => 'required|boolean',
+            'reservation_price' => 'required_if:reservation,true|numeric|min:0',
             'menu' => 'nullable|string',
             'opening_time' => 'required|date_format:H:i',
             'closing_time' => 'required|date_format:H:i|after:opening_time',

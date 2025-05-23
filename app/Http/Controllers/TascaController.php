@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Tasca\UpdateTascaRequest;
 use App\Models\Tasca;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Inertia\Inertia;
 
 class TascaController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
         $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get();
@@ -29,5 +33,30 @@ class TascaController extends Controller
             'user_review' => auth()->user() ?
                 auth()->user()->customer?->reviews?->where('tasca_id', $tasca->id) : null,
         ]);
+    }
+
+    public function edit(Tasca $tasca)
+    {
+        return Inertia::render('Tascas/TascaEdit', [
+            'tasca' => $tasca,
+        ]);
+    }
+
+    public function update(UpdateTascaRequest $request, Tasca $tasca)
+    {
+        $this->authorize('update', $tasca);
+
+        $validated = $request->validated();
+
+        if ($request->hasFile('picture')) {
+            $validated['picture'] = $request->file('picture')->store('tascas', 'public');
+        } else {
+            unset($validated['picture']);
+        }
+
+        $tasca->update($validated);
+
+        return redirect()->route('tascas.show', $tasca)->with('success',
+            'Tasca actualizada correctamente.');
     }
 }

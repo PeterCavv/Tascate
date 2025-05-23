@@ -5,7 +5,10 @@ import {Link, router} from "@inertiajs/vue3";
 import {useForm} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
 
-const form = useForm();
+
+const form = useForm({
+    content: '',
+});
 defineOptions({
     layout: MainLayoutTemp,
 });
@@ -34,7 +37,26 @@ function toggleFavorite(post) {
     });
 }
 
+function submitComment() {
+    const comment = form.content;
 
+    if (comment.trim() === '') {
+        alert('Please enter a comment.');
+        return;
+    }
+    form.post(`/posts/${post.id}/comment`, { comment }, {
+        onSuccess: () => {
+            document.querySelector('textarea').value = '';
+            // Optionally, you can refresh the comments section here
+        },
+        onError: () => {
+            alert('Failed to submit comment.');
+        },
+        onFinish: () => {
+            form.reset('content');
+        },
+    });
+}
 </script>
 
 <template>
@@ -83,6 +105,40 @@ function toggleFavorite(post) {
                     alt="Post Picture"
                     class="rounded-lg shadow-md"
                 />
+            </div>
+        </div>
+
+        <div class="comments">
+            <div class="flex space-x-3">
+                <h1>Comentarios</h1>
+                <i class="pi pi-comment mt-1"></i>
+            </div>
+            <div class="mt-4">
+                <textarea
+                    id="content"
+                    v-model="form.content"
+                    placeholder="Escribe un comentario..."
+                    class="w-full p-2 border rounded-lg"
+                ></textarea>
+                <button
+                    @click="submitComment"
+                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                >
+                    Comentar
+                </button>
+                <p v-if="form.errors.content" class="text-red-500 text-sm mt-2">
+                    {{ form.errors.content }}
+                </p>
+            </div>
+            <div>
+                <h1>Lista de comentarios</h1>
+                <div v-for="comment in post.comments" :key="comment.id" class="p-4 border-b border-gray-200">
+                    <div class="flex items-center space-x-3">
+                        <div class="font-semibold text-gray-800">{{ comment.user.name }}</div>
+                        <div class="text-sm text-gray-500">{{ new Date(comment.created_at).toLocaleString() }}</div>
+                    </div>
+                    <p class="mt-2 text-gray-700">{{ comment.content }}</p>
+                </div>
             </div>
         </div>
     </div>

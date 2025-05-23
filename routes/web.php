@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\WelcomePageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostCommentController;
 
 Route::get('/', WelcomePageController::class)->name('welcome');
 
@@ -56,6 +57,7 @@ Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.up
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware('auth');
 Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])->name('posts.toggle-like')->middleware('auth');
 Route::get('/liked-posts', [PostController::class, 'likedPosts'])->name('posts.liked')->middleware('auth');
+Route::post('/posts/{post}/comment', [PostCommentController::class, 'store'])->name('posts.comment')->middleware('auth');
 
 require __DIR__.'/auth.php';
 

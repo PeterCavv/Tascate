@@ -17,4 +17,16 @@ class PostCommentController extends Controller
             'content' => $validated['content'],
         ]);
     }
+    public function update (CommentRequest $request, Comment $comment)
+    {
+        $validated = $request->validated();
+        $comment->update([
+            'content' => $validated['content'],
+        ]);
+    }
+
+    public function destroy(Comment $comment)
+    {
+        $comment->delete();
+    }
 }

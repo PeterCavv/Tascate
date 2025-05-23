@@ -4,11 +4,20 @@ import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {Link, router} from "@inertiajs/vue3";
 import {useForm} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
+import {ZiggyVue} from "ziggy-js";
 
 
-const form = useForm({
+const form = useForm();
+
+const postCommentForm = useForm({
     content: '',
 });
+
+const editCommentForm = useForm({
+    content: '',
+});
+
+
 defineOptions({
     layout: MainLayoutTemp,
 });
@@ -38,13 +47,13 @@ function toggleFavorite(post) {
 }
 
 function submitComment() {
-    const comment = form.content;
+    const comment = postCommentForm.content;
 
     if (comment.trim() === '') {
         alert('Please enter a comment.');
         return;
     }
-    form.post(`/posts/${post.id}/comment`, { comment }, {
+    postCommentForm.post(`/posts/${post.id}/comment`, { comment }, {
         onSuccess: () => {
             document.querySelector('textarea').value = '';
             // Optionally, you can refresh the comments section here
@@ -53,7 +62,32 @@ function submitComment() {
             alert('Failed to submit comment.');
         },
         onFinish: () => {
-            form.reset('content');
+            postCommentForm.reset('content');
+        },
+    });
+}
+
+function editComment(comment) {
+    comment.originalContent = comment.content;
+    comment.isEditing = true;
+}
+
+function cancelEdit(comment) {
+    comment.content = comment.originalContent;
+    comment.isEditing = false;
+}
+
+function saveComment(comment) {
+    editCommentForm.content = comment.content;
+
+    editCommentForm.put(route('posts.comment.update', comment.id), {
+        content: editCommentForm.content,
+    }, {
+        onSuccess: () => {
+            comment.isEditing = false;
+        },
+        onError: () => {
+            alert('Error al guardar el comentario.');
         },
     });
 }
@@ -116,7 +150,7 @@ function submitComment() {
             <div class="mt-4">
                 <textarea
                     id="content"
-                    v-model="form.content"
+                    v-model="postCommentForm.content"
                     placeholder="Escribe un comentario..."
                     class="w-full p-2 border rounded-lg"
                 ></textarea>
@@ -126,8 +160,8 @@ function submitComment() {
                 >
                     Comentar
                 </button>
-                <p v-if="form.errors.content" class="text-red-500 text-sm mt-2">
-                    {{ form.errors.content }}
+                <p v-if="postCommentForm.errors.content" class="text-red-500 text-sm mt-2">
+                    {{ postCommentForm.errors.content }}
                 </p>
             </div>
             <div>
@@ -137,7 +171,44 @@ function submitComment() {
                         <div class="font-semibold text-gray-800">{{ comment.user.name }}</div>
                         <div class="text-sm text-gray-500">{{ new Date(comment.created_at).toLocaleString() }}</div>
                     </div>
-                    <p class="mt-2 text-gray-700">{{ comment.content }}</p>
+                    <div v-if="comment.isEditing">
+        <textarea
+            v-model="comment.content"
+            class="w-full p-2 border rounded-lg mt-2"
+        ></textarea>
+                        <button
+                            @click="saveComment(comment)"
+                            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                        >
+                            Guardar
+                        </button>
+                        <button
+                            @click="cancelEdit(comment)"
+                            class="mt-2 bg-gray-500 text-white px-4 py-2 rounded-lg ml-2"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                    <div v-else>
+                        <p class="mt-2 text-gray-700">{{ comment.content }}</p>
+                        <div v-if="comment.user_id === $page.props.auth.user.id" class="mt-2">
+                            <button
+                                @click="editComment(comment)"
+                                class="text-blue-600 hover:underline"
+                            >
+                                Editar
+                            </button>
+                            <button
+                                @click="form.delete(route('posts.comment.delete', comment.id))"
+                                class="text-red-600 hover:underline ml-2"
+                            >
+                                Eliminar
+                            </button>
+                            <p v-if="editCommentForm.errors.content" class="text-red-500 text-sm mt-2">
+                                {{ editCommentForm.errors.content }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -58,6 +58,8 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.
 Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])->name('posts.toggle-like')->middleware('auth');
 Route::get('/liked-posts', [PostController::class, 'likedPosts'])->name('posts.liked')->middleware('auth');
 Route::post('/posts/{post}/comment', [PostCommentController::class, 'store'])->name('posts.comment')->middleware('auth');
+Route::put('/posts/{comment}/edit', [PostCommentController::class, 'update'])->name('posts.comment.update')->middleware('auth');
+Route::delete('/posts/{comment}/delete', [PostCommentController::class, 'destroy'])->name('posts.comment.delete')->middleware('auth');
 
 require __DIR__.'/auth.php';
 

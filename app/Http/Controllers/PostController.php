@@ -13,7 +13,15 @@ class PostController extends Controller
     use AuthorizesRequests;
     public function index()
     {
-        $posts = Post::with('user', 'pictures')->get();
+        $user = auth()->user();
+
+        $posts = Post::with('user', 'pictures')
+            ->withCount('likedByUsers as likes_count')
+            ->get()
+            ->map(function ($post) use ($user) {
+                $post->is_favorite = $user ? $user->likedPosts->contains($post->id) : false;
+                return $post;
+            });
 
         return Inertia::render('Posts/PostIndex', [
             'posts' => $posts,
@@ -50,7 +58,9 @@ class PostController extends Controller
     public function show (Post $post)
     {
 
-        $post->load('user', 'pictures');
+        $post->load('user', 'pictures', 'likedByUsers');
+        $post->is_favorite = auth()->user() ? auth()->user()->likedPosts->contains($post->id) : false;
+        $post->likedByUsers = $post->likedByUsers->count();
 
         return Inertia::render('Posts/PostShow', [
             'post' => $post,
@@ -90,5 +100,30 @@ class PostController extends Controller
 
         return redirect()->route('posts.index')->with('success', 'Post eliminado exitosamente.');
 
+    }
+
+    public function toggleLike(Post $post)
+    {
+
+        if ($post->likedByUsers()->where('user_id', auth()->id())->exists()) {
+            $post->likedByUsers()->detach(auth()->id());
+        } else {
+            $post->likedByUsers()->attach(auth()->id());
+        }
+
+    }
+
+    public function likedPosts()
+    {
+        $user = auth()->user();
+
+        $posts = $user->likedPosts()->with('user', 'pictures')->withCount('likedByUsers as like_count')->get()->map(function ($post) {
+            $post->is_favorite = true;
+            return $post;
+        });
+
+        return Inertia::render('Posts/LikedPosts', [
+            'posts' => $posts,
+        ]);
     }
 }

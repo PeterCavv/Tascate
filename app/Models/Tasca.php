@@ -14,13 +14,20 @@ class Tasca extends Model
     use HasFactory;
 
     protected $fillable = [
-      'user_id',
-      'name',
-      'opening_time',
-      'closing_time',
-      'capacity',
-      'menu',
-      'address'
+        'name',
+        'address',
+        'telephone',
+        'reservation',
+        'reservation_price',
+        'menu',
+        'opening_time',
+        'closing_time',
+        'capacity',
+        'picture',
+    ];
+
+    protected $casts = [
+        'reservation' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -66,5 +73,10 @@ class Tasca extends Model
             'tasca_id',
             'customer_id'
         );
+    }
+
+    public function getPictureUrlAttribute(): ?string
+    {
+        return $this->picture ? asset($this->picture) : null;
     }
 }

@@ -1,11 +1,8 @@
 <script setup>
 
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {router} from "@inertiajs/vue3";
-import { defineProps } from 'vue';
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
-
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -14,6 +11,10 @@ defineOptions({
 defineProps({
     posts: {
         type: Array,
+        required: true,
+    },
+    countLikes: {
+        type: Number,
         required: true,
     },
 });
@@ -34,28 +35,31 @@ function toggleFavorite(post) {
 </script>
 
 <template>
-    <h1 class="text-2xl font-bold">Lista de Posts</h1>
-    <div class="mt-10">
-        <Link
-            v-if="$page.props.auth.user"
-            href="/posts/create-post"
-            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+            v-for="post in posts"
+            :key="post.id"
+            class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
         >
-            Crear Post
-        </Link>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <div v-for="post in posts" :key="post.id" class="bg-white shadow-md rounded-md p-4">
             <img
-                v-if="post.pictures.length > 0"
+                v-if="post.pictures && post.pictures.length"
                 :src="`/storage/${post.pictures[0].picture_path}`"
-                alt="Imagen del Post"
-                class="w-full h-48 object-cover rounded-md mb-4"
+                alt="Post Image"
+                class="w-full h-48 object-cover"
             />
-            <h2 class="text-lg font-bold mb-2">{{ post.title }}</h2>
-            <p class="text-gray-700 mb-4">{{ post.content }}</p>
-            <div class="flex">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-800 truncate">
+                    {{ post.title }}
+                </h2>
+                <p class="text-sm text-gray-600 mt-2 line-clamp-3">
+                    {{ post.content }}
+                </p>
+                <Link
+                    :href="`/posts/${post.id}`"
+                    class="text-blue-500 hover:underline"
+                >
+                    Ver más
+                </Link>
                 <button
                     @click="toggleFavorite(post)"
                     :class="post.is_favorite ? 'text-red-500' : 'text-gray-500'"
@@ -64,18 +68,11 @@ function toggleFavorite(post) {
                     <i :class="post.is_favorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
                 </button>
                 <span class="ml-2 text-sm text-gray-500">
-                    {{ post.likes_count }} {{ post.likes_count === 1 ? 'like' : 'likes' }}
+                    {{ post.like_count }} {{ post.likes_count === 1 ? 'like' : 'likes' }}
                 </span>
             </div>
-            <Link
-                :href="`/posts/${post.id}`"
-                class="text-blue-500 hover:underline"
-            >
-                Ver más
-            </Link>
         </div>
     </div>
-
 </template>
 
 <style scoped>

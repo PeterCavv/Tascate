@@ -21,4 +21,13 @@ class TascaPolicy
 
     }
 
+    public function update(User $user, Tasca $tasca): bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return $user->id === $tasca->user_id;
+    }
+
 }

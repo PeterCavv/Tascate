@@ -12,28 +12,66 @@ const sidebarOpen = ref(false);
         <transition name="slide">
             <aside
                 :class="[
-                    'fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 text-white p-4 flex flex-col transform transition-transform duration-300 ease-in-out',
+                    'fixed inset-y-0 left-0 z-30 w-64 text-white p-4 flex flex-col transform transition-transform duration-300 ease-in-out',
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+                    $page.props.auth.user?.role === 'tasca' ? 'bg-blue-950' : 'bg-gray-800',
                     'md:translate-x-0 md:static md:inset-0'
                   ]"
             >
                 <nav class="flex-1 space-y-2 overflow-y-auto">
-                    <Link href="/" class="flex items-center px-4 py-2 text-lg font-semibold hover:bg-gray-700 transition">Welcome</Link>
-                    <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
-                    <Link href="/users" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Usuarios</Link>
-                    <Link href="/posts" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Posts</Link>
+                    <div class="flex items-center space-x-4">
+                        <Link href="/" class="flex items-center px-4 py-2 text-lg font-semibold hover:bg-gray-700 transition">
+                            Welcome
+                        </Link>
+
+                        <Link
+                            v-if="$page.props.auth.user"
+                            :href="`/users/${$page.props.auth.user.id}`"
+                            class="block px-4 py-2 underline hover:text-gray-300 transition text-xs"
+                        >
+                            Ver Perfil
+                        </Link>
+                    </div>
+
+                    <!-- Sidebar Links Common User -->
+                    <div v-if="$page.props.auth.user?.role !== 'tasca'">
+                        <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
+                        <Link
+                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
+                            href="/users"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Usuarios
+                        </Link>
+                        <Link href="/posts" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Posts</Link>
+                        <Link
+                            v-if="$page.props.auth.user"
+                            href="/liked-posts"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Posts Favoritos
+                        </Link>
+                        <Link
+                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
+                            href="/reservations"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Mis Reservas
+                        </Link>
+                        <Link href="" class="block px-4 py-2 rounded hover:bg-gray-700 transition">About Us</Link>
+                        <Link v-if="!$page.props.auth.user" href="/login" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Login</Link>
+                        <Link v-if="!$page.props.auth.user" href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Registro</Link>
+                    </div>
+
+                    <!-- Sidebar Links Tasca -->
+                    <div v-else>
+                        <Link :href="`/tascas/${$page.props.auth.user.tasca.id}`" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Mi Tasca</Link>
+                        <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Empleados</Link>
+                        <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Gestión Stock</Link>
+                    </div>
+
                     <Link
-                        v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
-                        href="/reservations"
-                        class="block px-4 py-2 rounded hover:bg-gray-700 transition"
-                    >
-                        Mis Reservas
-                    </Link>
-                    <Link href="" class="block px-4 py-2 rounded hover:bg-gray-700 transition">About Us</Link>
-                    <Link v-if="!$page.props.auth.user" href="/login" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Login</Link>
-                    <Link v-if="!$page.props.auth.user" href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Registro</Link>
-                    <Link
-                        v-else
+                        v-if="$page.props.auth.user"
                         href="/logout"
                         method="post"
                         as="button"
@@ -46,12 +84,21 @@ const sidebarOpen = ref(false);
                         <Link href="/accessibility" class="block text-xs text-gray-400 hover:text-gray-200 hover:underline transition">
                             Declaración de accesibilidad
                         </Link>
+                        <div v-if="$page.props.auth.impersonating" class="py-2 block text-xs text-yellow-400">
+                            Impersonificando a <strong>{{ $page.props.auth.user.name }}</strong>
+                            <Link
+                                href="/impersonate/stop"
+                                method="get"
+                                as="button"
+                                class="underline block text-xs text-yellow-400 hover:text-yellow-200 hover:underline transition"
+                                preserveState
+                            >Volver a mi cuenta</Link>
+                        </div>
                     </div>
                 </nav>
             </aside>
         </transition>
 
-        <!-- Main Content -->
         <div
             v-if="sidebarOpen"
             @click="sidebarOpen = false"
@@ -61,7 +108,7 @@ const sidebarOpen = ref(false);
             <!-- Top bar -->
             <header class="bg-white shadow-md px-4 py-3 flex items-center justify-between md:hidden">
                 <button @click="sidebarOpen = !sidebarOpen" class="text-gray-600 hover:text-gray-800 focus:outline-none">
-                    <!-- icono hamburguesa -->
+
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>

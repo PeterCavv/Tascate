@@ -9,7 +9,6 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-
     use AuthorizesRequests;
 
     public function index()
@@ -40,7 +39,7 @@ class UserController extends Controller
         }
 
         return Inertia::render('Users/UserShow', [
-            'user' => $user,
+            'user' => $user->load('posts', 'customer.reviews'),
             'authUserId' => auth()->id(),
             'csrfToken' => csrf_token(),
         ]);
@@ -79,5 +78,17 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
+    }
+
+    public function getReviews(User $user)
+    {
+        $this->authorize('view', $user);
+
+        $reviews = $user->customer->reviews()->get();
+
+        return inertia('Reviews/ReviewIndex', [
+            'reviews' => $reviews->load('tasca'),
+            'user' => $user
+        ]);
     }
 }

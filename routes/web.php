@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\WelcomePageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ManagerController;
 
 Route::get('/', WelcomePageController::class)->name('welcome');
 
@@ -22,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 //User Routes
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -29,6 +32,7 @@ Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show')
 Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('auth');
 Route::post('/users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('auth');
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('auth');
+
 
 // Posts Routes
 
@@ -40,16 +44,11 @@ Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.e
 Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update')->middleware('auth');
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware('auth');
 
-require __DIR__.'/auth.php';
-
-// Tascas Routes
-
-Route::get('/tascas', [TascaController::class, 'index'])->name('tascas.index');
-Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.show');
 
 // Reservations Routes
 
 Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+
 
 // Accesibilidad
 
@@ -57,12 +56,12 @@ Route::get('/accessibility', function () {
     return Inertia::render('Accessibility');
 })->name('accessibility');
 
+
 // RUTAS
 
+require __DIR__.'/auth.php';
 require __DIR__.'/roles/admin.php';
 require __DIR__.'/roles/manager.php';
 require __DIR__.'/roles/employee.php';
 require __DIR__.'/roles/tasca.php';
 require __DIR__.'/roles/customer.php';
-
-

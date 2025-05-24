@@ -77,19 +77,22 @@ class User extends Authenticatable
         return $this->role === Role::TASCA;
     }
 
+    /**
+     * Return if the user is an employee.
+     * @return bool
+     */
     public function isEmployee(): bool
     {
         return $this->role === Role::EMPLOYEE;
     }
 
+    /**
+     * Return if the user is a manager.
+     * @return bool
+     */
     public function isManager(): bool
     {
         return $this->role === Role::MANAGER;
-    }
-
-    public function isOwner(): bool
-    {
-        return $this->role === Role::OWNER;
     }
 
     /**

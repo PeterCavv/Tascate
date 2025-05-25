@@ -10,8 +10,8 @@ return new class extends Migration {
         Schema::create('tascas', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->time('opening_time');
-            $table->time('closing_time');
+            $table->time('opening_time')->default('12:00');
+            $table->time('closing_time')->default('23:00');
             $table->integer('capacity')->nullable();
             $table->timestamps();
         });

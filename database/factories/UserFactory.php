@@ -31,7 +31,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role' => Role::cases()[array_rand(Role::cases())],
+            'role' => $role = Role::cases()[array_rand(Role::cases())],
+            'dni' => $role === Role::TASCA ? fake()->unique()->numerify('#########') : null,
         ];
     }
 

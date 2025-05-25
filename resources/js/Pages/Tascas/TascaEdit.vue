@@ -2,6 +2,8 @@
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {computed} from 'vue'
 import {Head, useForm} from '@inertiajs/vue3'
+import 'primeicons/primeicons.css'
+import {Link} from '@inertiajs/vue3'
 
 const {tasca} = defineProps({
     tasca: Object
@@ -20,8 +22,8 @@ const form = useForm({
     telephone: tasca ? tasca.telephone : '',
     reservation: tasca ? tasca.reservation : false,
     reservation_price: tasca ? tasca.reservation_price : 0,
-    opening_time: tasca ? openingTimeFormatted : '',
-    closing_time: tasca ? closingTimeFormatted : '',
+    opening_time: tasca ? openingTimeFormatted.value : '',
+    closing_time: tasca ? closingTimeFormatted.value : '',
     capacity: tasca ? tasca.capacity : 0,
     picture: null,
 })
@@ -52,6 +54,10 @@ const submitForm = () => {
     <Head title="Editar Tasca" />
 
     <form @submit.prevent="submitForm" class="w-full max-w-4xl mx-auto space-y-6 p-6 bg-white rounded shadow">
+        <Link :href="`/tascas/${tasca.id}`" class="text-blue-600 hover:underline">
+            <i class="pi pi-arrow-left mr-2 text-xs"></i>
+            <span>Volver</span>
+        </Link>
         <h1 class="text-2xl font-bold mb-6">Editar Tasca</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

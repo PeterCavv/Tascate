@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\FriendshipStatus;
+use App\Enums\ManageStatus;
 use App\Models\Friendship;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;

@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\ManageStatus;
+use App\Enums\Role;
+use App\Http\Requests\TascaProposalRequest;
+use App\Models\Tasca;
+use App\Models\TascaProposal;
+use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
+
+class TascaProposalController extends Controller
+{
+
+    use AuthorizesRequests;
+
+    public function index()
+    {
+        return Inertia::render('Admin/TascaProposalIndex', [
+            'tascasProposals' => TascaProposal::all(),
+        ]);
+    }
+
+    public function show(TascaProposal $tascaProposal)
+    {
+        return Inertia::render('Admin/TascaProposalShow', [
+            'tascaProposal' => $tascaProposal,
+        ]);
+    }
+
+    public function registerForm()
+    {
+        return Inertia::render('Auth/TascaProposalCreate');
+    }
+
+    public function store(TascaProposalRequest $request)
+    {
+        TascaProposal::create($request->validated());
+
+        return Inertia::render('Auth/TascaProposalCreated');
+    }
+
+    public function update(TascaProposalRequest $request, TascaProposal $tascaProposal)
+    {
+        $this->authorize('update', $tascaProposal);
+
+        $tascaProposal->update($request->validated());
+
+        return redirect()->route('tascas-proposals.index')->with(
+            'success', 'La Propuesta de Tasca se ha actualizado correctamente.');
+    }
+
+    public function approve(TascaProposal $tascaProposal)
+    {
+        $this->authorize('update', $tascaProposal);
+
+        $user = User::create([
+            'name' => $tascaProposal->owner_name,
+            'email' => $tascaProposal->owner_email,
+            'password' => Hash::make(Str::random(10)),
+            'role' => Role::TASCA,
+            'dni' => $tascaProposal->dni,
+            'telephone' => $tascaProposal->telephone,
+        ]);
+
+        Tasca::create([
+            'name' => $tascaProposal->tasca_name,
+            'address' => $tascaProposal->address,
+            'user_id' => $user->id,
+            'cif' => $tascaProposal->cif,
+            'telephone' => $tascaProposal->telephone,
+        ]);
+
+        $tascaProposal->update(['status' => ManageStatus::ACCEPTED->value]);
+
+        return redirect()->route('tascas-proposals.index')->with(
+            'success', 'La Propuesta de Tasca se ha aprobado y el usuario ha sido creado correctamente.');
+    }
+}

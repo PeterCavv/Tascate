@@ -110,5 +110,3 @@ require __DIR__.'/roles/manager.php';
 require __DIR__.'/roles/employee.php';
 require __DIR__.'/roles/tasca.php';
 require __DIR__.'/roles/customer.php';
-
-

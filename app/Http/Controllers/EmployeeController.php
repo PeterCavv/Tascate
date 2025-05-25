@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
+use App\Http\Requests\Employee\StoreEmployeeRequest;
+use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Models\Employee;
 use App\Models\Manager;
 use App\Models\User;
+use App\Rules;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class EmployeeController extends Controller
@@ -17,19 +22,20 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        $this->authorize('view', Employee::class);
+        $this->authorize('viewAny', Employee::class);
 
-        $employees = User::where('role', Role::EMPLOYEE->value)->get();
+        $authUser = auth()->user();
 
-        if (auth()->check()) {
-            $authUserId = auth()->user()->id;
-        } else {
-            $authUserId = null;
+        if($authUser->isAdmin()) {
+            $employees = Employee::allEmployees()->get();
+        }else{
+            $tascaId = $authUser->tasca_id;
+            $employees = Employee::tascaEmployees($tascaId)->get();
         }
 
         return Inertia::render('Employees/Employees', [
             'employees' => $employees,
-            'authUserId' => $authUserId,
+            'authUserId' => $authUser->id,
         ]);
     }
 
@@ -37,8 +43,8 @@ class EmployeeController extends Controller
     {
         $this->authorize('view', $employee);
 
-        if ($employee->avatar) {
-            $employee->avatar = asset('storage/' . $employee->avatar);
+        if ($employee->user->avatar) {
+            $employee->user->avatar = asset('storage/' . $employee->user->avatar);
         }
 
         if (auth()->check()) {
@@ -57,34 +63,69 @@ class EmployeeController extends Controller
     public function create()
     {
         $this->authorize('create', Employee::class);
-        return Inertia::render('Employee/EmployeeForm');
+
+        $authUser = auth()->user();
+
+//        ARREGLAR ESTO
+
+//        // Get tascas based on user role
+//        $tascas = match(true) {
+//            $authUser->isAdmin() => \App\Models\Tasca::all(),
+//            $authUser->isManager() => \App\Models\Tasca::where('id', $authUser->manager->tasca_id)->get(),
+//            $authUser->isTasca() => \App\Models\Tasca::where('id', $authUser->tasca->id)->get(),
+//            default => collect([])
+//        };
+//
+//        // Get managers based on user role
+//        $managers = match(true) {
+//            $authUser->isAdmin() => \App\Models\Manager::with('user')->get(),
+//            $authUser->isManager() => \App\Models\Manager::where('id', $authUser->manager->id)->with('user')->get(),
+//            $authUser->isTasca() => \App\Models\Manager::where('tasca_id', $authUser->tasca->id)->with('user')->get(),
+//            default => collect([])
+//        };
+
+        return Inertia::render('Employees/EmployeeForm', [
+//            'tascas' => $tascas,
+//            'managers' => $managers,
+            'auth' => [
+                'user' => [
+                    'id' => $authUser->id,
+                    'name' => $authUser->name,
+                    'email' => $authUser->email,
+                    'role' => $authUser->role,
+                    'tasca_id' => $authUser->employee?->tasca_id ?? $authUser->manager?->tasca_id ?? $authUser->tasca?->id,
+                    'manager_id' => $authUser->employee?->manager_id ?? $authUser->manager?->id,
+                ]
+            ]
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
         $this->authorize('create', Employee::class);
 
-        $validated = $request->validate([
-            'user_id' => [
-                'required',
-                'exists:users,id',
-                Rule::unique('employees', 'user_id')
-            ],
-            'tasca_id' => [
-                'required',
-                'exists:tascas,id'
-            ],
-            'manager_id' => [
-                'required',
-                'exists:managers,id'
-            ]
-        ]);
+        return DB::transaction(function () use ($request) {
+            $password = Str::random(12);
 
-        $employee = Employee::create($validated);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($password),
+                'role' => Role::EMPLOYEE
+            ]);
 
-        return redirect()
-            ->route('employees.show', $employee)
-            ->with('success', 'Empleado creado exitosamente.');
+            $employee = Employee::create([
+                'user_id' => $user->id,
+                'tasca_id' => $request->tasca_id,
+                'manager_id' => $request->manager_id
+            ]);
+
+//    AÑADIR NOTIFICACION CON LA CONTRASEÑA GENERADA
+
+            return redirect()
+                ->route('employees.show', $employee)
+                ->with('success', 'Empleado creado exitosamente.');
+        });
     }
 
     public function edit(Employee $employee)
@@ -96,33 +137,35 @@ class EmployeeController extends Controller
         ]);
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
         $this->authorize('update', $employee);
 
-        $validated = $request->validate([
-            'manager_id' => [
-                'required',
-                'exists:managers,id'
-            ]
-        ]);
+        return DB::transaction(function () use ($request, $employee) {
+            $employee->user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
 
-        $employee->update($validated);
+            $employee->update([
+                'manager_id' => $request->manager_id
+            ]);
 
-        return redirect()
-            ->route('employees.show', $employee)
-            ->with('success', 'Empleado actualizado exitosamente.');
+            return redirect()
+                ->route('employees.show', $employee)
+                ->with('success', 'Empleado actualizado exitosamente.');
+        });
     }
 
     public function destroy(Employee $employee)
     {
         $this->authorize('delete', $employee);
 
-        $employee->delete();
+            $employee->user->delete();
 
-        return redirect()
-            ->route('employees.index')
-            ->with('success', 'Empleado eliminado exitosamente.');
+            return redirect()
+                ->route('employees.index')
+                ->with('success', 'Empleado eliminado exitosamente.');
     }
 
     public function promote(Request $request, Employee $employee)
@@ -130,13 +173,13 @@ class EmployeeController extends Controller
         $this->authorize('promote', $employee);
 
         return DB::transaction(function () use ($employee) {
-            // Create manager record
             $manager = Manager::create([
                 'user_id' => $employee->user_id,
                 'tasca_id' => $employee->tasca_id
             ]);
 
-            // Delete employee record
+            $employee->user->update(['role' => Role::MANAGER]);
+
             $employee->delete();
 
             return redirect()

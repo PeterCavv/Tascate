@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,5 +27,17 @@ class Manager extends Model
     public function tasca()
     {
         return $this->belongsTo(Tasca::class);
+    }
+
+    public function scopeAllManagers($query)
+    {
+        return $query->whereHas('user', function ($q) {
+            $q->where('role', Role::MANAGER->value);
+        });
+    }
+
+    public function scopeTascaManagers($query, $tascaId)
+    {
+        return $query->allManagers()->where('tasca_id', $tascaId);
     }
 }

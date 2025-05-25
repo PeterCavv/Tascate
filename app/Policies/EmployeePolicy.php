@@ -12,6 +12,11 @@ class EmployeePolicy
     use HandlesAuthorization, OwnershipPolicy;
 
 
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdmin() || $user->isTasca() || $user->isManager();
+    }
+
     public function view(User $user, Employee $employee): bool
     {
         return $user->isAdmin() ||
@@ -33,11 +38,13 @@ class EmployeePolicy
 
     public function delete(User $user, Employee $employee): bool
     {
-        return $user->isAdmin() || ($user->isTasca() && $user->tasca->id === $employee->tasca_id);
+        return $user->isAdmin() ||
+            ($user->isTasca() && $user->tasca->id === $employee->tasca_id);
     }
 
     public function promote(User $user, Employee $employee): bool
     {
-        return $user->isAdmin() || ($user->isTasca() && $user->tasca->id === $employee->tasca_id) ;
+        return $user->isAdmin() ||
+            ($user->isTasca() && $user->tasca->id === $employee->tasca_id) ;
     }
 }

@@ -21,8 +21,14 @@ class ManagerController extends Controller
     {
         $this->authorize('view', Manager::class);
 
-        $managers = User::where('role', Role::MANAGER->value)->get();
+        $authUser = auth()->user();
 
+        if($authUser->isAdmin()) {
+            $managers = Manager::allManagers()->get();
+        }else{
+            $tascaId = $authUser->tasca_id;
+            $managers = Manager::tascaManagers($tascaId)->get();
+        }
         if (auth()->check()) {
             $authUserId = auth()->user()->id;
         } else {
@@ -100,13 +106,11 @@ class ManagerController extends Controller
         $this->authorize('demote', $manager);
 
         return DB::transaction(function () use ($manager) {
-            // Create employee record
             $employee = Employee::create([
                 'user_id' => $manager->user_id,
                 'tasca_id' => $manager->tasca_id,
             ]);
 
-            // Delete manager record
             $manager->delete();
 
             return redirect()

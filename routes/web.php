@@ -1,10 +1,12 @@
 <?php
 
+use App\Enums\Role;
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TascaController;
+use App\Http\Controllers\TascaProposalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +64,33 @@ Route::put('/posts/{comment}/edit', [PostCommentController::class, 'update'])->n
 Route::delete('/posts/{comment}/delete', [PostCommentController::class, 'destroy'])->name('posts.comment.delete')->middleware('auth');
 
 require __DIR__.'/auth.php';
+
+// Tasca Proposals Routes
+
+Route::get('/register/tascas-proposals', [TascaProposalController::class, 'registerForm'])->name('tascas-proposals.create');
+Route::post('/register/tascas-proposals', [TascaProposalController::class, 'store'])->name('tascas-proposals.store');
+Route::get('/tascas-proposals', [TascaProposalController::class, 'index'])->name('tascas-proposals.index')->middleware('auth');
+Route::get('/tascas-proposals/{tascaProposal}', [TascaProposalController::class, 'show'])->name('tascas-proposals.show')->middleware('auth');
+Route::put('/tascas-proposals/{tascaProposal}', [TascaProposalController::class, 'update'])->name('tascas-proposals.update')->middleware('auth');
+Route::post('/tascas-proposals/{tascaProposal}/approve', [TascaProposalController::class, 'approve'])->name('tascas-proposals.approve')->middleware('auth');
+
+// Imagenes privadas
+
+Route::get('/imagen-privada/{path}', function (Request $request, $path) {
+
+    if(!auth()->user() && auth()->user()->role !== Role::ADMIN->value)
+        abort(403);
+
+    $path = str_replace('..', '', $path);
+    if (!Storage::disk('private')->exists($path)) {
+        abort(404);
+    }
+
+    $file = Storage::disk('private')->get($path);
+    $mime = Storage::disk('private')->mimeType($path);
+
+    return Response::make($file, 200)->header("Content-Type", $mime);
+})->where('path', '.*')->middleware('auth');
 
 // Tascas Routes
 

@@ -9,7 +9,6 @@ use App\Models\Tasca;
 use App\Models\TascaProposal;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -40,7 +39,16 @@ class TascaProposalController extends Controller
 
     public function store(TascaProposalRequest $request)
     {
-        TascaProposal::create($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('dni_picture_path')) {
+            $validated['dni_picture_path'] = $request->file('dni_picture_path')->store('dni', 'private');
+        }
+        if ($request->hasFile('cif_picture_path')) {
+            $validated['cif_picture_path'] = $request->file('cif_picture_path')->store('cif', 'private');
+        }
+
+        TascaProposal::create($validated);
 
         return Inertia::render('Auth/TascaProposalCreated');
     }

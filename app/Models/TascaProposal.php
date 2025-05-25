@@ -12,9 +12,11 @@ class TascaProposal extends Model
         'address',
         'telephone',
         'cif',
+        'cif_picture_path',
         'owner_name',
         'owner_email',
         'dni',
+        'dni_picture_path',
         'status'
     ];
 

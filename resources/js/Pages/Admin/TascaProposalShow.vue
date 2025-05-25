@@ -1,11 +1,15 @@
 <script setup>
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {Link, useForm} from "@inertiajs/vue3";
+import {Link, router, useForm} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
+import {ref} from "vue";
 
 const {tascaProposal} = defineProps({
     tascaProposal: Object
 });
+
+const showImageModal = ref(false);
+const imageToShow = ref('');
 
 const form = useForm({
     tasca_name: tascaProposal.tasca_name,
@@ -43,6 +47,11 @@ const submitForm = () => {
             },
         })
 }
+
+function openImageModal(path) {
+    imageToShow.value = `/imagen-privada/${path}`;
+    showImageModal.value = true;
+}
 </script>
 
 <template>
@@ -58,10 +67,22 @@ const submitForm = () => {
             <div><strong>Nombre:</strong> {{ tascaProposal.tasca_name }}</div>
             <div><strong>Dirección:</strong> {{ tascaProposal.address }}</div>
             <div><strong>Teléfono:</strong> {{ tascaProposal.telephone }}</div>
-            <div><strong>CIF:</strong> {{ tascaProposal.cif }}</div>
+            <div>
+                <strong>CIF:</strong>
+                {{ tascaProposal.cif }}
+                <i
+                    @click="openImageModal(tascaProposal.cif_picture_path)"
+                    class="pi pi-eye text-blue-400 text-l cursor-pointer mr-2" title="Ver detalles"/>
+            </div>
             <div><strong>Propietario:</strong> {{ tascaProposal.owner_name }}</div>
             <div><strong>Email Propietario:</strong> {{ tascaProposal.owner_email }}</div>
-            <div><strong>DNI:</strong> {{ tascaProposal.dni }}</div>
+            <div>
+                <strong>DNI:</strong>
+                {{ tascaProposal.dni }}
+                <i
+                    @click="openImageModal(tascaProposal.dni_picture_path)"
+                    class="pi pi-eye text-blue-400 text-l cursor-pointer mr-2" title="Ver detalles"/>
+            </div>
         </div>
 
         <form @submit.prevent="submitForm" class="flex items-center gap-4 mt-6">
@@ -87,4 +108,32 @@ const submitForm = () => {
             <p class="text-xs text-gray-500">Una vez actualizado el estado de la propuesta, no puede volver a cambiarse.</p>
         </form>
     </div>
+
+    <transition name="fade">
+        <div
+            v-if="showImageModal"
+            class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center px-4"
+            @click="showImageModal = false"
+        >
+            <div
+                class="relative bg-white rounded shadow-lg max-w-4xl w-full max-h-[90vh] overflow-auto"
+                @click.stop
+            >
+                <img
+                    :src="imageToShow"
+                    alt="Imagen ampliada"
+                    class="mx-auto max-w-full max-h-[80vh] object-contain"
+                />
+            </div>
+        </div>
+    </transition>
 </template>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s ease;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
+</style>

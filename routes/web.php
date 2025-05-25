@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Role;
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
@@ -72,6 +73,24 @@ Route::get('/tascas-proposals', [TascaProposalController::class, 'index'])->name
 Route::get('/tascas-proposals/{tascaProposal}', [TascaProposalController::class, 'show'])->name('tascas-proposals.show')->middleware('auth');
 Route::put('/tascas-proposals/{tascaProposal}', [TascaProposalController::class, 'update'])->name('tascas-proposals.update')->middleware('auth');
 Route::post('/tascas-proposals/{tascaProposal}/approve', [TascaProposalController::class, 'approve'])->name('tascas-proposals.approve')->middleware('auth');
+
+// Imagenes privadas
+
+Route::get('/imagen-privada/{path}', function (Request $request, $path) {
+
+    if(!auth()->user() && auth()->user()->role !== Role::ADMIN->value)
+        abort(403);
+
+    $path = str_replace('..', '', $path);
+    if (!Storage::disk('private')->exists($path)) {
+        abort(404);
+    }
+
+    $file = Storage::disk('private')->get($path);
+    $mime = Storage::disk('private')->mimeType($path);
+
+    return Response::make($file, 200)->header("Content-Type", $mime);
+})->where('path', '.*')->middleware('auth');
 
 // Tascas Routes
 

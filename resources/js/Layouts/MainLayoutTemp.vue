@@ -52,6 +52,13 @@ const sidebarOpen = ref(false);
                             Posts Favoritos
                         </Link>
                         <Link
+                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
+                            href="/tascas-proposals"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Peticiones de Tascas
+                        </Link>
+                        <Link
                             v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
                             href="/reservations"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
@@ -65,7 +72,7 @@ const sidebarOpen = ref(false);
 
                     <!-- Sidebar Links Tasca -->
                     <div v-else>
-                        <Link :href="`/tascas/${$page.props.auth.user.tasca.id}`" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Mi Tasca</Link>
+                        <Link :href="`/tascas/${$page.props.auth.user.tasca?.id}`" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Mi Tasca</Link>
                         <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Empleados</Link>
                         <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Gestión Stock</Link>
                     </div>

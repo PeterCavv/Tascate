@@ -14,6 +14,7 @@ class Tasca extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'name',
         'address',
         'telephone',
@@ -23,11 +24,14 @@ class Tasca extends Model
         'opening_time',
         'closing_time',
         'capacity',
+        'cif',
         'picture',
     ];
 
     protected $casts = [
         'reservation' => 'boolean',
+        'opening_time' => 'datetime:H:i',
+        'closing_time' => 'datetime:H:i',
     ];
 
     public function user(): BelongsTo

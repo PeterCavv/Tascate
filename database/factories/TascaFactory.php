@@ -23,6 +23,7 @@ class TascaFactory extends Factory
             'reservation' => $this->faker->boolean(),
             'reservation_price' => $this->faker->numberBetween(0, 100),
             'telephone' => $this->faker->numerify('6########'),
+            'cif' => $this->faker->unique()->numerify('#########'),
             'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
         ];
     }

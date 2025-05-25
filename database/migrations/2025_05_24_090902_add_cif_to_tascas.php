@@ -8,15 +8,15 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('tascas', function (Blueprint $table) {
-            $table->string('picture')->default('TascaPictures/Foto_Bar_Predeterminada.jpg')
-                ->after('capacity');
+            $table->string('cif', 9)->unique()->after('telephone')
+                ->comment('Unique identifier for the tasca, typically a tax identification number.');
         });
     }
 
     public function down(): void
     {
         Schema::table('tascas', function (Blueprint $table) {
-            $table->dropColumn('picture');
+            $table->dropColumn('cif');
         });
     }
 };

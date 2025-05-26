@@ -20,6 +20,11 @@ import Card from 'primevue/card';
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
 import Avatar from 'primevue/avatar';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Select from 'primevue/select';
+import DatePicker from 'primevue/datepicker';
+import InputNumber from 'primevue/inputnumber';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -43,7 +48,7 @@ createInertiaApp({
                     preset: Aura,
                     options: {
                         prefix: 'p',
-                        darkModeSelector: 'system',
+                        darkModeSelector: 'light',
                         cssLayer: false
                     }
                 }
@@ -59,6 +64,11 @@ createInertiaApp({
         app.component('Dialog', Dialog);
         app.component('Dropdown', Dropdown);
         app.component('Avatar', Avatar);
+        app.component('DataTable', DataTable);
+        app.component('Column', Column);
+        app.component('Select', Select);
+        app.component('DatePicker', DatePicker);
+        app.component('InputNumber', InputNumber);
 
         app.mount(el);
     },

@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Employee;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreEmployeeRequest extends FormRequest
+class UpdateManagerRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -12,7 +13,7 @@ class StoreEmployeeRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
-                'unique:users,email'
+                Rule::unique('users', 'email')->ignore($this->route('manager')->user_id, 'id')
             ],
             'name' => [
                 'required',
@@ -22,9 +23,6 @@ class StoreEmployeeRequest extends FormRequest
             'tasca_id' => [
                 'required',
                 'exists:tascas,id'
-            ],
-            'manager_id' => [
-                'exists:managers,id'
             ]
         ];
     }
@@ -37,8 +35,7 @@ class StoreEmployeeRequest extends FormRequest
             'email.unique' => 'Este correo electrónico ya está registrado',
             'name.required' => 'El nombre es obligatorio',
             'tasca_id.required' => 'La tasca es obligatoria',
-            'tasca_id.exists' => 'La tasca seleccionada no existe',
-            'manager_id.exists' => 'El manager seleccionado no existe'
+            'tasca_id.exists' => 'La Tasca seleccionada no existe'
         ];
     }
 }

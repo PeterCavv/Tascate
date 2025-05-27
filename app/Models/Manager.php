@@ -40,4 +40,10 @@ class Manager extends Model
     {
         return $query->allManagers()->where('tasca_id', $tascaId);
     }
+
+    public function demote(Manager $manager): void
+    {
+        $manager->role = Role::EMPLOYEE->value;
+        $manager->save();
+    }
 }

@@ -43,4 +43,13 @@ class Employee extends Model
     {
         return $query->allEmployees()->where('tasca_id', $tascaId);
     }
+
+    public function promote(Employee $employee): void
+    {
+        if($employee->manager_id !== null){
+            throw new \Exception('Esta Tasca ya tiene un manager, no puedes tener dos manager a la vez.');
+        }
+        $employee->role = Role::MANAGER->value;
+        $employee->save();
+    }
 }

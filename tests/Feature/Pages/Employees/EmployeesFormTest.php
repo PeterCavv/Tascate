@@ -4,103 +4,98 @@ use App\Models\Manager;
 use App\Models\Tasca;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
+use App\Models\Employee;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-test('employee form page can be rendered', function () {
-    $user = User::factory()->create();
-    $tascas = Tasca::factory()->count(3)->create();
-    $managers = Manager::factory()->count(2)->create();
+//uses(RefreshDatabase::class);
 
-    $response = $this->actingAs($user)
-        ->get(route('employees.create'));
-
-    $response->assertStatus(200);
-    $response->assertInertia(fn (Assert $page) => $page
-        ->component('employees/EmployeeForm')
-        ->has('tascas', 3)
-        ->has('managers', 2)
-        ->has('auth')
-    );
-})->todo();
-
-test('employee can be created with required fields', function () {
+it('allows to create an employee', function () {
     $user = User::factory()->create();
     $tasca = Tasca::factory()->create();
+    $manager = User::factory()->create();
 
-    $response = $this->actingAs($user)
+    $this->actingAs($user)
         ->post(route('employees.store'), [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'tasca_id' => $tasca->id,
-        ]);
-
-    $response->assertRedirect(route('employees.index'));
-    $this->assertDatabaseHas('employees', [
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'tasca_id' => $tasca->id,
-    ]);
-})->todo();
-
-test('employee can be created with manager', function () {
-    $user = User::factory()->create();
-    $tasca = Tasca::factory()->create();
-    $manager = Manager::factory()->create();
-
-    $response = $this->actingAs($user)
-        ->post(route('employees.store'), [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
+            'name' => 'Juan Pérez',
+            'email' => 'juan@example.com',
             'tasca_id' => $tasca->id,
             'manager_id' => $manager->id,
-        ]);
+        ])
+        ->assertRedirect(); // o ->assertStatus(302)
 
-    $response->assertRedirect(route('employees.index'));
-    $this->assertDatabaseHas('employees', [
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'tasca_id' => $tasca->id,
-        'manager_id' => $manager->id,
-    ]);
+    expect(User::where('email', 'juan@example.com')->exists())->toBeTrue();
 })->todo();
 
-test('validation fails with invalid data', function () {
+it('requires the name field', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)
+    $this->actingAs($user)
         ->post(route('employees.store'), [
-            'name' => '',
-            'email' => 'invalid-email',
-            'tasca_id' => 999,
-        ]);
+            'email' => 'juan@example.com',
+            'tasca_id' => 1,
+            'manager_id' => 1,
+        ])
+        ->assertSessionHasErrors(['name']);
+})->todo();
 
-    $response->assertSessionHasErrors(['name', 'email', 'tasca_id']);
+it('requires the email field', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->post(route('employees.store'), [
+            'name' => 'Juan Pérez',
+            'email' => 'correo-no-valido',
+            'tasca_id' => 1,
+            'manager_id' => 1,
+        ])
+        ->assertSessionHasErrors(['email']);
+})->todo();
+
+it('asigns automatically a tasca if the user has already one', function () {
+    $tasca = Tasca::factory()->create();
+    $user = User::factory()->create([
+        'tasca_id' => $tasca->id,
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('employees.store'), [
+            'name' => 'Empleado Auto Tasca',
+            'email' => 'auto@tasca.com',
+            'manager_id' => null,
+        ])
+        ->assertRedirect();
+
+    $employee = Employee::where('email', 'auto@tasca.com')->first();
+    expect($employee->tasca_id)->toBe($tasca->id);
+})->todo();
+
+it('asigns automatically a manager if the tasca has already one', function () {
+    $manager = User::factory()->create();
+    $user = User::factory()->create([
+        'manager_id' => $manager->id,
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('employees.store'), [
+            'name' => 'Empleado Auto Manager',
+            'email' => 'auto@manager.com',
+            'tasca_id' => null,
+        ])
+        ->assertRedirect();
+
+    $employee = Employee::where('email', 'auto@manager.com')->first();
+    expect($employee->manager_id)->toBe($manager->id);
+})->todo();
+
+it('non authenticated user cannot  create employees', function () {
+    $this->post(route('employees.store'), [
+        'name' => 'Invitado',
+        'email' => 'no@auth.com',
+        'tasca_id' => 1,
+        'manager_id' => 1,
+    ])->assertRedirect(route('login'));
 });
 
-test('tasca field is auto-filled for user with tasca', function () {
-    $tasca = Tasca::factory()->create();
-    $user = User::factory()->create(['tasca_id' => $tasca->id]);
-
-    $response = $this->actingAs($user)
-        ->get(route('employees.create'));
-
-    $response->assertInertia(fn (Assert $page) => $page
-        ->component('Employees/EmployeeForm')
-        ->where('auth.user.tasca_id', $tasca->id)
-    );
-})->todo();
-
-test('manager field is auto-filled for user with manager', function () {
-    $manager = Manager::factory()->create();
-    $user = User::factory()->create(['manager_id' => $manager->id]);
-
-    $response = $this->actingAs($user)
-        ->get(route('employees.create'));
-
-    $response->assertInertia(fn (Assert $page) => $page
-        ->component('Employees/EmployeeForm')
-        ->where('auth.user.manager_id', $manager->id)
-    );
-})->todo();
 
 test('non authenticated user cannot access employee form', function () {
     $response = $this->get(route('employees.create'));

@@ -14,18 +14,11 @@ const form = useForm({
     name: '',
     email: '',
     tasca_id: '',
-    manager_id: '',
 });
 
-const isManager = ref(false);
 const isTascaAssigned = ref(false);
 
 onMounted(() => {
-    if (props.auth.user.manager_id) {
-        isManager.value = true;
-        form.manager_id = props.auth.user.manager_id;
-    }
-
     if (props.auth.user.tasca_id) {
         isTascaAssigned.value = true;
         form.tasca_id = props.auth.user.tasca_id;
@@ -33,7 +26,7 @@ onMounted(() => {
 });
 
 const submit = () => {
-    form.post(route('employees.store'), {
+    form.post(route('managers.store'), {
         onSuccess: () => {
             form.reset();
         },
@@ -54,7 +47,7 @@ const submit = () => {
   <FormLayout>
     <div class="w-full max-w-md mx-auto">
       <div class="text-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">Crear Empleado</h2>
+        <h2 class="text-2xl font-bold text-gray-900">Crear Manager</h2>
       </div>
 
       <form @submit.prevent="submit" class="space-y-6">
@@ -106,32 +99,13 @@ const submit = () => {
           </small>
         </div>
 
-        <div class="field">
-          <FloatLabel>
-            <Dropdown
-              id="manager_id"
-              v-model="form.manager_id"
-              :options="managers"
-              optionLabel="name"
-              optionValue="id"
-              class="w-full"
-              :disabled="isManager"
-            />
-            <label for="manager_id">Manager</label>
-          </FloatLabel>
-          <small class="p-error" v-if="form.errors.manager_id">{{ form.errors.manager_id }}</small>
-          <small v-if="isManager" class="text-gray-500">
-            Manager asignado automáticamente
-          </small>
-        </div>
-
         <div class="flex items-center justify-end space-x-4">
-          <Link :href="route('employees.index')">
+          <Link :href="route('managers.index')">
             <Button label="Cancelar" severity="secondary" text />
           </Link>
           <Button
             type="submit"
-            label="Crear Empleado"
+            label="Crear Manager"
             severity="primary"
             :loading="form.processing"
             :disabled="form.processing"

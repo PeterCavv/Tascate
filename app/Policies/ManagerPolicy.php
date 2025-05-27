@@ -11,6 +11,10 @@ class ManagerPolicy
 {
     use HandlesAuthorization, OwnershipPolicy;
 
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdmin() || $user->isTasca() || $user->isManager();
+    }
     public function view(User $user, Manager $manager): bool
     {
         return $user->isAdmin() ||

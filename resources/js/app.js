@@ -20,6 +20,7 @@ import Card from 'primevue/card';
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
 import Avatar from 'primevue/avatar';
+import Fieldset from 'primevue/fieldset';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -59,6 +60,7 @@ createInertiaApp({
         app.component('Dialog', Dialog);
         app.component('Dropdown', Dropdown);
         app.component('Avatar', Avatar);
+        app.component('Fieldset', Fieldset);
 
         app.mount(el);
     },

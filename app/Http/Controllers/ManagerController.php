@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Employee\UpdateManagerRequest;
 use App\Models\Employee;
 use App\Models\Manager;
 use App\Models\User;
@@ -19,7 +20,7 @@ class ManagerController extends Controller
 
     public function index()
     {
-        $this->authorize('view', Manager::class);
+        $this->authorize('viewAny', Manager::class);
 
         $authUser = auth()->user();
 
@@ -27,17 +28,14 @@ class ManagerController extends Controller
             $managers = Manager::allManagers()->get();
         }else{
             $tascaId = $authUser->tasca_id;
-            $managers = Manager::tascaManagers($tascaId)->get();
-        }
-        if (auth()->check()) {
-            $authUserId = auth()->user()->id;
-        } else {
-            $authUserId = null;
+            $manager = Manager::tascaManagers($tascaId)->get();
+
+            return redirect()
+                ->route('manager.show', $manager);
         }
 
-        return Inertia::render('Managers/Index', [
+        return Inertia::render('Managers/Managers', [
             'managers' => $managers,
-            'authUserId' => $authUserId,
         ]);
     }
 
@@ -49,16 +47,8 @@ class ManagerController extends Controller
             $manager->avatar = asset('storage/' . $manager->avatar);
         }
 
-        if (auth()->check()) {
-            $authUserId = auth()->user()->id;
-        } else {
-            $authUserId = null;
-        }
-
-        return Inertia::render('Managers/ManagersShow', [
+        return Inertia::render('Managers/ManagerShow', [
             'manager' => $manager,
-            'authUserId' => $authUserId,
-            'csrfToken' => csrf_token(),
         ]);
     }
 
@@ -66,24 +56,18 @@ class ManagerController extends Controller
     {
         $this->authorize('update', $manager);
 
-        return Inertia::render('Managers/ManagersEdit', [
+        return Inertia::render('Managers/ManagerEdit', [
             'user' => $manager,
         ]);
     }
 
-    public function update(Request $request, Manager $manager)
+    public function update(UpdateManagerRequest $request, Manager $manager)
     {
         $this->authorize('update', $manager);
 
-        if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $manager->avatar = $path;
-        }
         $validated = $request->validated();
 
-        $manager->name = $validated['name'];
-        $manager->email = $validated['email'];
-        $manager->save();
+        $manager->update($validated);
 
         return redirect()
             ->route('managers.show', $manager)
@@ -105,17 +89,11 @@ class ManagerController extends Controller
     {
         $this->authorize('demote', $manager);
 
-        return DB::transaction(function () use ($manager) {
-            $employee = Employee::create([
-                'user_id' => $manager->user_id,
-                'tasca_id' => $manager->tasca_id,
-            ]);
-
-            $manager->delete();
+        $employee = $manager;
+        $employee->demote($manager);
 
             return redirect()
                 ->route('employees.show', $employee)
                 ->with('success', 'Manager degradado a empleado exitosamente.');
-        });
     }
 }

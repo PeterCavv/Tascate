@@ -7,11 +7,6 @@ use Illuminate\Validation\Rule;
 
 class UpdateEmployeeRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user()->can('update', $this->route('employee'));
-    }
-
     public function rules(): array
     {
         return [
@@ -24,6 +19,10 @@ class UpdateEmployeeRequest extends FormRequest
                 'required',
                 'string',
                 'max:255'
+            ],
+            'tasca_id' => [
+                'required',
+                'exists:tascas,id'
             ],
             'manager_id' => [
                 'exists:managers,id'
@@ -38,7 +37,9 @@ class UpdateEmployeeRequest extends FormRequest
             'email.email' => 'El correo electrónico debe ser válido',
             'email.unique' => 'Este correo electrónico ya está registrado',
             'name.required' => 'El nombre es obligatorio',
-            'manager_id.exists' => 'El manager seleccionado no existe'
+            'manager_id.exists' => 'El manager seleccionado no existe',
+            'tasca_id.required' => 'La tasca es obligatoria',
+            'tasca_id.exists' => 'La tasca seleccionada no existe'
         ];
     }
 }

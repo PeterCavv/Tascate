@@ -59,6 +59,23 @@ const sidebarOpen = ref(false);
                             Peticiones de Tascas
                         </Link>
                         <Link
+                            v-if="($page.props.auth.user && $page.props.auth.user.role === 'admin') ||
+                                    ($page.props.auth.user && $page.props.auth.user.role === 'tasca') ||
+                                    ($page.props.auth.user && $page.props.auth.user.role === 'manager')"
+                            href="/employees"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Empleados
+                        </Link>
+                        <Link
+                            v-if="($page.props.auth.user && $page.props.auth.user.role === 'admin') ||
+                                      ($page.props.auth.user && $page.props.auth.user.role === 'tasca') "
+                            href="/managers"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                          Managers
+                        </Link>
+                        <Link
                             v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
                             href="/reservations"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"

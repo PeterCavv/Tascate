@@ -62,6 +62,7 @@ Route::get('/liked-posts', [PostController::class, 'likedPosts'])->name('posts.l
 Route::post('/posts/{post}/comment', [PostCommentController::class, 'store'])->name('posts.comment')->middleware('auth');
 Route::put('/posts/{comment}/edit', [PostCommentController::class, 'update'])->name('posts.comment.update')->middleware('auth');
 Route::delete('/posts/{comment}/delete', [PostCommentController::class, 'destroy'])->name('posts.comment.delete')->middleware('auth');
+Route::post('/posts/comment/{comment}/response', [PostCommentController::class, 'response'])->name('posts.comment.response')->middleware('auth');
 
 require __DIR__.'/auth.php';
 

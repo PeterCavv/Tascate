@@ -6,7 +6,6 @@ import {useForm} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
 import {ZiggyVue} from "ziggy-js";
 
-
 const form = useForm();
 
 const postCommentForm = useForm({
@@ -16,6 +15,15 @@ const postCommentForm = useForm({
 const editCommentForm = useForm({
     content: '',
 });
+
+const createResponseForm = useForm({
+    content: '',
+});
+
+function createResponse(comment) {
+    comment.showResponseForm = !comment.showResponseForm ;
+}
+
 
 
 defineOptions({
@@ -28,6 +36,10 @@ const { post } = defineProps({
         required: true,
     },
 });
+
+console.log(JSON.stringify(post.comments, null, 2));
+
+
 
 const deletePost = () => {
     form.delete(route('posts.destroy', post.id));
@@ -77,6 +89,23 @@ function cancelEdit(comment) {
     comment.isEditing = false;
 }
 
+function showResponses(comment) {
+    comment.showResponses = !comment.showResponses;
+}
+
+function saveResponse(comment){
+    createResponseForm.post(route('posts.comment.response', comment), {
+        content: createResponseForm.content,
+    }, {
+        onSuccess: () => {
+            comment.showResponseForm = false;
+            createResponseForm.reset('content');
+        },
+        onError: () => {
+            alert('Error al enviar la respuesta.');
+        },
+    });
+}
 function saveComment(comment) {
     editCommentForm.content = comment.content;
 
@@ -166,16 +195,17 @@ function saveComment(comment) {
             </div>
             <div>
                 <h1>Lista de comentarios</h1>
-                <div v-for="comment in post.comments" :key="comment.id" class="p-4 border-b border-gray-200">
+                <div v-for="comment in post.comments" :key="comment.id"  >
+                    <div v-if="!comment.id_comment_father" class="p-4 border-b border-gray-200">
                     <div class="flex items-center space-x-3">
                         <div class="font-semibold text-gray-800">{{ comment.user.name }}</div>
                         <div class="text-sm text-gray-500">{{ new Date(comment.created_at).toLocaleString() }}</div>
                     </div>
                     <div v-if="comment.isEditing">
-        <textarea
-            v-model="comment.content"
-            class="w-full p-2 border rounded-lg mt-2"
-        ></textarea>
+                        <textarea
+                            v-model="comment.content"
+                            class="w-full p-2 border rounded-lg mt-2"
+                        ></textarea>
                         <button
                             @click="saveComment(comment)"
                             class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
@@ -204,10 +234,87 @@ function saveComment(comment) {
                             >
                                 Eliminar
                             </button>
+                            <button
+                                @click="showResponses(comment)"
+                                class="text-gray-600 hover:underline ml-2"
+                            >
+                                Respuestas
+                            </button>
+                            <button
+                                @click="createResponse(comment)"
+                                class="text-green-600 hover:underline ml-2"
+                            >
+                                Responder
+                            </button>
                             <p v-if="editCommentForm.errors.content" class="text-red-500 text-sm mt-2">
                                 {{ editCommentForm.errors.content }}
                             </p>
                         </div>
+
+                        <div>
+                            <div v-if="comment.showResponseForm" class="mt-4">
+                                <textarea
+                                    v-model="createResponseForm.content"
+                                    placeholder="Escribe una respuesta..."
+                                    class="w-full p-2 border rounded-lg"
+                                ></textarea>
+                                <p
+                                v-if="createResponseForm.errors">
+                                    {{ createResponseForm.errors.content }}
+                                </p>
+                                <button
+                                    @click="saveResponse(comment)"
+                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                >
+                                    Responder
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 bg-gray-100 p-4 rounded-lg"
+                             v-if="comment.showResponses"
+                             v-for="child_comment in comment.child_comments" :key="child_comment.id">
+                            <div class="flex items-center space-x-3">
+                                <div class="font-semibold text-gray-800">{{ child_comment.user.name }}</div>
+                                <div class="text-sm text-gray-500">{{ new Date(child_comment.created_at).toLocaleString() }}</div>
+                            </div>
+                            <div v-if="child_comment.isEditing">
+        <textarea
+            v-model="child_comment.content"
+            class="w-full p-2 border rounded-lg mt-2"
+        ></textarea>
+                                <button
+                                    @click="saveComment(child_comment)"
+                                    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                >
+                                    Guardar
+                                </button>
+                                <button
+                                    @click="cancelEdit(child_comment)"
+                                    class="mt-2 bg-gray-500 text-white px-4 py-2 rounded-lg ml-2"
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+                            <div v-else>
+                                <p class="mt-2 text-gray-700">{{ child_comment.content }}</p>
+                                <div v-if="child_comment.user_id === $page.props.auth.user.id" class="mt-2">
+                                    <button
+                                        @click="editComment(child_comment)"
+                                        class="text-blue-600 hover:underline"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        @click="form.delete(route('posts.comment.delete', child_comment.id))"
+                                        class="text-red-600 hover:underline ml-2"
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>

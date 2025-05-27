@@ -59,9 +59,16 @@ class PostController extends Controller
     {
 
         $post->load('user', 'pictures', 'likedByUsers', 'comments');
-        $post->comments->load('user');
+        $post->comments->load('user', 'parentComment', 'childComments');
         $post->is_favorite = auth()->user() ? auth()->user()->likedPosts->contains($post->id) : false;
         $post->likedByUsers = $post->likedByUsers->count();
+
+        $post->load([
+            'comments' => function ($query) {
+                $query->with(['user', 'childComments.user']);
+            }
+        ]);
+
 
         return Inertia::render('Posts/PostShow', [
             'post' => $post,

@@ -29,4 +29,15 @@ class PostCommentController extends Controller
     {
         $comment->delete();
     }
+
+    public function response(CommentRequest $request,Comment $comment)
+    {
+        $validated= $request->validated();
+        Comment::create([
+            'post_id' => $comment->post_id,
+            'user_id' => auth()->id(),
+            'content' => $validated['content'],
+            'id_comment_father' => $comment->id,
+        ]);
+    }
 }

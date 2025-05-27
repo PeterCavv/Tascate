@@ -4,6 +4,7 @@ import {useForm} from "@inertiajs/vue3";
 import {ref} from "vue";
 import PoliticaPrivacidadModal from "@/Components/PoliticaPrivacidadModal.vue";
 import FileUpload from 'primevue/fileupload';
+import CheckBox from 'primevue/checkbox';
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -36,12 +37,10 @@ const submitForm = () => {
 
 };
 function onFileSelectCif(event) {
-    // event.files es un array con los archivos seleccionados
     form.cif_picture_path = event.files.length ? event.files[0] : null
 }
 
 function onFileSelectDni(event) {
-    // event.files es un array con los archivos seleccionados
     form.dni_picture_path = event.files.length ? event.files[0] : null
 }
 
@@ -70,6 +69,7 @@ function onFileClearDni() {
                 class="w-full"
                 maxlength="100"
                 placeholder="Nombre de la Tasca"
+                required
             />
         </div>
 
@@ -82,6 +82,7 @@ function onFileClearDni() {
                 class="w-full"
                 maxlength="200"
                 placeholder="Dirección de la Tasca"
+                required
             />
         </div>
 
@@ -104,10 +105,11 @@ function onFileClearDni() {
                 <InputText
                     id="cif"
                     v-model="form.cif"
-                    v-keyfilter.hex
+                    v-keyfilter="/[A-Z0-9]/"
                     class="w-full"
                     maxlength="9"
                     placeholder="CIF de la empresa"
+                    required
                 />
             </div>
             <div>
@@ -115,10 +117,11 @@ function onFileClearDni() {
                 <InputText
                     id="nif"
                     v-model="form.dni"
-                    v-keyfilter.hex
+                    v-keyfilter="/[A-Z0-9]/"
                     class="w-full"
                     maxlength="9"
                     placeholder="NIF del propietario"
+                    required
                 />
             </div>
         </div>
@@ -133,6 +136,7 @@ function onFileClearDni() {
                     class="w-full"
                     maxlength="50"
                     placeholder="Ingresa el nombre del propietario"
+                    required
                 />
             </div>
             <div>
@@ -144,15 +148,16 @@ function onFileClearDni() {
                     class="w-full"
                     maxlength="120"
                     placeholder="Ingresa un email válido"
+                    required
                 />
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label for="image1" class="block font-semibold mb-1">CIF de la Empresa</label>
+                <label for="cif_picture" class="block font-semibold mb-1">CIF de la Empresa</label>
                 <FileUpload
-                    id="image1"
+                    inputId="cif_picture"
                     name="cif_picture"
                     accept="image/*"
                     customUpload
@@ -169,7 +174,7 @@ function onFileClearDni() {
             <div>
                 <label for="dni_picture" class="block font-semibold mb-1">DNI del Representante Legal</label>
                 <FileUpload
-                    id="image2"
+                    id="dni_picture"
                     name="dni_picture"
                     accept="image/*"
                     customUpload
@@ -180,7 +185,19 @@ function onFileClearDni() {
                     @select="onFileSelectDni"
                     @clear="onFileClearDni"
                     class="w-full"
-                />
+                >
+                    <template #choose>
+                        <Button icon="pi pi-image" label="Elegir imagen" />
+                    </template>
+
+                    <template #upload>
+                        <Button icon="pi pi-cloud-upload" label="Subir archivo" />
+                    </template>
+
+                    <template #cancel>
+                        <Button icon="pi pi-times" label="Cancelar" severity="danger" />
+                    </template>
+                </FileUpload>
             </div>
         </div>
 
@@ -219,14 +236,24 @@ function onFileClearDni() {
             </p>
         </div>
 
-        <div>
-            <input
+        <div class="flex items-center gap-2">
+            <CheckBox
                 v-model="acceptedPrivacy"
-                type="checkbox"
-                id="reservation"
-                class="w-5 h-5 accent-green-600 "
-            ><span class="text-l ml-3">He leído y acepto la Política de Privacidad</span>
+                name="acceptedPrivacy"
+                inputId="acceptedPrivacy"
+                binary
+            />
+            <label for="acceptedPrivacy" class="text-l ml-1">He leído y acepto la Política de Privacidad</label>
         </div>
+
+<!--        <div>-->
+<!--            <input-->
+<!--                v-model="acceptedPrivacy"-->
+<!--                type="checkbox"-->
+<!--                id="reservation"-->
+<!--                class="w-5 h-5 accent-green-600 "-->
+<!--            ><span class="text-l ml-3">He leído y acepto la Política de Privacidad</span>-->
+<!--        </div>-->
 
         <Button
             type="submit"
@@ -236,5 +263,19 @@ function onFileClearDni() {
             Enviar Propuesta
         </Button>
     </form>
-    <PoliticaPrivacidadModal v-if="openModal" @close="openModal = false"/>
+    <transition name="fade">
+        <PoliticaPrivacidadModal v-if="openModal" @close="openModal = false"/>
+    </transition>
 </template>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s ease;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
+:deep(.p-fileupload-file-status){
+    display: none !important;
+}
+</style>

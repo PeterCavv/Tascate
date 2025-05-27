@@ -1,6 +1,6 @@
 <script setup>
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {Link} from '@inertiajs/vue3';
+import {Link, router} from '@inertiajs/vue3';
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -15,13 +15,13 @@ defineOptions({
             <p class="text-gray-700">
                 Hemos recibido tu propuesta de tasca. Un administrador la revisará pronto. Si es aprobada, recibirás un correo con instrucciones para acceder a tu cuenta.
             </p>
-            <Link
-                href="/login"
+            <Button
+                @click="router.visit('/login')"
                 class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
             >
                 <i class="pi pi-arrow-left"/>
                 Volver al login
-            </Link>
+            </Button>
         </div>
     </div>
 </template>

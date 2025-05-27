@@ -79,13 +79,13 @@
             </div>
 
             <div class="mt-8 text-center sm:text-right">
-                <button
+                <Button
                     @click="$emit('close')"
                     class="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition w-full sm:w-auto"
                     aria-label="Cerrar política de privacidad"
                 >
                     Cerrar
-                </button>
+                </Button>
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@ import "primeicons/primeicons.css";
 import {router} from "@inertiajs/vue3";
 import {useDateFormatter} from "@/Composables/useDateFormatter.js";
 import {Head} from "@inertiajs/vue3";
+import Tag from 'primevue/tag';
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -57,18 +58,13 @@ const {formateDateToDDMMYYYY} = useDateFormatter();
                 </template>
             </Column>
 
-            <Column header="Estado">
+            <Column field="status" header="Estado" sortable>
                 <template #body="slotProps">
-                <span
-                  class="px-2 py-1 rounded-full text-xs font-medium"
-                  :class="{
-                  'bg-yellow-100 text-yellow-800': slotProps.data.status === 'pending',
-                  'bg-green-100 text-green-800': slotProps.data.status === 'accepted',
-                  'bg-red-100 text-red-800': slotProps.data.status === 'rejected'
-                }"
-                >
-                {{ traduceStatus(slotProps.data.status) }}
-                </span>
+                    <Tag
+                      :value="traduceStatus(slotProps.data.status)"
+                      class="text-xs font-medium"
+                      :severity="slotProps.data.status === 'pending' ? 'warn' : slotProps.data.status === 'accepted' ? 'success' : 'danger'"
+                      value="{{ traduceStatus(slotProps.data.status) }}"/>
                 </template>
             </Column>
 
@@ -80,7 +76,9 @@ const {formateDateToDDMMYYYY} = useDateFormatter();
                         title="Ver detalles"
                     ></i>
                     <i class="pi pi-file-edit text-green-500 cursor-pointer mr-2 hover:text-green-700 transition" title="Editar"></i>
-                    <i class="pi pi-clone text-green-500 cursor-pointer mr-2 hover:text-green-700 transition" title="Clonar"></i>
+                    <i
+                        @click="router.post(route('tascas-proposals.clone', { tascaProposal: slotProps.data.id }))"
+                        class="pi pi-clone text-green-500 cursor-pointer mr-2 hover:text-green-700 transition" title="Clonar"></i>
                 </template>
             </Column>
         </DataTable>

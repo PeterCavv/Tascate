@@ -33,6 +33,7 @@ const statusOptions = [
     {label: 'Pendiente', value: 'pending'},
     {label: 'Aprobada', value: 'accepted'},
     {label: 'Rechazada', value: 'rejected'},
+
 ];
 
 const submitForm = () => {
@@ -83,7 +84,7 @@ function openImageModal(path) {
                 {{ tascaProposal.cif }}
                 <i
                     @click="openImageModal(tascaProposal.cif_picture_path)"
-                    class="pi pi-eye text-blue-400 text-l cursor-pointer mr-2" title="Ver detalles"/>
+                    class="pi pi-eye text-green-500  hover:text-green-700 transition text-l cursor-pointer mr-2" title="Ver detalles"/>
             </div>
             <div><strong>Propietario:</strong> {{ tascaProposal.owner_name }}</div>
             <div><strong>Email Propietario:</strong> {{ tascaProposal.owner_email }}</div>
@@ -92,7 +93,7 @@ function openImageModal(path) {
                 {{ tascaProposal.dni }}
                 <i
                     @click="openImageModal(tascaProposal.dni_picture_path)"
-                    class="pi pi-eye text-blue-400 text-l cursor-pointer mr-2" title="Ver detalles"/>
+                    class="pi pi-eye text-green-500  hover:text-green-700 transition text-l cursor-pointer mr-2" title="Ver detalles"/>
             </div>
         </div>
 

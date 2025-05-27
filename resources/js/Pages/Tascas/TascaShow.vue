@@ -6,6 +6,8 @@ import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
 import {Head, router, usePage} from '@inertiajs/vue3';
 import {ref} from "vue";
 import 'primeicons/primeicons.css';
+import Message from 'primevue/message';
+import "primeicons/primeicons.css";
 
 const { auth } = usePage().props
 
@@ -23,6 +25,23 @@ const openReservation = ref(false);
 defineOptions({
     layout: MainLayoutTemp,
 });
+
+const isOpenMoreThan8Hours = (tasca) => {
+    const [openH, openM] = tasca.opening_time.split(':').map(Number);
+    const [closeH, closeM] = tasca.closing_time.split(':').map(Number);
+
+    const open = new Date();
+    open.setHours(openH, openM, 0);
+
+    const close = new Date();
+    close.setHours(closeH, closeM, 0);
+
+    let diff = (close - open) / (1000 * 60 * 60);
+
+    if (diff < 0) diff += 24;
+
+    return diff > 8;
+}
 
 </script>
 
@@ -46,20 +65,40 @@ defineOptions({
                 <h2 class="text-3xl font-bold">{{ tasca.name }}</h2>
                 <p class="text-sm">{{ tasca.address }}</p>
 
-                <div class="mt-2 flex items-center justify-between flex-wrap gap-2">
-                    <span
-                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
-                        :class="tasca.reservation ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
-                    >
-                        {{ tasca.reservation ? 'Permite reservas' : 'No permite reservas' }}
-                    </span>
+                <div class="mt-2 flex justify-between items-center flex-wrap gap-2">
+                    <div class="flex gap-2 flex-wrap">
+                        <Message
+                            :severity="tasca.reservation ? 'success' : 'error'"
+                            size="small"
+                        >
+                            {{ tasca.reservation ? "Permite reservas" : "No permite reservas" }}
+                        </Message>
+                        <Message
+                            v-if="isOpenMoreThan8Hours(tasca)"
+                            icon="pi pi-clock"
+                            severity="info"
+                            size="small"
+                        >
+                            Horario extenso
+                        </Message>
+                        <Message
+                            v-if="tasca.reviews.length >= 1 && getRoundedRating(tasca) >= 4"
+                            icon="pi pi-crown"
+                            severity="warn"
+                            size="small"
+                        >
+                            Mejores valorados
+                        </Message>
+                    </div>
+
+                    <!-- Botón alineado a la derecha -->
                     <div v-if="tasca.reservation && (!auth.user || auth.user.role !== 'tasca')">
-                        <button
+                        <Button
                             @click="auth.user ? openReservation = true : router.visit('/login')"
                             class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
                         >
                             {{ auth.user ? "Realizar Reserva" : "Inicia sesión para reservar" }}
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>

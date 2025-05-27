@@ -1,6 +1,7 @@
 <script setup>
 import { Head } from '@inertiajs/vue3'
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import Tag from 'primevue/tag';
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -23,7 +24,8 @@ defineOptions({
         <section class="mb-8">
             <h2 class="text-xl font-semibold text-gray-900 mb-2">Estado de accesibilidad</h2>
             <p>Este sitio web ha sido desarrollado siguiendo las pautas de accesibilidad <strong>WCAG 2.1 nivel AA</strong>.</p>
-            <p class="mt-1">Actualmente, se encuentra en un estado de: <span class="font-semibold text-yellow-600">En proceso de mejora</span>.</p>
+            <p class="mt-1">Actualmente, se encuentra en un estado de:
+                <Tag severity="warn">En proceso de mejora</Tag>.</p>
         </section>
 
         <section class="mb-8">

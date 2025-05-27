@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\TascaProposal;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TascaProposalRequest extends FormRequest
+class CreateTascaProposalRequest extends FormRequest
 {
     public function rules(): array
     {

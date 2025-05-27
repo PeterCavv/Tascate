@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\ManageStatus;
 use App\Enums\Role;
-use App\Http\Requests\TascaProposalRequest;
+use App\Http\Requests\TascaProposal\CreateTascaProposalRequest;
+use App\Http\Requests\TascaProposal\UpdateTascaProposalRequest;
 use App\Models\Tasca;
 use App\Models\TascaProposal;
 use App\Models\User;
@@ -37,7 +38,7 @@ class TascaProposalController extends Controller
         return Inertia::render('Auth/TascaProposalCreate');
     }
 
-    public function store(TascaProposalRequest $request)
+    public function store(CreateTascaProposalRequest $request)
     {
         $validated = $request->validated();
 
@@ -53,7 +54,7 @@ class TascaProposalController extends Controller
         return Inertia::render('Auth/TascaProposalCreated');
     }
 
-    public function update(TascaProposalRequest $request, TascaProposal $tascaProposal)
+    public function update(UpdateTascaProposalRequest $request, TascaProposal $tascaProposal)
     {
         $this->authorize('update', $tascaProposal);
 

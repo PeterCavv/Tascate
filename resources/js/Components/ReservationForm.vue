@@ -137,12 +137,13 @@ const submitReservation = () => {
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <button
+                    <Button
+                        type="submit"
                         class="px-5 py-1.5 rounded-full bg-green-600 text-white font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
                     >
                         <span v-if="!isEdit">Reservar</span>
                         <span v-else>Actualizar Reserva</span>
-                    </button>
+                    </Button>
 
                     <p v-if="!isEdit" class="font-bold text-green-950">Precio de la reserva: {{ tasca.reservation_price }}€</p>
                 </div>

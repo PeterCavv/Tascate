@@ -26,6 +26,7 @@ import Select from 'primevue/select';
 import DatePicker from 'primevue/datepicker';
 import InputNumber from 'primevue/inputnumber';
 import Fieldset from 'primevue/fieldset';
+import KeyFilter from 'primevue/keyfilter';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -52,6 +53,11 @@ createInertiaApp({
                         darkModeSelector: 'light',
                         cssLayer: false
                     }
+                },
+                locale: {
+                    choose: 'Elegir archivo',
+                    upload: 'Subir',
+                    cancel: 'Cancelar'
                 }
             });
 
@@ -71,6 +77,8 @@ createInertiaApp({
         app.component('DatePicker', DatePicker);
         app.component('InputNumber', InputNumber);
         app.component('Fieldset', Fieldset);
+
+        app.directive('keyfilter', KeyFilter);
 
         app.mount(el);
     },

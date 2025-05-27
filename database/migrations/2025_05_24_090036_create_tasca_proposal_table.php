@@ -12,10 +12,10 @@ return new class extends Migration {
             $table->string('tasca_name');
             $table->string('address');
             $table->string('telephone', 9);
-            $table->string('cif', 9)->unique();
+            $table->string('cif', 9);
             $table->string('owner_name');
-            $table->string('owner_email')->unique();
-            $table->string('dni', 9)->unique();
+            $table->string('owner_email');
+            $table->string('dni', 9);
             $table->timestamps();
         });
     }

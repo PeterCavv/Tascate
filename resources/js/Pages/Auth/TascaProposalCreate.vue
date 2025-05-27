@@ -3,6 +3,7 @@ import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {useForm} from "@inertiajs/vue3";
 import {ref} from "vue";
 import PoliticaPrivacidadModal from "@/Components/PoliticaPrivacidadModal.vue";
+import FileUpload from 'primevue/fileupload';
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -17,7 +18,7 @@ const form = useForm({
     owner_name: "",
     owner_email: "",
     dni: "",
-    dni_picture_path: ""
+    dni_picture_path: "",
 });
 
 const acceptedPrivacy = ref(false);
@@ -34,14 +35,22 @@ const submitForm = () => {
     });
 
 };
-function handleImage1Upload(event) {
-    const file = event.target.files[0]
-    form.cif_picture_path = file ? file : null
+function onFileSelectCif(event) {
+    // event.files es un array con los archivos seleccionados
+    form.cif_picture_path = event.files.length ? event.files[0] : null
 }
 
-function handleImage2Upload(event) {
-    const file = event.target.files[0]
-    form.dni_picture_path = file ? file : null
+function onFileSelectDni(event) {
+    // event.files es un array con los archivos seleccionados
+    form.dni_picture_path = event.files.length ? event.files[0] : null
+}
+
+function onFileClearCif() {
+    form.cif_picture_path = null
+}
+
+function onFileClearDni() {
+    form.dni_picture_path = null
 }
 </script>
 
@@ -53,101 +62,149 @@ function handleImage2Upload(event) {
         </h2>
 
         <div>
-            <label class="block font-semibold mb-1">Nombre de la Tasca*</label>
-            <input
+            <label for="tasca_name" class="block font-semibold">Nombre de la Tasca*</label>
+            <InputText
+                id="tasca_name"
                 v-model="form.tasca_name"
-                type="text"
-                class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                required
+                v-keyfilter="/[a-zA-Z0-9 ]/"
+                class="w-full"
+                maxlength="100"
+                placeholder="Nombre de la Tasca"
             />
         </div>
 
         <div>
-            <label class="block font-semibold mb-1">Dirección*</label>
-            <input
+            <label for="address" class="block font-semibold">Dirección*</label>
+            <InputText
+                id="address"
                 v-model="form.address"
-                type="text"
-                class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                required
+                v-keyfilter="/[a-zA-Z0-9 ]/"
+                class="w-full"
+                maxlength="200"
+                placeholder="Dirección de la Tasca"
             />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-                <label class="block font-semibold mb-1">Teléfono*</label>
-                <input
+                <label for="telephone" class="block font-semibold">Teléfono*</label>
+                <InputText
+                    id="telephone"
                     v-model="form.telephone"
-                    type="tel"
-                    class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                    v-keyfilter.int
+                    class="w-full"
                     pattern="[0-9]{9}"
                     maxlength="9"
+                    placeholder="Teléfono de contacto"
                     required
                 />
             </div>
             <div>
-                <label class="block font-semibold mb-1">CIF*</label>
-                <input
+                <label for="cif" class="block font-semibold">CIF*</label>
+                <InputText
+                    id="cif"
                     v-model="form.cif"
-                    type="text"
-                    class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 uppercase"
+                    v-keyfilter.hex
+                    class="w-full"
                     maxlength="9"
-                    required
+                    placeholder="CIF de la empresa"
                 />
             </div>
             <div>
-                <label class="block font-semibold mb-1">DNI*</label>
-                <input
+                <label for="nif" class="block font-semibold">NIF*</label>
+                <InputText
+                    id="nif"
                     v-model="form.dni"
-                    type="text"
-                    class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 uppercase"
+                    v-keyfilter.hex
+                    class="w-full"
                     maxlength="9"
-                    required
+                    placeholder="NIF del propietario"
                 />
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="block font-semibold mb-1">Nombre del Propietario*</label>
-                <input
+                <label for="owner_name" class="block font-semibold">Nombre del Propietario*</label>
+                <InputText
+                    id="owner_name"
                     v-model="form.owner_name"
-                    type="text"
-                    class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
+                    v-keyfilter="/[a-zA-Z ]/"
+                    class="w-full"
+                    maxlength="50"
+                    placeholder="Ingresa el nombre del propietario"
                 />
             </div>
             <div>
-                <label class="block font-semibold mb-1">Email del Propietario*</label>
-                <input
+                <label for="owner_email" class="block font-semibold">Email del Propietario*</label>
+                <InputText
+                    id="owner_email"
                     v-model="form.owner_email"
-                    type="email"
-                    class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                    required
+                    v-keyfilter="/[a-zA-Z0-9@._+\-]/"
+                    class="w-full"
+                    maxlength="120"
+                    placeholder="Ingresa un email válido"
                 />
             </div>
         </div>
 
-        <div>
-            <label class="block font-semibold mb-1" for="image1">CIF de la Empresa</label>
-            <input
-                id="image1"
-                type="file"
-                accept="image/*"
-                @change="handleImage1Upload"
-                class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-            />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="image1" class="block font-semibold mb-1">CIF de la Empresa</label>
+                <FileUpload
+                    id="image1"
+                    name="cif_picture"
+                    accept="image/*"
+                    customUpload
+                    :auto="false"
+                    :maxFileSize="1000000"
+                    :maxFiles="1"
+                    :showUploadButton="false"
+                    @select="onFileSelectCif"
+                    @clear="onFileClearCif"
+                    class="w-full"
+                />
+            </div>
+
+            <div>
+                <label for="dni_picture" class="block font-semibold mb-1">DNI del Representante Legal</label>
+                <FileUpload
+                    id="image2"
+                    name="dni_picture"
+                    accept="image/*"
+                    customUpload
+                    :auto="false"
+                    :maxFileSize="1000000"
+                    :maxFiles="1"
+                    :showUploadButton="false"
+                    @select="onFileSelectDni"
+                    @clear="onFileClearDni"
+                    class="w-full"
+                />
+            </div>
         </div>
 
-        <div>
-            <label class="block font-semibold mb-1" for="image2">DNI del Representante Legal</label>
-            <input
-                id="image2"
-                type="file"
-                accept="image/*"
-                @change="handleImage2Upload"
-                class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"
-            />
-        </div>
+<!--        <div>-->
+<!--            <label class="block font-semibold mb-1" for="image1">CIF de la Empresa</label>-->
+<!--            <input-->
+<!--                id="image1"-->
+<!--                type="file"-->
+<!--                accept="image/*"-->
+<!--                @change="handleImage1Upload"-->
+<!--                class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"-->
+<!--            />-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label class="block font-semibold mb-1" for="image2">DNI del Representante Legal</label>-->
+<!--            <input-->
+<!--                id="image2"-->
+<!--                type="file"-->
+<!--                accept="image/*"-->
+<!--                @change="handleImage2Upload"-->
+<!--                class="w-full border rounded px-4 py-2 focus:ring-2 focus:ring-blue-500"-->
+<!--            />-->
+<!--        </div>-->
 
         <div class="grid grid-cols-1 md:grid-cols-1 gap-4 text-xs text-gray-400">
             <p>De conformidad con el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD), le informamos de que los datos personales proporcionados serán tratados por TASCATE con la finalidad de gestionar el registro del establecimiento en nuestra plataforma.
@@ -171,13 +228,13 @@ function handleImage2Upload(event) {
             ><span class="text-l ml-3">He leído y acepto la Política de Privacidad</span>
         </div>
 
-        <button
+        <Button
             type="submit"
             class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-700 disabled:hover:bg-gray-400"
             :disabled="!acceptedPrivacy"
         >
             Enviar Propuesta
-        </button>
+        </Button>
     </form>
     <PoliticaPrivacidadModal v-if="openModal" @close="openModal = false"/>
 </template>

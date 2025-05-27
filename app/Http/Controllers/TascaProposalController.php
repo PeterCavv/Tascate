@@ -22,7 +22,7 @@ class TascaProposalController extends Controller
     public function index()
     {
         return Inertia::render('Admin/TascaProposalIndex', [
-            'tascasProposals' => TascaProposal::all(),
+            'tascasProposals' => TascaProposal::orderBy('updated_at', direction: 'desc')->get(),
         ]);
     }
 
@@ -62,6 +62,18 @@ class TascaProposalController extends Controller
 
         return redirect()->route('tascas-proposals.index')->with(
             'success', 'La Propuesta de Tasca se ha actualizado correctamente.');
+    }
+
+    public function clone(TascaProposal $tascaProposal)
+    {
+        $this->authorize('update', $tascaProposal);
+
+        $clonedProposal = $tascaProposal->replicate();
+        $clonedProposal->status = ManageStatus::PENDING->value;
+        $clonedProposal->save();
+
+        return redirect()->route('tascas-proposals.index')->with(
+            'success', 'La Propuesta de Tasca se ha clonado correctamente.');
     }
 
     public function approve(TascaProposal $tascaProposal)

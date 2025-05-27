@@ -45,13 +45,12 @@ const filteredUsers = computed(() => {
 </script>
 
 <template>
+    <Head title="Usuarios" />
     <h2 id="usersTitle" class="text-xl sm:text-2xl font-bold mb-6 text-center sm:text-left">
         Usuarios
     </h2>
     <div class="flex gap-6 w-full">
-        <!-- Columna izquierda -->
         <div class="w-1/2 flex flex-col gap-4">
-            <!-- InputText para filtrar -->
             <InputText
                 v-model="filterEmail"
                 placeholder="Filtrar por email"
@@ -65,7 +64,6 @@ const filteredUsers = computed(() => {
                 placeholder="Seleccionar estado"
             />
 
-            <!-- Lista de usuarios -->
             <Listbox
                 :options="filteredUsers"
                 v-model="selectedUser"
@@ -76,7 +74,6 @@ const filteredUsers = computed(() => {
             </Listbox>
         </div>
 
-        <!-- Columna derecha -->
         <div class="w-1/2 flex flex-col gap-4">
             <label class="font-semibold">Nombre</label>
             <InputText :value="selectedUser?.name" disabled class="w-full" />

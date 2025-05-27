@@ -73,6 +73,7 @@ Route::get('/tascas-proposals', [TascaProposalController::class, 'index'])->name
 Route::get('/tascas-proposals/{tascaProposal}', [TascaProposalController::class, 'show'])->name('tascas-proposals.show')->middleware('auth');
 Route::put('/tascas-proposals/{tascaProposal}', [TascaProposalController::class, 'update'])->name('tascas-proposals.update')->middleware('auth');
 Route::post('/tascas-proposals/{tascaProposal}/approve', [TascaProposalController::class, 'approve'])->name('tascas-proposals.approve')->middleware('auth');
+Route::post('/tascas-proposals/{tascaProposal}/clone', [TascaProposalController::class, 'clone'])->name('tascas-proposals.clone')->middleware('auth');
 
 // Imagenes privadas
 

@@ -53,7 +53,7 @@ class CreateAdmin extends Command
             return 1;
         }
 
-        if (User::role('Admin')->exists()) {
+        if (User::role(\App\Enums\Role::ADMIN->value)->exists()) {
             $this->warn('An admin user already exists. Do you want to create another one?');
             if (!$this->confirm('Do you wish to continue?')) {
                 return 0;
@@ -67,7 +67,7 @@ class CreateAdmin extends Command
             'email_verified_at' => now(),
         ]);
 
-        $user->assignRole('Admin');
+        $user->assignRole( \App\Enums\Role::ADMIN->value);
 
         $this->info('Admin user created successfully!');
         $this->table(

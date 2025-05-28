@@ -5,7 +5,6 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import SelectInput from '@/Components/SelectInput.vue';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 
 const props = defineProps({
@@ -68,7 +67,7 @@ const submit = () => {
 
               <div>
                 <InputLabel for="manager_id" value="Manager" />
-                <SelectInput
+                <Select
                   id="manager_id"
                   class="mt-1 block w-full"
                   v-model="form.manager_id"
@@ -77,12 +76,12 @@ const submit = () => {
                   <option value="">Selecciona un manager</option>
                   <option
                     v-for="manager in managers"
-                    :key="manager.id"
-                    :value="manager.id"
+                    :key="manager.manager_id"
+                    :value="manager.manager_id"
                   >
-                    {{ manager.name }}
+                    {{ manager.user.name }}
                   </option>
-                </SelectInput>
+                </Select>
                 <InputError :message="form.errors.manager_id" class="mt-2" />
               </div>
 

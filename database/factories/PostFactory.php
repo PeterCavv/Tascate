@@ -13,7 +13,11 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::getRandomOrCreate([
+                'name' => $this->faker->name(),
+                'email' => $this->faker->unique()->safeEmail(),
+                'password' => bcrypt('12345678'),
+            ])->id,
             'title' => $this->faker->sentence,
             'content' => $this->faker->paragraph,
         ];

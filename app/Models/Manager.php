@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \App\Traits\GetRandomOrCreate;
+
 
 class Manager extends Model
 {
-    use HasFactory;
+    use HasFactory, GetRandomOrCreate;
 
     protected $fillable = [
         'user_id'

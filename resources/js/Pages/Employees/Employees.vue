@@ -53,13 +53,13 @@ const deleteEmployee = () => {
           <Card v-for="employee in employees" :key="employee.id" class="hover:shadow-lg transition-shadow">
             <template #header>
               <div class="flex items-center space-x-4 p-4">
-                <Avatar :image="employee.avatar || '/default-avatar.png'" :label="employee.name.charAt(0)" size="large" shape="circle" />
-                <div class="flex-1 min-w-0">
+                  <Avatar :image="employee.user.avatar || '/default-avatar.png'" :label="employee.user.name ? employee.user.name.charAt(0) : 'T'" size="large" shape="circle" />
+                  <div class="flex-1 min-w-0">
                   <p class="text-sm font-medium text-gray-900 truncate">
-                    {{ employee.name }}
+                    {{ employee.user.name }}
                   </p>
                   <p class="text-sm text-gray-500 truncate">
-                    {{ employee.email }}
+                    {{ employee.user.email }}
                   </p>
                 </div>
               </div>

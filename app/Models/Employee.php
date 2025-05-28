@@ -32,11 +32,18 @@ class Employee extends Model
         return $this->belongsTo(Manager::class);
     }
 
+    public function scopeOneEmployee($query, $employee_id)
+    {
+        return $query->where('id', $employee_id)
+            ->with('user:id,name,email,avatar')
+            ->with('tasca:id,name')
+            ->with('manager.user:id,name,email,avatar');
+    }
     public function scopeAllEmployees($query)
     {
         return $query->whereHas('user', function ($q) {
             $q->where('role', Role::EMPLOYEE->value);
-        });
+        })->with('user:id,name,email,avatar');
     }
 
     public function scopeTascaEmployees($query, $tascaId)

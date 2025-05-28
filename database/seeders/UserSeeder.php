@@ -23,6 +23,9 @@ class UserSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ])->assignRole(Role::ADMIN->value);
 
+        User::factory()->count(10)->create();
+
+
     }
 
     private function isDataAlreadyGiven(): bool

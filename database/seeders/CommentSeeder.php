@@ -2,20 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\Friendship;
+use App\Models\Comment;
 use App\Traits\HasDataCheck;
 use Illuminate\Database\Seeder;
 
-class FriendshipSeeder extends Seeder
+class CommentSeeder extends Seeder
 {
     use HasDataCheck;
 
     public function run(): void
     {
-        if ($this->isDataAlreadyGiven(Friendship::class)) {
+        if ($this->isDataAlreadyGiven(Comment::class)) {
             return;
         }
 
-        Friendship::factory()->count(2)->create();
+        \Database\Factories\CommentFactory::new()->count(20)->create();
     }
-}
+} 

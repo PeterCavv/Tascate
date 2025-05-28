@@ -13,13 +13,15 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Observers\UserObserver;
+use \App\Traits\GetRandomOrCreate;
+
 
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, GetRandomOrCreate;
 
     protected $casts = [
         'email_verified_at' => 'datetime',

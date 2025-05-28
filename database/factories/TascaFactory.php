@@ -6,14 +6,20 @@ use App\Models\Tasca;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+
 class TascaFactory extends Factory
 {
+
     protected $model = Tasca::class;
 
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::getRandomOrCreate([
+                                'name' => $this->faker->name(),
+                                'email' => $this->faker->unique()->safeEmail(),
+                                'password' => bcrypt('12345678'),
+                            ])->id,
             'name' => $this->faker->sentence(3),
             'address' => $this->faker->address(),
             'menu' => $this->faker->sentence(5),

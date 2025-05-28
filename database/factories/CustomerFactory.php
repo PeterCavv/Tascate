@@ -10,10 +10,15 @@ class CustomerFactory extends Factory
 {
     protected $model = Customer::class;
 
+
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::getRandomOrCreate([
+                'name' => $this->faker->unique()->name(),
+                'email' => $this->faker->unique()->safeEmail(),
+                'password' => bcrypt('12345678'),
+            ])->id,
         ];
     }
 }

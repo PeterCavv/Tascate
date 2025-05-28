@@ -42,9 +42,13 @@ class EmployeeController extends Controller
     {
         $this->authorize('view', $employee);
 
-        if ($employee->user->avatar) {
-            $employee->user->avatar = asset('storage/' . $employee->user->avatar);
-        }
+//        if ($employee->user->avatar) {
+//            $employee->user->avatar = asset('storage/' . $employee->user->avatar);
+//        }
+
+        $employee_id = $employee->id;
+
+        $employee = Employee::oneEmployee($employee_id)->first();
 
         return Inertia::render('Employees/EmployeeShow', [
             'employee' => $employee,

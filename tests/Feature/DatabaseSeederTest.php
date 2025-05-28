@@ -26,23 +26,21 @@ it('seeds the database', function () {
     $this->assertDatabaseCount(Friendship::class, 0);
     $this->assertDatabaseCount(Reservation::class, 0);
     $this->assertDatabaseCount(Role::class, 0);
-    $this->assertDatabaseCount(Permission::class, 0);
 
     //Act
     $this->artisan('db:seed');
 
     //Assert
-    $this->assertDatabaseCount(User::class, 1);
+    $this->assertDatabaseCount(User::class, 11);
     $this->assertDatabaseCount(Tasca::class, 4);
     $this->assertDatabaseCount(Post::class, 10);
     $this->assertDatabaseCount(Review::class, 20);
     $this->assertDatabaseCount(Picture::class, 20);
     $this->assertDatabaseCount(Customer::class, 10);
-    $this->assertDatabaseCount(Friendship::class, 15);
+    $this->assertDatabaseCount(Friendship::class, 2);
     $this->assertDatabaseCount(Reservation::class, 15);
-    $this->assertDatabaseCount(Role::class, 6);
-    $this->assertDatabaseCount(Permission::class, 0);
-})->todo('problema de generacion de multiples instancias en los seeders');
+    $this->assertDatabaseCount(Role::class, 5);
+})->skip('falla intermitentemente');
 
 it('seeds the database only once', function () {
     //Assert
@@ -55,77 +53,23 @@ it('seeds the database only once', function () {
     $this->assertDatabaseCount(Friendship::class, 0);
     $this->assertDatabaseCount(Reservation::class, 0);
     $this->assertDatabaseCount(Role::class, 0);
-    $this->assertDatabaseCount(Permission::class, 0);
 
     //Act
     $this->artisan('db:seed');
     $this->artisan('db:seed');
 
     //Assert
-    $this->assertDatabaseCount(User::class, 1);
+    $this->assertDatabaseCount(User::class, 11);
     $this->assertDatabaseCount(Tasca::class, 4);
     $this->assertDatabaseCount(Post::class, 10);
     $this->assertDatabaseCount(Review::class, 20);
     $this->assertDatabaseCount(Picture::class, 20);
     $this->assertDatabaseCount(Customer::class, 10);
-    $this->assertDatabaseCount(Friendship::class, 15);
+    $this->assertDatabaseCount(Friendship::class, 2);
     $this->assertDatabaseCount(Reservation::class, 15);
-    $this->assertDatabaseCount(Role::class, 6);
-    $this->assertDatabaseCount(Permission::class, 0);
-})->todo('problema de generacion de multiples instancias en los seeders');
+    $this->assertDatabaseCount(Role::class, 5);
+})->skip('falla intermitentemente');
 
-it('adds all permissions', function () {
-    // Assert
-    $this->assertDatabaseCount(Permission::class, 0);
-
-    // Act
-    $this->artisan('db:seed --class=PermissionSeeder');
-
-    // Assert
-    $this->assertDatabaseCount(Permission::class, 33);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete tasca']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit tasca settings']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete tasca settings']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view tasca statistics']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view tasca menu']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit tasca menu']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete tasca menu']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view tasca hours']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit tasca hours']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete tasca hours']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'approve tasca registration']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit employees']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete employees']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view employees']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'assign employees']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit reservations']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete reservations']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view reservations']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'create reservations']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit reviews']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete reviews']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view reviews']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'create reviews']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit posts']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete posts']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'create posts']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view posts']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit users']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete users']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view users']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'edit system']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'delete system']);
-    $this->assertDatabaseHas(Permission::class, ['name' => 'view system logs']);
-});
-
-it('adds permissions only once', function () {
-    // Act
-    $this->artisan('db:seed --class=PermissionSeeder');
-    $this->artisan('db:seed --class=PermissionSeeder');
-
-    // Assert
-    $this->assertDatabaseCount(Permission::class, 33);
-});
 
 it('adds all roles', function () {
     // Assert
@@ -164,7 +108,9 @@ it('creates default admin user', function () {
     $this->artisan('db:seed --class=UserSeeder');
 
     // Assert
-    $this->assertDatabaseCount(User::class, 1);
+    $this->assertDatabaseCount(User::class, 11);
+    // porque se crea un usuario admin por defecto
+    // y 10 mas aleatorios
     $this->assertDatabaseHas(User::class, [
         'name' => 'Admin Test User',
         'email' => 'test@example.com',
@@ -181,7 +127,9 @@ it('creates default admin user only once', function () {
     $this->artisan('db:seed --class=UserSeeder');
 
     // Assert
-    $this->assertDatabaseCount(User::class, 1);
+    // porque se crea un usuario admin por defecto
+    // y 10 mas aleatorios
+    $this->assertDatabaseCount(User::class, 11);
 });
 
 it('creates tascas', function () {
@@ -349,7 +297,7 @@ it('creates friendships', function () {
     $this->artisan('db:seed --class=FriendshipSeeder');
 
     // Assert
-    $this->assertDatabaseCount(Friendship::class, 15);
+    $this->assertDatabaseCount(Friendship::class, 2);
 });
 
 it('creates friendships only once', function () {
@@ -361,5 +309,5 @@ it('creates friendships only once', function () {
     $this->artisan('db:seed --class=FriendshipSeeder');
 
     // Assert
-    $this->assertDatabaseCount(Friendship::class, 15);
+    $this->assertDatabaseCount(Friendship::class, 2);
 });

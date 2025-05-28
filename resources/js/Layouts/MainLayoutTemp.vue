@@ -4,6 +4,12 @@ import { ref } from 'vue';
 
 const sidebarOpen = ref(false);
 
+const visible = ref(false)
+
+function showModal() {
+    visible.value = true
+}
+
 </script>
 
 <template>
@@ -69,12 +75,24 @@ const sidebarOpen = ref(false);
                         </Link>
                         <Link
                             v-if="($page.props.auth.user && $page.props.auth.user.role === 'admin') ||
-                                      ($page.props.auth.user && $page.props.auth.user.role === 'tasca') "
-                            href="/managers"
+    ($page.props.auth.user && $page.props.auth.user.role === 'tasca')"
+                            href=""
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                            @click.prevent="showModal"
                         >
-                          Managers
+                            Managers
                         </Link>
+                        <Dialog
+                            v-model:visible="visible"
+                            maximizable
+                            modal
+                            header="Alerta"
+                            :style="{ width: '30rem' }"
+                            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+                        >
+                            <p class="m-0">En proceso ...</p>
+                        </Dialog>
+
                         <Link
                             v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
                             href="/reservations"

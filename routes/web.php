@@ -97,9 +97,12 @@ Route::get('/imagen-privada/{path}', function (Request $request, $path) {
 // Tascas Routes
 
 Route::get('/tascas', [TascaController::class, 'index'])->name('tascas.index');
+Route::get('/tascas/favorites', [TascaController::class, 'favoriteIndex'])->name('tascas.favorites')->middleware('auth');
 Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.show');
 Route::get('/tascas/{tasca}/edit', [TascaController::class, 'edit'])->name('tascas.edit')->middleware('auth');
 Route::post('/tascas/{tasca}', [TascaController::class, 'update'])->name('tascas.update')->middleware('auth');
+Route::post('/tascas/{tasca}/toggle-favorite', [TascaController::class, 'toggleFavorite'])->name('tascas.toggle-favorite')->middleware('auth');
+
 
 // Reservations Routes
 

@@ -13,7 +13,16 @@ class TascaController extends Controller
 
     public function index()
     {
-        $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get();
+        $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
+            ->map(function ($tasca) {
+                $user = auth()->user();
+                if ($user->hasRole('admin')){
+                    $tasca->is_favorite = true;
+                }else{
+                $tasca->is_favorite = $user ? $user->customer->favoriteTascas->contains($tasca->id) : false;
+                }
+                return $tasca;
+            });
 
         return Inertia::render('Tascas/TascasIndex', [
             'tascas' => $tascas,
@@ -26,6 +35,8 @@ class TascaController extends Controller
             $tasca->picture = asset($tasca->picture);
         }
         $tasca_picture_path = $tasca->picture;
+        $tasca->is_favorite = auth()->user() ?
+            auth()->user()->customer->favoriteTascas->contains($tasca->id) : false;
 
         return Inertia::render('Tascas/TascaShow', [
             'tasca' => $tasca->load('user', 'reservations', 'reviews.customer.user'),
@@ -58,5 +69,42 @@ class TascaController extends Controller
 
         return redirect()->route('tascas.show', $tasca)->with('success',
             'Tasca actualizada correctamente.');
+    }
+
+    public function toggleFavorite(Tasca $tasca)
+    {
+        if (auth()->user()->hasRole('admin')) {
+            return;
+        }
+
+        $customer = auth()->user()->customer;
+
+        if ($customer->favoriteTascas->contains($tasca->id)) {
+            $customer->favoriteTascas()->detach($tasca->id);
+        } else {
+            $customer->favoriteTascas()->attach($tasca->id);
+        }
+    }
+
+    public function favoriteIndex()
+    {
+
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+            return Inertia::render('Tascas/TascasIndex', [
+                'tascas' => collect(),
+            ]);
+        }
+
+        $favoriteTascas = $user->customer->favoriteTascas->load('user', 'reservations', 'reviews.customer.user')
+            ->map(function ($tasca ) use ($user) {
+                    $tasca->is_favorite = true;
+                    return $tasca;
+            });
+
+        return Inertia::render('Tascas/TascasIndex', [
+            'tascas' => $favoriteTascas,
+        ]);
     }
 }

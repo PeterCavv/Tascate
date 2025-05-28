@@ -43,6 +43,13 @@ const isOpenMoreThan8Hours = (tasca) => {
     return diff > 8;
 }
 
+const toggleFavorite = (tasca) => {
+    router.post(route('tascas.toggle-favorite', tasca), {}, {
+        preserveState: true,
+        preserveScroll: true,
+    });
+};
+
 </script>
 
 <template>
@@ -119,6 +126,13 @@ const isOpenMoreThan8Hours = (tasca) => {
                     </template>
                 </div>
                 <div class="text-sm text-gray-600 mt-1">{{ tasca.reviews.length }} reseña/s</div>
+                <button
+                    @click.stop
+                    @click="toggleFavorite(tasca)"
+                    class="text-gray-400 hover:text-gray-600 transition-transform duration-200 mt-3 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1"
+                >
+                    <i :class="tasca.is_favorite ? 'pi pi-bookmark-fill text-gray-600 text-3xl' : 'pi pi-bookmark text-3xl'"></i>
+                </button>
             </div>
         </div>
 

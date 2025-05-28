@@ -3,6 +3,7 @@ import {Head, router} from '@inertiajs/vue3'
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
 
+
 const {tascas} = defineProps({
     tascas: Array,
 })
@@ -12,6 +13,13 @@ const { getRoundedRating } = useRatingCalculator();
 defineOptions({
         layout: MainLayoutTemp,
 });
+
+function toggleFavorite(tasca) {
+  router.post(route('tascas.toggle-favorite', tasca), {}, {
+    preserveState: true,
+    preserveScroll: true,
+  });
+}
 
 
 </script>
@@ -32,9 +40,11 @@ defineOptions({
                 <div class="bg-white shadow-md rounded-xl p-4 h-40 hover:shadow-lg transition flex items-end relative">
 
                     <button
-                        class="absolute top-2 right-2 text-red-400 hover:text-red-600 transition-transform duration-200"
+                        @click.stop
+                        @click="toggleFavorite(tasca)"
+                        class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-transform duration-200"
                     >
-                        <span>🤍</span>
+                        <i :class="tasca.is_favorite ? 'pi pi-bookmark-fill text-gray-600' : 'pi pi-bookmark'"></i>
                     </button>
 
                     <div class="text-left w-full">

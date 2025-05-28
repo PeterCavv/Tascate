@@ -76,7 +76,7 @@ function showModal() {
                         <Link
                             v-if="($page.props.auth.user && $page.props.auth.user.role === 'admin') ||
     ($page.props.auth.user && $page.props.auth.user.role === 'tasca')"
-                            href=""
+                            href="/"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                             @click.prevent="showModal"
                         >

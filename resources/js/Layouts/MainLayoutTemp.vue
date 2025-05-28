@@ -65,7 +65,7 @@ function showModal() {
                             Posts Favoritos
                         </Link>
                         <Link
-                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
+                            v-if="$page.props.auth.user && $page.props.auth.is_admin"
                             href="/tascas-proposals"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >

@@ -1,6 +1,6 @@
 <script setup>
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {Head, Link, router} from '@inertiajs/vue3';
+import {Head, router} from '@inertiajs/vue3';
 import {computed, ref} from "vue";
 import InputText from 'primevue/inputtext'
 import Listbox from 'primevue/listbox';

@@ -23,6 +23,7 @@ class UserController extends Controller
         return Inertia::render('Users/Users', [
             'users' => $users,
             'authUserId' => $authUserId,
+            'role' => auth()->user() ? auth()->user()->getRoleNames() : [],
         ]);
     }
 

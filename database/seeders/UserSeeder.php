@@ -21,21 +21,36 @@ class UserSeeder extends Seeder
             'name' => 'Admin Test User',
             'email' => 'test@example.com',
             'password' => bcrypt('12345678'),
+            'role' => Role::ADMIN->value,
         ])->assignRole(Role::ADMIN->value);
 
-        User::factory()->count(10)->create()->each(function ($user) {
+        User::factory()->count(10)->create([
+            'role' => Role::ADMIN->value,
+        ])->each(function ($user) {
             $user->assignRole(Role::ADMIN->value);
         });
-        User::factory()->count(10)->create()->each(function ($user) {
+
+        User::factory()->count(10)->create([
+            'role' => Role::TASCA->value,
+        ])->each(function ($user) {
             $user->assignRole(Role::TASCA->value);
         });
-        User::factory()->count(10)->create()->each(function ($user) {
+
+        User::factory()->count(10)->create([
+            'role' => Role::MANAGER->value,
+        ])->each(function ($user) {
             $user->assignRole(Role::MANAGER->value);
         });
-        User::factory()->count(10)->create()->each(function ($user) {
+
+        User::factory()->count(10)->create([
+            'role' => Role::EMPLOYEE->value,
+        ])->each(function ($user) {
             $user->assignRole(Role::EMPLOYEE->value);
         });
-        User::factory()->count(10)->create()->each(function ($user) {
+
+        User::factory()->count(10)->create([
+            'role' => Role::EMPLOYEE->value
+        ])->each(function ($user) {
             $user->assignRole(Role::CUSTOMER->value);
         });
 

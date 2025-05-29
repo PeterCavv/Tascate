@@ -83,15 +83,17 @@ class EmployeeController extends Controller
             'role' => Role::EMPLOYEE->value,
         ]);
 
+        $user->assignRole(Role::EMPLOYEE->value);
+
         $employee = Employee::create([
             'user_id' => $user->id,
             'tasca_id' => $validated['tasca_id'],
             'manager_id' => $validated['manager_id'] ?? null,
         ]);
 
-            return redirect()
-                ->route('employees.show', $employee)
-                ->with('success', 'Empleado creado exitosamente.');
+        return redirect()
+            ->route('employees.show', $employee)
+            ->with('success', 'Empleado creado exitosamente.');
     }
 
     public function edit(Employee $employee)
@@ -123,7 +125,7 @@ class EmployeeController extends Controller
         DB::transaction(function () use ($employee) {
             $user = $employee->user;
             $employee->delete();
-            
+
             // Comprobar si el usuario tiene más empleos
             $hasMoreJobs = Employee::where('user_id', $user->id)->exists();
             if (!$hasMoreJobs) {

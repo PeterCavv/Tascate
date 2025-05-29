@@ -17,11 +17,11 @@ class RoleSeeder extends Seeder
         }
 
         // Create roles
-        $admin = Role::create(['name' => \App\Enums\Role::ADMIN->value]);
-        $manager = Role::create(['name' => \App\Enums\Role::MANAGER->value]);
-        $employee = Role::create(['name' => \App\Enums\Role::EMPLOYEE->value]);
-        $tasca = Role::create(['name' => \App\Enums\Role::TASCA->value]);
-        $customer = Role::create(['name' => \App\Enums\Role::CUSTOMER->value]);
+        Role::create(['name' => \App\Enums\Role::ADMIN->value]);
+        Role::create(['name' => \App\Enums\Role::TASCA->value]);
+        Role::create(['name' => \App\Enums\Role::MANAGER->value]);
+        Role::create(['name' => \App\Enums\Role::EMPLOYEE->value]);
+        Role::create(['name' => \App\Enums\Role::CUSTOMER->value]);
 
     }
 

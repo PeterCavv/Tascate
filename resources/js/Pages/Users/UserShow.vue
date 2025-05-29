@@ -55,7 +55,7 @@ const deleteUser = () => {
         </div>
 
         <div class="mt-4 flex space-x-2">
-            <div v-if="authUserId === user.id || $page.props.auth.user.role === 'admin'">
+            <div v-if="authUserId === user.id || $page.props.auth.is_admin">
                 <Link
                     class="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 transition"
                     :href="route('users.edit', user.id)"
@@ -69,7 +69,7 @@ const deleteUser = () => {
                     Eliminar
                 </button>
                 <Link
-                    v-if="!$page.props.auth.impersonating && user.role !== 'admin'"
+                    v-if="!$page.props.auth.impersonating && user.role_name !== 'admin'"
                     :href="route('impersonate.start', user.id)"
                     method="get"
                     class="btn px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-600 transition"

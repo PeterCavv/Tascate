@@ -53,20 +53,20 @@ const deleteManager = () => {
           <Card v-for="manager in managers" :key="manager.id" class="hover:shadow-lg transition-shadow">
             <template #header>
               <div class="flex items-center space-x-4 p-4">
-                <Avatar :image="manager.avatar || '/default-avatar.png'" :label="manager.name.charAt(0)" size="large" shape="circle" />
+                <Avatar :image="manager.user.avatar || '/default-avatar.png'" :label="manager.user.name.charAt(0)" size="large" shape="circle" />
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-medium text-gray-900 truncate">
-                    {{ manager.name }}
+                    {{ manager.user.name }}
                   </p>
                   <p class="text-sm text-gray-500 truncate">
-                    {{ manager.email }}
+                    {{ manager.user.email }}
                   </p>
                 </div>
               </div>
             </template>
             <template #footer>
               <div class="flex justify-end space-x-2">
-                <Link :href="route('managers.show', manager.id)">
+                <Link :href="route('managers.show', manager.user.id)">
                   <Button icon="pi pi-eye" severity="info" text rounded />
                 </Link>
                 <Link :href="route('managers.edit', manager.id)">

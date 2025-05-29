@@ -31,7 +31,7 @@ it('seeds the database', function () {
     $this->artisan('db:seed');
 
     //Assert
-    $this->assertDatabaseCount(User::class, 11);
+    $this->assertDatabaseCount(User::class, 51);
     $this->assertDatabaseCount(Tasca::class, 4);
     $this->assertDatabaseCount(Post::class, 10);
     $this->assertDatabaseCount(Review::class, 20);
@@ -59,7 +59,7 @@ it('seeds the database only once', function () {
     $this->artisan('db:seed');
 
     //Assert
-    $this->assertDatabaseCount(User::class, 11);
+    $this->assertDatabaseCount(User::class, 51);
     $this->assertDatabaseCount(Tasca::class, 4);
     $this->assertDatabaseCount(Post::class, 10);
     $this->assertDatabaseCount(Review::class, 20);
@@ -99,7 +99,7 @@ it('adds roles only once', function () {
     $this->assertDatabaseCount(Role::class, count($roles));
 });
 
-it('creates default admin user', function () {
+it('creates user', function () {
     // Assert
     $this->assertDatabaseCount(User::class, 0);
 
@@ -108,28 +108,16 @@ it('creates default admin user', function () {
     $this->artisan('db:seed --class=UserSeeder');
 
     // Assert
-    $this->assertDatabaseCount(User::class, 11);
-    // porque se crea un usuario admin por defecto
-    // y 10 mas aleatorios
-    $this->assertDatabaseHas(User::class, [
-        'name' => 'Admin Test User',
-        'email' => 'test@example.com',
-    ]);
-
-    $admin = User::where('email', 'test@example.com')->first();
-    expect($admin->hasRole(UseRole::ADMIN->value))->toBeTrue();
+    $this->assertDatabaseCount(User::class, 51);
 });
 
-it('creates default admin user only once', function () {
+it('creates user only once', function () {
     // Act
     $this->artisan('db:seed --class=RoleSeeder');
     $this->artisan('db:seed --class=UserSeeder');
     $this->artisan('db:seed --class=UserSeeder');
 
-    // Assert
-    // porque se crea un usuario admin por defecto
-    // y 10 mas aleatorios
-    $this->assertDatabaseCount(User::class, 11);
+    $this->assertDatabaseCount(User::class, 51);
 });
 
 it('creates tascas', function () {

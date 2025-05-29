@@ -2,6 +2,10 @@
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import Card from 'primevue/card';
+import Avatar from 'primevue/avatar';
+import Button from 'primevue/button';
+
 
 const props = defineProps({
     employees: Array,
@@ -76,6 +80,12 @@ const deleteEmployee = () => {
               </div>
             </template>
           </Card>
+            <Link
+                :href="route('employees.create')"
+                class="fixed bottom-10 right-12 z-50"
+            >
+                <Button label="Nuevo Empleado" icon="pi pi-user" />
+            </Link>
         </div>
       </div>
     </div>

@@ -5,7 +5,6 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import SelectInput from '@/Components/SelectInput.vue';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 
 const props = defineProps({
@@ -68,7 +67,7 @@ const submit = () => {
 
               <div>
                 <InputLabel for="tasca_id" value="Tasca" />
-                <SelectInput
+                <Select
                   id="tasca_id"
                   class="mt-1 block w-full"
                   v-model="form.tasca_id"
@@ -82,7 +81,7 @@ const submit = () => {
                   >
                     {{ tasca.name }}
                   </option>
-                </SelectInput>
+                </Select>
                 <InputError :message="form.errors.tasca_id" class="mt-2" />
               </div>
 

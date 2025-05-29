@@ -27,6 +27,8 @@ import DatePicker from 'primevue/datepicker';
 import InputNumber from 'primevue/inputnumber';
 import Fieldset from 'primevue/fieldset';
 import KeyFilter from 'primevue/keyfilter';
+import SplitButton from 'primevue/splitbutton';
+
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -77,6 +79,7 @@ createInertiaApp({
         app.component('DatePicker', DatePicker);
         app.component('InputNumber', InputNumber);
         app.component('Fieldset', Fieldset);
+        app.component('SplitButton', SplitButton);
 
         app.directive('keyfilter', KeyFilter);
 

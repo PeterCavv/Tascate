@@ -14,11 +14,6 @@ import ApplicationTextLogo from "@/Components/ApplicationTextLogo.vue";
                                     <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
                                         <slot name="title">Tascate</slot>
                                     </h1>
-<!--                                    <div class="w-20 h-auto flex items-left justify-left">-->
-<!--                                        <ApplicationTextLogo-->
-<!--                                            style="transform: scale(1.2);"-->
-<!--                                        />-->
-<!--                                    </div>-->
                                     <p class="text-gray-500 mt-2">
                                         <slot name="subtitle">Complete todos los campos requeridos (*) </slot>
                                     </p>

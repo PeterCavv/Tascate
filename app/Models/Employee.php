@@ -56,7 +56,6 @@ class Employee extends Model
         if($employee->manager_id !== null){
             throw new \Exception('Esta Tasca ya tiene un manager, no puedes tener dos manager a la vez.');
         }
-        $employee->role = Role::MANAGER->value;
-        $employee->save();
+        $employee->user->update(['role' => Role::MANAGER->value]);
     }
 }

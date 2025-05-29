@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import ProfileLayout from "@/Layouts/ProfileLayout.vue";
 
 const props = defineProps({
     employee: Object,
@@ -39,6 +40,7 @@ const deleteEmployee = () => {
   <Head :title="employee.user.name" />
 
   <MainLayoutTemp>
+      <ProfileLayout>
     <template #header>
       <div class="flex justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -113,5 +115,6 @@ const deleteEmployee = () => {
         </div>
       </div>
     </Dialog>
+      </ProfileLayout>
   </MainLayoutTemp>
 </template>

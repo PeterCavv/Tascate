@@ -31,11 +31,18 @@ class Manager extends Model
         return $this->belongsTo(Tasca::class);
     }
 
+    public function scopeOneManager($query, $manager_id)
+    {
+        return $query->where('id', $manager_id)
+            ->with('user:id,name,email,avatar')
+            ->with('tasca:id,name');
+    }
+
     public function scopeAllManagers($query)
     {
         return $query->whereHas('user', function ($q) {
             $q->where('role', Role::MANAGER->value);
-        });
+        })->with('user:id,name,email,avatar');
     }
 
     public function scopeTascaManagers($query, $tascaId)
@@ -45,7 +52,6 @@ class Manager extends Model
 
     public function demote(Manager $manager): void
     {
-        $manager->role = Role::EMPLOYEE->value;
-        $manager->save();
+        $manager->user->update(['role' => Role::EMPLOYEE->value]);
     }
 }

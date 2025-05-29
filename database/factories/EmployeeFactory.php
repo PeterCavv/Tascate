@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Role;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Manager;
@@ -19,6 +20,9 @@ class EmployeeFactory extends Factory
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
+                'role' => Role::TASCA->value,
+            ], [
+                'role' => Role::TASCA->value,
             ])->id,
             'name' => $this->faker->sentence(3),
             'address' => $this->faker->address(),
@@ -37,6 +41,9 @@ class EmployeeFactory extends Factory
                 'name' => $this->faker->unique()->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
+                'role' => Role::EMPLOYEE->value,
+            ], [
+                'role' => Role::EMPLOYEE->value,
             ])->id,
             'tasca_id' => $tasca->id,
             'manager_id' => Manager::getRandomOrCreate([
@@ -45,6 +52,9 @@ class EmployeeFactory extends Factory
                                             'name' => $this->faker->unique()->name(),
                                             'email' => $this->faker->unique()->safeEmail(),
                                             'password' => bcrypt('12345678'),
+                                            'role' => Role::MANAGER->value,
+                                        ], [
+                                            'role' => Role::MANAGER->value,
                                         ])->id,
             ])->id,
         ];

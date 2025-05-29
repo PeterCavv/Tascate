@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Role;
 use App\Models\Manager;
 use App\Models\Tasca;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,6 +20,9 @@ class ManagerFactory extends Factory
                     'name' => $this->faker->name(),
                     'email' => $this->faker->unique()->safeEmail(),
                     'password' => bcrypt('12345678'),
+                    'role' => Role::TASCA->value,
+                ], [
+                    'role' => Role::TASCA->value,
                 ])->id,
                 'name' => $this->faker->sentence(3),
                 'address' => $this->faker->address(),
@@ -36,6 +40,9 @@ class ManagerFactory extends Factory
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
+                'role' => Role::MANAGER->value,
+            ], [
+                'role' => Role::MANAGER->value,
             ])->id,
         ];
     }

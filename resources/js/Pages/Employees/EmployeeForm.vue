@@ -1,12 +1,15 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import FormLayout from "@/Layouts/FormLayout.vue";
+import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
+import Button from 'primevue/button';
+import FloatLabel from 'primevue/floatlabel';
 
 const props = defineProps({
     tascas: Array,
-    managers: Array,
     auth: Object,
 });
 
@@ -17,18 +20,23 @@ const form = useForm({
     manager_id: '',
 });
 
-const isManager = ref(false);
-const isTascaAssigned = ref(false);
+const showManagerField = ref(false);
+const selectedTasca = ref(null);
 
-onMounted(() => {
-    if (props.auth.user.manager_id) {
-        isManager.value = true;
-        form.manager_id = props.auth.user.manager_id;
-    }
-
-    if (props.auth.user.tasca_id) {
-        isTascaAssigned.value = true;
-        form.tasca_id = props.auth.user.tasca_id;
+watch(() => form.tasca_id, (newTascaId) => {
+    if (newTascaId) {
+        selectedTasca.value = props.tascas.find(t => t.id === newTascaId);
+        if (selectedTasca.value?.manager) {
+            form.manager_id = selectedTasca.value.manager.id;
+            showManagerField.value = true;
+        } else {
+            form.manager_id = '';
+            showManagerField.value = false;
+        }
+    } else {
+        selectedTasca.value = null;
+        form.manager_id = '';
+        showManagerField.value = false;
     }
 });
 
@@ -96,32 +104,24 @@ const submit = () => {
               optionValue="id"
               class="w-full"
               required
-              :disabled="isTascaAssigned"
             />
             <label for="tasca_id">Tasca*</label>
           </FloatLabel>
           <small class="p-error" v-if="form.errors.tasca_id">{{ form.errors.tasca_id }}</small>
-          <small v-if="isTascaAssigned" class="text-gray-500">
-            Tasca asignada automáticamente
-          </small>
         </div>
 
-        <div class="field">
+        <div v-if="showManagerField" class="field">
           <FloatLabel>
-            <Dropdown
+            <InputText
               id="manager_id"
-              v-model="form.manager_id"
-              :options="managers"
-              optionLabel="name"
-              optionValue="id"
+              v-model="selectedTasca.manager.user.name"
               class="w-full"
-              :disabled="isManager"
+              disabled
             />
             <label for="manager_id">Manager</label>
           </FloatLabel>
-          <small class="p-error" v-if="form.errors.manager_id">{{ form.errors.manager_id }}</small>
-          <small v-if="isManager" class="text-gray-500">
-            Manager asignado automáticamente
+          <small class="text-gray-500">
+            Manager asignado automáticamente.
           </small>
         </div>
 

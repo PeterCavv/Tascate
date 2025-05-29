@@ -30,8 +30,14 @@ class ManagerController extends Controller
             $tascaId = $authUser->tasca_id;
             $manager = Manager::tascaManagers($tascaId)->get();
 
+            if($manager->isEmpty()) {
+                return redirect()
+                    ->route('managers.index')
+                    ->with('info', 'No hay managers asignados a esta Tasca. Por favor, crea uno.');
+            }
+
             return redirect()
-                ->route('manager.show', $manager);
+                ->route('managers.show', $manager->first());
         }
 
         return Inertia::render('Managers/Managers', [
@@ -42,10 +48,6 @@ class ManagerController extends Controller
     public function show(Manager $manager)
     {
         $this->authorize('view', $manager);
-
-        if ($manager->avatar) {
-            $manager->avatar = asset('storage/' . $manager->avatar);
-        }
 
         return Inertia::render('Managers/ManagerShow', [
             'manager' => $manager,
@@ -78,7 +80,20 @@ class ManagerController extends Controller
     {
         $this->authorize('delete', $manager);
 
-        $manager->delete();
+        DB::transaction(function () use ($manager) {
+            // Primero actualizamos los empleados que tienen este manager
+            $manager->employees()->update(['manager_id' => null]);
+            
+            $user = $manager->user;
+            $manager->delete();
+            
+            // Comprobar si el usuario tiene más trabajos (como empleado o manager)
+            $hasMoreJobs = Employee::where('user_id', $user->id)->exists() || 
+                          Manager::where('user_id', $user->id)->exists();
+            if (!$hasMoreJobs) {
+                $user->delete();
+            }
+        });
 
         return redirect()
             ->route('managers.index')

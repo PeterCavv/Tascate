@@ -12,9 +12,9 @@ trait GetRandomOrCreate
      * @param array $attributes
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public static function getRandomOrCreate(array $attributes = [])
+    public static function getRandomOrCreate(array $attributes = [], array $where = [])
     {
-        $existingModel = static::inRandomOrder()->first();
+        $existingModel = static::where($where)->inRandomOrder()->first();
 
         return $existingModel ?? static::create($attributes);
     }

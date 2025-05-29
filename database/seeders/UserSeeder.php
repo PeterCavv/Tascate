@@ -23,7 +23,21 @@ class UserSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ])->assignRole(Role::ADMIN->value);
 
-        User::factory()->count(10)->create();
+        User::factory()->count(10)->create()->each(function ($user) {
+            $user->assignRole(Role::ADMIN->value);
+        });
+        User::factory()->count(10)->create()->each(function ($user) {
+            $user->assignRole(Role::TASCA->value);
+        });
+        User::factory()->count(10)->create()->each(function ($user) {
+            $user->assignRole(Role::MANAGER->value);
+        });
+        User::factory()->count(10)->create()->each(function ($user) {
+            $user->assignRole(Role::EMPLOYEE->value);
+        });
+        User::factory()->count(10)->create()->each(function ($user) {
+            $user->assignRole(Role::CUSTOMER->value);
+        });
 
 
     }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Role;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,6 +21,9 @@ class ReviewFactory extends Factory
                             'name' => $this->faker->name(),
                             'email' => $this->faker->unique()->safeEmail(),
                             'password' => bcrypt('12345678'),
+                            'role' => Role::TASCA->value,
+                        ], [
+                            'role' => Role::TASCA->value,
                         ])->id,
                 'name' => $this->faker->sentence(3),
                 'address' => $this->faker->address(),
@@ -38,6 +42,9 @@ class ReviewFactory extends Factory
                     'name' => $this->faker->unique()->name(),
                     'email' => $this->faker->unique()->safeEmail(),
                     'password' => bcrypt('12345678'),
+                    'role' => Role::CUSTOMER->value,
+                ], [
+                    'role' => Role::CUSTOMER->value,
                 ])->id,
             ])->id,
             'body' => $this->faker->text(200),

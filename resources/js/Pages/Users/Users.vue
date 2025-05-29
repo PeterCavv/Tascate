@@ -37,11 +37,10 @@ const selectedUser = ref(null)
 const filteredUsers = computed(() => {
     return props.users.filter(user => {
         const matchesEmail = user.email.toLowerCase().includes(filterEmail.value.toLowerCase())
-        const matchesRole = user.role.toLowerCase().includes(filterRole.value.toLowerCase())
+        const matchesRole = user.role_name.toLowerCase().includes(filterRole.value.toLowerCase())
         return matchesEmail && matchesRole
     })
 })
-
 </script>
 
 <template>
@@ -82,10 +81,10 @@ const filteredUsers = computed(() => {
             <InputText :value="selectedUser?.email" disabled class="w-full" />
 
             <label class="font-semibold">Rol</label>
-            <InputText :value="selectedUser?.role" disabled class="w-full" />
+            <InputText :value="selectedUser?.role_name" disabled class="w-full" />
 
             <Button
-                :disabled="!selectedUser || selectedUser?.id === authUserId || selectedUser.role === 'admin'"
+                :disabled="!selectedUser || selectedUser?.id === authUserId || selectedUser.role_name === 'admin'"
                 label="Impersonar"
                 icon="pi pi-user"
                 class="w-fit mt-2"

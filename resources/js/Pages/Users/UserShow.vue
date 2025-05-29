@@ -50,7 +50,7 @@ const deleteUser = () => {
             <div>
                 <h2 class="text-xl font-semibold">{{ user.name }}</h2>
                 <p class="text-gray-600">{{ user.email }}</p>
-                <p class="text-gray-600">{{ user.role }}</p>
+                <p class="text-gray-600">{{ user.role_name }}</p>
             </div>
         </div>
 

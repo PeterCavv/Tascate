@@ -52,6 +52,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['role_name'];
+
     /**
      * Return if the user is an admin.
      * @return bool
@@ -186,5 +188,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
             ->wherePivot('status', 'blocked');
+    }
+
+    /**
+     * Get the user's role name.
+     *
+     * @return string
+     */
+    public function getRoleNameAttribute(): string
+    {
+        return $this->roles->first()?->name ?? '';
     }
 }

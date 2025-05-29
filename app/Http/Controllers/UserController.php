@@ -13,7 +13,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::with('roles')->get();
 
         if (auth()->check()) {
             $authUserId = auth()->user()->id;
@@ -38,6 +38,8 @@ class UserController extends Controller
         } else {
             $authUserId = null;
         }
+
+        $user->load('roles');
 
         return Inertia::render('Users/UserShow', [
             'user' => $user->load('posts', 'customer.reviews'),

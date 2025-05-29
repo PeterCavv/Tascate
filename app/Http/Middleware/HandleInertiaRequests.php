@@ -38,7 +38,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 ...($shared['auth'] ?? []),
                 'user'          => $request->user()?->load('tasca'),
-                'role' => $request?->user()?->getRoleNames(),
+                'role' => $request?->user()?->role_name ?? '',
                 'is_admin'      => $request->user()?->hasRole(Role::ADMIN->value),
                 'is_customer'   => $request->user()?->hasRole(Role::CUSTOMER->value),
                 'is_employee'   => $request->user()?->hasRole(Role::EMPLOYEE->value),

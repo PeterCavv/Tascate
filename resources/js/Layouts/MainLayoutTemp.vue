@@ -82,7 +82,7 @@ function showModal() {
                         </Link>
                         <Link
                             v-if="($page.props.auth.user && $page.props.auth.is_admin) ||
-                                ($page.props.auth.user && $page.props.auth.user.is_tasca)"
+                                ($page.props.auth.user && $page.props.auth.is_tasca)"
                             href="/managers"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >

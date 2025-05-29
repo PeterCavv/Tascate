@@ -64,7 +64,7 @@ const toggleFavorite = (tasca) => {
             />
             <div class="absolute inset-0 bg-black bg-opacity-40 p-4 flex flex-col justify-end text-white">
                 <i
-                    v-if="auth.user && auth.user.role === 'tasca' && auth.user.id === tasca.user.id"
+                    v-if="auth.user && auth.is_tasca && auth.user.id === tasca.user.id"
                     @click="router.visit(route('tascas.edit', { tasca: tasca.id }))"
                     title="Editar"
                     class="pi pi-pen-to-square absolute top-4 right-4 text-white text-xl hover:text-green-400 cursor-pointer"></i>
@@ -99,7 +99,7 @@ const toggleFavorite = (tasca) => {
                     </div>
 
                     <!-- Botón alineado a la derecha -->
-                    <div v-if="tasca.reservation && (!auth.user || auth.user.role !== 'tasca')">
+                    <div v-if="tasca.reservation && (!auth.user || !auth.is_tasca)">
                         <Button
                             @click="auth.user ? openReservation = true : router.visit('/login')"
                             class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
@@ -146,7 +146,7 @@ const toggleFavorite = (tasca) => {
             <div class="py-3">
                 <h3 class="text-lg font-semibold text-gray-700 mb-2">Reseñas</h3>
                 <button
-                    v-if="auth.user && auth.user.role === 'customer' && user_review.length === 0"
+                    v-if="auth.user && auth.is_customer && user_review.length === 0"
                     @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
                     class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
                 >

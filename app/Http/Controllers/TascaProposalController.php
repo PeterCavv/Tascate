@@ -89,6 +89,8 @@ class TascaProposalController extends Controller
             'telephone' => $tascaProposal->telephone,
         ]);
 
+        $user->assignRole(Role::TASCA->value);
+
         Tasca::create([
             'name' => $tascaProposal->tasca_name,
             'address' => $tascaProposal->address,

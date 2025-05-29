@@ -20,7 +20,7 @@ function showModal() {
                 :class="[
                     'fixed inset-y-0 left-0 z-30 w-64 text-white p-4 flex flex-col transform transition-transform duration-300 ease-in-out',
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-                    $page.props.auth.user?.role === 'tasca' ? 'bg-blue-950' : 'bg-gray-800',
+                    $page.props.auth?.is_tasca ? 'bg-blue-950' : 'bg-gray-800',
                     'md:translate-x-0 md:static md:inset-0'
                   ]"
             >
@@ -40,10 +40,17 @@ function showModal() {
                     </div>
 
                     <!-- Sidebar Links Common User -->
-                    <div v-if="$page.props.auth.user?.role !== 'tasca'">
+                    <div v-if="!$page.props.auth?.is_tasca">
                         <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
                         <Link
-                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
+                            v-if="$page.props.auth.user"
+                            href="/tascas/favorites"
+                            class="block px-4 py-2 rounded hover:bg-gray-700 transition"
+                        >
+                            Tascas guardadas
+                        </Link>
+                        <Link
+                            v-if="$page.props.auth.user && $page.props.auth.is_admin"
                             href="/users"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >
@@ -58,31 +65,31 @@ function showModal() {
                             Posts Favoritos
                         </Link>
                         <Link
-                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'admin'"
+                            v-if="$page.props.auth.user && $page.props.auth.is_admin"
                             href="/tascas-proposals"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >
                             Peticiones de Tascas
                         </Link>
                         <Link
-                            v-if="($page.props.auth.user && $page.props.auth.user.role === 'admin') ||
-                                    ($page.props.auth.user && $page.props.auth.user.role === 'tasca') ||
-                                    ($page.props.auth.user && $page.props.auth.user.role === 'manager')"
+                            v-if="($page.props.auth.user && $page.props.auth.is_admin) ||
+                                    ($page.props.auth.user && $page.props.auth.is_tasca) ||
+                                    ($page.props.auth.user && $page.props.auth.is_manager)"
                             href="/employees"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >
                             Empleados
                         </Link>
                         <Link
-                            v-if="($page.props.auth.user && $page.props.auth.user.role === 'admin') ||
-                                    ($page.props.auth.user && $page.props.auth.user.role === 'tasca')"
+                            v-if="($page.props.auth.user && $page.props.auth.is_admin) ||
+                                ($page.props.auth.user && $page.props.auth.user.is_tasca)"
                             href="/managers"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >
                             Managers
                         </Link>
                         <Link
-                            v-if="$page.props.auth.user && $page.props.auth.user.role === 'customer'"
+                            v-if="$page.props.auth.user && $page.props.auth.is_customer"
                             href="/reservations"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >

@@ -16,7 +16,7 @@ class TascaController extends Controller
         $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
             ->map(function ($tasca) {
                 $user = auth()->user();
-                if ($user->hasRole('admin')){
+                if ($user && $user->hasRole('admin')){
                     $tasca->is_favorite = true;
                 }else{
                 $tasca->is_favorite = $user ? $user->customer->favoriteTascas->contains($tasca->id) : false;

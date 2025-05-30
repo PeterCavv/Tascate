@@ -17,14 +17,11 @@ class ReservationFactory extends Factory
 
     public function definition(): array
     {
-        $tasca = Tasca::getRandomOrCreate([
-            'user_id' => User::getRandomOrCreate([
+        $tasca = Tasca::create([
+            'user_id' => User::create([
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
-                'role' => Role::TASCA->value,
-            ], [
-                'role' => Role::TASCA->value,
             ])->id,
             'name' => $this->faker->sentence(3),
             'address' => $this->faker->address(),
@@ -38,14 +35,11 @@ class ReservationFactory extends Factory
             'cif' => $this->faker->unique()->numerify('#########'),
             'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
         ]);
-        $customer =  Customer::getRandomOrCreate([
+        $customer =  Customer::create([
             'user_id' => User::getRandomOrCreate([
                 'name' => $this->faker->unique()->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
-                'role' => Role::CUSTOMER->value,
-            ], [
-                'role' => Role::EMPLOYEE->value,
             ])->id,
         ]);
 
@@ -58,5 +52,19 @@ class ReservationFactory extends Factory
             'people' => $this->faker->numberBetween(1, $tasca->capacity),
             'observations' => $this->faker->sentence(),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function ($reservation) {
+            $tasca = Tasca::where('id', $reservation->tasca_id)->first();
+            $userTasca = $tasca->user;
+
+            $customer = Customer::where('id', $reservation->customer_id)->first();
+            $userCustomer = $customer->user;
+
+            $userTasca->syncRoles(Role::TASCA->value);
+            $userCustomer->syncRoles(Role::CUSTOMER->value);
+        });
     }
 }

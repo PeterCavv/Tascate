@@ -16,13 +16,10 @@ class TascaFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::getRandomOrCreate([
+            'user_id' => User::create([
                                 'name' => $this->faker->name(),
                                 'email' => $this->faker->unique()->safeEmail(),
                                 'password' => bcrypt('12345678'),
-                                'role' => Role::TASCA->value,
-                            ], [
-                                'role' => Role::TASCA->value,
                             ])->id,
             'name' => $this->faker->sentence(3),
             'address' => $this->faker->address(),
@@ -36,5 +33,13 @@ class TascaFactory extends Factory
             'cif' => $this->faker->unique()->numerify('#########'),
             'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function ($tasca) {
+            $user = User::where('id', $tasca->user_id)->first();
+            $user->syncRoles(Role::TASCA->value);
+        });
     }
 }

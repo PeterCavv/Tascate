@@ -15,14 +15,19 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::getRandomOrCreate([
+            'user_id' => User::Create([
                 'name' => $this->faker->unique()->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
-                'role' => Role::CUSTOMER->value,
-            ], [
-                'role' => Role::CUSTOMER->value,
             ])->id,
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function ($customer) {
+            $user = User::where('id', $customer->user_id)->first();
+            $user->syncRoles(Role::CUSTOMER->value);
+        });
     }
 }

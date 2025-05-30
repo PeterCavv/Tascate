@@ -15,14 +15,11 @@ class EmployeeFactory extends Factory
 
     public function definition(): array
     {
-        $tasca = Tasca::getRandomOrCreate([
+        $tasca = Tasca::create([
             'user_id' => User::getRandomOrCreate([
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
-                'role' => Role::TASCA->value,
-            ], [
-                'role' => Role::TASCA->value,
             ])->id,
             'name' => $this->faker->sentence(3),
             'address' => $this->faker->address(),
@@ -37,26 +34,36 @@ class EmployeeFactory extends Factory
             'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
         ]);
         return [
-            'user_id' => User::getRandomOrCreate([
+            'user_id' => User::create([
                 'name' => $this->faker->unique()->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
-                'role' => Role::EMPLOYEE->value,
-            ], [
-                'role' => Role::EMPLOYEE->value,
             ])->id,
             'tasca_id' => $tasca->id,
-            'manager_id' => Manager::getRandomOrCreate([
+            'manager_id' => Manager::create([
                                         'tasca_id' => $tasca->id,
                                         'user_id' => User::getRandomOrCreate([
                                             'name' => $this->faker->unique()->name(),
                                             'email' => $this->faker->unique()->safeEmail(),
                                             'password' => bcrypt('12345678'),
-                                            'role' => Role::MANAGER->value,
-                                        ], [
-                                            'role' => Role::MANAGER->value,
                                         ])->id,
             ])->id,
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function ($employee) {
+            $tasca = Tasca::where('id', $employee->tasca_id)->first();
+            $userTasca = $tasca->user;
+
+            $userTasca->syncRoles(Role::TASCA->value);
+            $manager = Manager::where('id', $employee->manager_id)->first();
+            $managerUser = $manager->user;
+
+            $managerUser->syncRoles(Role::MANAGER->value);
+            $employeeUser = $employee->user;
+            $employeeUser->syncRoles(Role::EMPLOYEE->value);
+        });
     }
 }

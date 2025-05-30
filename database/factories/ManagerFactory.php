@@ -15,13 +15,11 @@ class ManagerFactory extends Factory
     public function definition(): array
     {
         return [
-            'tasca_id' => Tasca::getRandomOrCreate([
+            'tasca_id' => Tasca::create([
                 'user_id' => User::getRandomOrCreate([
                     'name' => $this->faker->name(),
                     'email' => $this->faker->unique()->safeEmail(),
                     'password' => bcrypt('12345678'),
-                    'role' => Role::TASCA->value,
-                ], [
                     'role' => Role::TASCA->value,
                 ])->id,
                 'name' => $this->faker->sentence(3),
@@ -36,14 +34,23 @@ class ManagerFactory extends Factory
                 'cif' => $this->faker->unique()->numerify('#########'),
                 'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
             ])->id,
-            'user_id' => User::getRandomOrCreate([
+            'user_id' => User::create([
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
-                'role' => Role::MANAGER->value,
-            ], [
-                'role' => Role::MANAGER->value,
             ])->id,
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function ($manager) {
+            $tasca = Tasca::where('id', $manager->tasca_id)->first();
+            $userTasca = $tasca->user;
+
+            $userTasca->syncRoles(Role::TASCA->value);
+            $managerUser = $manager->user;
+            $managerUser->syncRoles(Role::MANAGER->value);
+        });
     }
 }

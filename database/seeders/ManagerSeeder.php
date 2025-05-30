@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Manager;
 use App\Traits\HasDataCheck;
+use Database\Factories\ManagerFactory;
 use Illuminate\Database\Seeder;
 
 class ManagerSeeder extends Seeder
@@ -16,6 +17,6 @@ class ManagerSeeder extends Seeder
             return;
         }
 
-        \Database\Factories\ManagerFactory::new()->count(5)->create();
+        Manager::factory()->count(5)->create();
     }
-} 
+}

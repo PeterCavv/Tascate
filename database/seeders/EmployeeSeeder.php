@@ -16,6 +16,6 @@ class EmployeeSeeder extends Seeder
             return;
         }
 
-        \Database\Factories\EmployeeFactory::new()->count(10)->create();
+        Employee::factory()->count(10)->create();
     }
-} 
+}

@@ -1,10 +1,31 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Link, router } from '@inertiajs/vue3'
+import { ref, onMounted, onUnmounted } from 'vue'
+import Loading from "@/Components/Loading.vue";
 
 const sidebarOpen = ref(false);
+const visible = ref(false);
+const isLoading = ref(false);
 
-const visible = ref(false)
+let destroyed = false
+
+const start = () => {
+    if (!destroyed) isLoading.value = true
+}
+const finish = () => {
+    if (!destroyed) isLoading.value = false
+}
+
+onMounted(() => {
+    destroyed = false
+    router.on('start', start)
+    router.on('finish', finish)
+    router.on('error', finish)
+})
+
+onUnmounted(() => {
+    destroyed = true
+})
 
 function showModal() {
     visible.value = true
@@ -13,6 +34,10 @@ function showModal() {
 </script>
 
 <template>
+    <transition name="fade">
+        <Loading v-if="isLoading"/>
+    </transition>
+
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <transition name="slide">
@@ -172,6 +197,15 @@ function showModal() {
 .slide-enter-from,
 .slide-leave-to {
     transform: translateX(-100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>
 

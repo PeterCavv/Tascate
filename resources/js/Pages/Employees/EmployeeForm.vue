@@ -8,6 +8,10 @@ import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
 import FloatLabel from 'primevue/floatlabel';
 
+defineOptions({
+    layout: MainLayoutTemp,
+});
+
 const props = defineProps({
     tascas: Array,
     auth: Object,
@@ -49,16 +53,7 @@ const submit = () => {
 };
 </script>
 
-<style scoped>
-.field {
-    margin-bottom: 1.5rem;
-}
-</style>
-
 <template>
-  <MainLayoutTemp>
-<!--  <Head title="Crear Empleado" />-->
-
   <FormLayout>
     <div class="w-full max-w-md mx-auto">
       <div class="text-center mb-6">
@@ -140,7 +135,12 @@ const submit = () => {
       </form>
     </div>
   </FormLayout>
-</MainLayoutTemp>
 </template>
+
+<style scoped>
+.field {
+    margin-bottom: 1.5rem;
+}
+</style>
 
 

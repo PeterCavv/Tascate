@@ -5,6 +5,9 @@ import {computed, ref} from "vue";
 import InputText from 'primevue/inputtext'
 import Listbox from 'primevue/listbox';
 import Button from 'primevue/button'
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+import 'primeicons/primeicons.css';
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -45,55 +48,109 @@ const filteredUsers = computed(() => {
 
 <template>
     <Head title="Usuarios" />
-    <h2 id="usersTitle" class="text-xl sm:text-2xl font-bold mb-6 text-center sm:text-left">
-        Usuarios
-    </h2>
-    <div class="flex gap-6 w-full">
-        <div class="w-1/2 flex flex-col gap-4">
-            <InputText
-                v-model="filterEmail"
-                placeholder="Filtrar por email"
-            />
-            <Select
-                id="status"
-                v-model="filterRole"
-                :options="roleOptions"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Seleccionar estado"
-            />
 
-            <Listbox
-                :options="filteredUsers"
-                v-model="selectedUser"
-            >
-                <template #option="{ option }">
-                    {{ option.email }}
-                </template>
-            </Listbox>
-        </div>
+    <div class="max-w-6xl mx-auto px-4 py-10">
+        <!-- Tarjeta envolvente -->
+        <div class="bg-white shadow-2xl rounded-2xl p-8 ring-1 ring-gray-200 space-y-8">
+            <h2 class="text-3xl font-extrabold text-gray-900">Gestión de Usuarios</h2>
 
-        <div class="w-1/2 flex flex-col gap-4">
-            <label class="font-semibold">Nombre</label>
-            <InputText :value="selectedUser?.name" disabled class="w-full" />
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Filtros -->
+                <section class="bg-gray-50 p-6 rounded-xl shadow-inner space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-700">Filtrar Usuarios</h3>
 
-            <label class="font-semibold">Email</label>
-            <InputText :value="selectedUser?.email" disabled class="w-full" />
+                    <IconField>
+                        <InputIcon class="pi pi-search" />
+                        <InputText
+                            v-model="filterEmail"
+                            placeholder="Filtrar por email"
+                            class="w-full"
+                        />
+                    </IconField>
 
-            <label class="font-semibold">Rol</label>
-            <InputText :value="selectedUser?.role_name" disabled class="w-full" />
+                    <Select
+                        id="status"
+                        v-model="filterRole"
+                        :options="roleOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Seleccionar rol"
+                        class="w-full"
+                    />
 
-            <Button
-                :disabled="!selectedUser || selectedUser?.id === authUserId || selectedUser.role_name === 'admin'"
-                label="Impersonar"
-                icon="pi pi-user"
-                class="w-fit mt-2"
-                @click="router.get(route('impersonate.start', selectedUser.id))"
-            />
+                    <div class="relative">
+                        <Listbox
+                            :options="filteredUsers"
+                            v-model="selectedUser"
+                            class="w-full bg-white border border-gray-300 rounded-md min-h-60 max-h-60 overflow-auto focus:ring-2 focus:ring-blue-500"
+                            :aria-labelledby="'users-listbox-label'"
+                        >
+                            <template #option="{ option, active, selected }">
+                                <li
+                                    :aria-selected="selected"
+                                    tabindex="0"
+                                    @keydown.enter="$event.target.click()"
+                                    class="px-3 py-1 cursor-pointer"
+                                >
+                                    {{ option.email }}
+                                </li>
+                            </template>
+                            <template #empty>
+                                <li class="text-gray-500 py-2">No hay usuarios que coincidan</li>
+                            </template>
+                        </Listbox>
+                    </div>
+                </section>
+
+                <!-- Detalles -->
+                <section class="bg-gray-50 p-6 rounded-xl shadow-inner space-y-4">
+                    <h3 class="text-xl font-semibold text-gray-700">Detalles del Usuario</h3>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Nombre</label>
+                            <InputText :value="selectedUser?.name" disabled class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Email</label>
+                            <InputText :value="selectedUser?.email" disabled class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">Rol</label>
+                            <InputText :value="selectedUser?.role_name" disabled class="w-full" />
+                        </div>
+                    </div>
+
+                    <Button
+                        :disabled="!selectedUser || selectedUser.id === authUserId || selectedUser.role_name === 'admin'"
+                        label="Impersonar"
+                        icon="pi pi-user"
+                        class="w-full mt-2"
+                        @click="router.get(route('impersonate.start', selectedUser.id))"
+                        :class="selectedUser && selectedUser.role_name !== 'admin' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 text-gray-600 cursor-not-allowed'"
+                    />
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <Button
+                            label="Editar"
+                            icon="pi pi-pencil"
+                            severity="info"
+                            class="w-full"
+                            @click="router.visit(route('users.edit', { user: selectedUser.id }))"
+                            :disabled="!selectedUser"
+                        />
+                        <Button
+                            label="Eliminar"
+                            icon="pi pi-trash"
+                            class="w-full"
+                            severity="danger"
+                            @click="router.delete(route('users.destroy', { user: selectedUser.id }))"
+                            :disabled="!selectedUser || selectedUser.role_name === 'admin'"
+                        />
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 </template>
 
-<style scoped>
-
-</style>

@@ -1,7 +1,3 @@
-<script setup>
-import { Link } from '@inertiajs/vue3';
-import ApplicationTextLogo from "@/Components/ApplicationTextLogo.vue";
-</script>
 <template>
     <div class="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 sm:p-6">
         <div class="w-full max-w-3xl rounded-2xl shadow-lg bg-white overflow-hidden">

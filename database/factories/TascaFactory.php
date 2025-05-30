@@ -16,11 +16,11 @@ class TascaFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::create([
+            'user_id' => User::factory([
                                 'name' => $this->faker->name(),
                                 'email' => $this->faker->unique()->safeEmail(),
                                 'password' => bcrypt('12345678'),
-                            ])->id,
+                            ])->create()->id,
             'name' => $this->faker->sentence(3),
             'address' => $this->faker->address(),
             'menu' => $this->faker->sentence(5),

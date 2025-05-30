@@ -42,7 +42,9 @@ class Employee extends Model
     public function scopeAllEmployees($query)
     {
         return $query->whereHas('user', function ($q) {
-            $q->where('role', Role::EMPLOYEE->value);
+            $q->whereHas('roles', function ($roleQuery) {
+                $roleQuery->where('name', Role::EMPLOYEE->value);
+            });
         })->with('user:id,name,email,avatar');
     }
 

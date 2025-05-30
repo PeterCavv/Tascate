@@ -41,7 +41,9 @@ class Manager extends Model
     public function scopeAllManagers($query)
     {
         return $query->whereHas('user', function ($q) {
-            $q->where('role', Role::MANAGER->value);
+            $q->whereHas('roles', function ($roleQuery) {
+                $roleQuery->where('name', Role::MANAGER->value);
+            });
         })->with('user:id,name,email,avatar');
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Http\Requests\Tasca\UpdateTascaRequest;
 use App\Models\Tasca;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -16,6 +17,7 @@ class TascaController extends Controller
         $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
             ->map(function ($tasca) {
                 $user = auth()->user();
+
                 if ($user && $user->hasRole('admin')){
                     $tasca->is_favorite = true;
                 }else{
@@ -35,8 +37,14 @@ class TascaController extends Controller
             $tasca->picture = asset($tasca->picture);
         }
         $tasca_picture_path = $tasca->picture;
-        $tasca->is_favorite = auth()->user() ?
+        if (auth()->check()){
+            if(auth()->user()->hasRole(Role::CUSTOMER->value)) {
+            $tasca->is_favorite = auth()->user() ?
             auth()->user()->customer->favoriteTascas->contains($tasca->id) : false;
+            } else {
+                $tasca->is_favorite = false;
+            }
+        }
 
         return Inertia::render('Tascas/TascaShow', [
             'tasca' => $tasca->load('user', 'reservations', 'reviews.customer.user'),
@@ -73,16 +81,15 @@ class TascaController extends Controller
 
     public function toggleFavorite(Tasca $tasca)
     {
-        if (auth()->user()->hasRole('admin')) {
-            return;
-        }
+        if (auth()->user()->hasRole(Role::CUSTOMER)) {
 
-        $customer = auth()->user()->customer;
+            $customer = auth()->user()->customer;
 
-        if ($customer->favoriteTascas->contains($tasca->id)) {
-            $customer->favoriteTascas()->detach($tasca->id);
-        } else {
-            $customer->favoriteTascas()->attach($tasca->id);
+            if ($customer->favoriteTascas->contains($tasca->id)) {
+                $customer->favoriteTascas()->detach($tasca->id);
+            } else {
+                $customer->favoriteTascas()->attach($tasca->id);
+            }
         }
     }
 

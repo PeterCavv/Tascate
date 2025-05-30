@@ -17,31 +17,9 @@ class ReservationFactory extends Factory
 
     public function definition(): array
     {
-        $tasca = Tasca::create([
-            'user_id' => User::create([
-                'name' => $this->faker->name(),
-                'email' => $this->faker->unique()->safeEmail(),
-                'password' => bcrypt('12345678'),
-            ])->id,
-            'name' => $this->faker->sentence(3),
-            'address' => $this->faker->address(),
-            'menu' => $this->faker->sentence(5),
-            'opening_time' => $this->faker->time(),
-            'closing_time' => $this->faker->time(),
-            'capacity' => $this->faker->numberBetween(1, 100),
-            'reservation' => $this->faker->boolean(),
-            'reservation_price' => $this->faker->numberBetween(0, 100),
-            'telephone' => $this->faker->numerify('6########'),
-            'cif' => $this->faker->unique()->numerify('#########'),
-            'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
-        ]);
-        $customer =  Customer::create([
-            'user_id' => User::getRandomOrCreate([
-                'name' => $this->faker->unique()->name(),
-                'email' => $this->faker->unique()->safeEmail(),
-                'password' => bcrypt('12345678'),
-            ])->id,
-        ]);
+        $tasca = Tasca::factory()->create();
+
+        $customer =  Customer::factory()->create();
 
         return [
             'tasca_id' => $tasca->id,

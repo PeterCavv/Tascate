@@ -15,11 +15,11 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::Create([
+            'user_id' => User::factory([
                 'name' => $this->faker->unique()->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'password' => bcrypt('12345678'),
-            ])->id,
+            ])->create()->id,
         ];
     }
 

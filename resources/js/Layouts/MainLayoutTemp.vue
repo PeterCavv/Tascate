@@ -68,7 +68,7 @@ function showModal() {
                     <div v-if="!$page.props.auth?.is_tasca">
                         <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
                         <Link
-                            v-if="$page.props.auth.user"
+                            v-if="$page.props.auth.user && !$page.props.auth.is_employee && !$page.props.auth.is_manager"
                             href="/tascas/favorites"
                             class="block px-4 py-2 rounded hover:bg-gray-700 transition"
                         >

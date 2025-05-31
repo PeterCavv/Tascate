@@ -14,17 +14,25 @@ class TascaController extends Controller
 
     public function index()
     {
-        $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
-            ->map(function ($tasca) {
+$tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
+->map(function ($tasca) {
+            if(auth()->check()) {
                 $user = auth()->user();
 
-                if ($user && $user->hasRole('admin')){
+                if ($user->hasRole('admin')) {
                     $tasca->is_favorite = true;
-                }else{
-                $tasca->is_favorite = $user ? $user->customer->favoriteTascas->contains($tasca->id) : false;
+                } else {
+                    if($user->hasRole(Role::MANAGER->value) || $user->hasRole(Role::EMPLOYEE->value)) {
+                        $tasca->is_favorite = false;
+                    } else {
+                        $tasca->is_favorite = $user->customer->favoriteTascas->contains($tasca->id);
+                    }
                 }
-                return $tasca;
-            });
+            } else {
+                $tasca->is_favorite = false; // Default for unauthenticated users
+            }
+            return $tasca;
+        });
 
         return Inertia::render('Tascas/TascasIndex', [
             'tascas' => $tascas,

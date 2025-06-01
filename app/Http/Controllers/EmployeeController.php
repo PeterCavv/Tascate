@@ -86,7 +86,7 @@ class EmployeeController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make('12345678'),
-            'role' => Role::EMPLOYEE->value,
+//            'role' => Role::EMPLOYEE->value,
         ]);
 
         $user->assignRole(Role::EMPLOYEE->value);

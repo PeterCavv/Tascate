@@ -54,6 +54,6 @@ class Manager extends Model
 
     public function demote(Manager $manager): void
     {
-        $manager->user->update(['role' => Role::EMPLOYEE->value]);
+        $manager->user->assignRole(Role::EMPLOYEE->value);
     }
 }

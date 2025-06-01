@@ -58,8 +58,9 @@ class Employee extends Model
     public function promote(Employee $employee): void
     {
         if($employee->manager_id !== null){
-            throw new \Exception('Esta Tasca ya tiene un manager, no puedes tener dos manager a la vez.');
+            session()->flash('error', 'Esta Tasca ya tiene un manager, no puedes tener dos manager a la vez.');
+            return;
         }
-        $employee->user->update(['role' => Role::MANAGER->value]);
+        $employee->user->assignRole(Role::MANAGER->value);
     }
 }

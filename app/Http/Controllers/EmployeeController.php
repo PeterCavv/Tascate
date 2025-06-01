@@ -6,14 +6,11 @@ use App\Enums\Role;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Models\Employee;
-use App\Models\Manager;
 use App\Models\Tasca;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class EmployeeController extends Controller
@@ -51,10 +48,6 @@ class EmployeeController extends Controller
 
         return Inertia::render('Employees/EmployeeShow', [
             'employee' => $employee,
-            'can' => [
-                'update' => auth()->user()->can('update', $employee),
-                'delete' => auth()->user()->can('delete', $employee),
-            ],
             'user' => $user,
         ]);
     }
@@ -86,7 +79,6 @@ class EmployeeController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make('12345678'),
-//            'role' => Role::EMPLOYEE->value,
         ]);
 
         $user->assignRole(Role::EMPLOYEE->value);

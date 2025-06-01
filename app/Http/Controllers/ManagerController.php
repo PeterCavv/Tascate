@@ -56,15 +56,6 @@ class ManagerController extends Controller
 
         return Inertia::render('Managers/ManagerShow', [
             'manager' => $manager->load(['user', 'tasca']),
-//            'can' => [
-//                'update' => auth()->user()->can('update', $manager),
-//                'delete' => auth()->user()->can('delete', $manager),
-//                'manage_employees' => [
-//                    'create' => auth()->user()->can('create', [Employee::class, $manager->tasca]),
-//                    'edit' => auth()->user()->can('update', [Employee::class, $manager->tasca]),
-//                    'delete' => auth()->user()->can('delete', [Employee::class, $manager->tasca]),
-//                ]
-//            ],
             'user' => $user,
         ]);
     }

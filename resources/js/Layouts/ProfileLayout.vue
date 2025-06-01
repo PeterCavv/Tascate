@@ -1,9 +1,8 @@
 <script setup>
-import { Link, router } from '@inertiajs/vue3';
-import ApplicationTextLogo from "@/Components/ApplicationTextLogo.vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import {Link, router, useForm} from '@inertiajs/vue3';
 import {ref} from "vue";
 import { useToast } from 'primevue/usetoast';
+
 
 const props = defineProps({
     user: {
@@ -19,168 +18,82 @@ const props = defineProps({
 
 const toast = useToast();
 
-const employee = ref([
-    {
-        label: 'Editar',
-        icon: 'pi pi-pencil',
-        command: () => {
-            if (!props.user?.id) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-                return;
-            }
-            router.visit(route('employees.edit', props.user.id), {
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
-                }
-            });
-        }
-    },
-    {
-        label: 'Ascender',
-        icon: 'pi pi-arrow-up',
-        command: () => {
-            if (!props.user?.id) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-                return;
-            }
-            router.visit(route('employees.promote', props.user.id), {
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo ascender al empleado', life: 3000 });
-                }
-            });
-        }
-    },
-    {
-        separator: true
-    },
-    {
-        label: 'Despedir',
-        icon: 'pi pi-user-minus',
-        command: () => {
-            if (!props.user?.id) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-                return;
-            }
-            router.visit(route('employees.destroy', props.user.id), {
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo despedir al empleado', life: 3000 });
-                }
-            });
-        }
-    }
-]);
+const form = useForm({});
 
-const manager = ref([
-    {
-        label: 'Editar',
-        icon: 'pi pi-pencil',
-        command: () => {
-            if (!props.user?.id) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-                return;
-            }
-            router.visit(route('managers.edit', props.user.id), {
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
-                }
-            });
-        }
-    },
-    {
-        label: 'Descender',
-        icon: 'pi pi-arrow-down',
-        command: () => {
-            if (!props.user?.id) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-                return;
-            }
-            router.visit(route('managers.demote', props.user.id), {
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo descender al manager', life: 3000 });
-                }
-            });
-        }
-    },
-    {
-        separator: true
-    },
-    {
-        label: 'Despedir',
-        icon: 'pi pi-user-minus',
-        command: () => {
-            if (!props.user?.id) {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-                return;
-            }
-            router.visit(route('managers.destroy', props.user.id), {
-                onError: () => {
-                    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo despedir al manager', life: 3000 });
-                }
-            });
-        }
-    }
-]);
-
-function edit_employee() {
-    if (!props.user?.id) {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-        return;
-    }
-    router.visit(route('employees.edit', props.user.id), {
-        onError: () => {
-            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
-        }
-    });
-}
-
-function edit_manager() {
-    if (!props.user?.id) {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-        return;
-    }
-    router.visit(route('managers.edit', props.user.id), {
-        onError: () => {
-            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
-        }
-    });
-}
 </script>
 
 <template>
     <div class="min-h-screen bg-cover bg-left bg-no-repeat">
         <Toast />
-        <!-- Contenedor principal con el slot -->
+
         <div class="bg-white/30 dark:bg-[#121212]/30 backdrop-blur-md rounded-xl overflow-hidden">
-            <!-- Banner de perfil -->
+            <!-- Banner superior -->
             <div class="h-48 bg-gray-300 dark:bg-gray-700 relative">
                 <slot name="banner">
-                    <img src="/images/default_background.png" alt="Banner de perfil" class="w-full h-full object-cover">
+                    <img src="/images/default_background.png" alt="Banner de perfil" class="w-full h-full object-cover" />
                 </slot>
             </div>
-
-            <!-- Foto de perfil y acciones -->
-            <div class="px-4 relative">
-                <div class="absolute -top-16 left-4 border-4 border-white dark:border-[#121212] rounded-full">
+            <div class="px-3 pt-3 pb-3 space-y-1"></div>
+            <div class="relative px-6 -mt-16 flex items-center justify-between">
+                <!-- Imagen -->
+                <div class="flex-shrink-0 border-4 border-white dark:border-[#121212] rounded-full w-32 h-32 overflow-hidden">
                     <slot name="profile-image">
-                        <img src="/images/default_profile.png" alt="Foto de perfil" class="w-32 h-32 rounded-full object-cover">
+                        <img src="/images/tascate-profile.png" alt="Foto de perfil" class="w-full h-full object-cover" />
                     </slot>
                 </div>
-                <div class="flex justify-end pt-3">
-                    <SplitButton v-if="$page.props.user && $page.props.user.is_manager"
-                               label="Editar"
-                               :model="manager"
-                               @click="edit_manager" />
-                    <SplitButton v-if="$page.props.user && $page.props.user.is_employee"
-                               label="Editar"
-                               :model="employee"
-                               @click="edit_employee" />
+
+
+
+                <!-- Nombre + correo -->
+                <div class="ml-6 flex-1">
+                    <div class="px-3 pt-3 pb-3 space-y-1"></div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                        <slot name="nombre">Nombre no disponible</slot>
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">
+                        <slot name="correo">Correo no disponible</slot>
+                    </p>
+                </div>
+
+                <!-- Botones -->
+                <div class="ml-auto pt-4">
+                    <slot name="actions" />
                 </div>
             </div>
 
-            <!-- Contenido principal inyectado -->
-            <div class="px-4 pt-16 pb-4">
-                <slot></slot>
+            <!-- Contenido adicional -->
+            <div class="px-6 pt-6 pb-6 space-y-2">
+                <!-- Datos personales opcionales -->
+
+                <div v-if="$slots.tasca">
+                    <strong class="text-gray-700 dark:text-gray-200">Tasca: </strong>
+                    <slot name="tasca" />
+                </div>
+
+                <div v-if="$slots.manager">
+                    <strong class="text-gray-700 dark:text-gray-200">Manager: </strong>
+                    <slot name="manager" />
+                </div>
+
+                <div v-if="$slots.posts">
+                    <strong class="text-gray-700 dark:text-gray-200">Posts: </strong>
+                    <slot name="posts" />
+                </div>
+
+                <div v-if="$slots.favs">
+                    <strong class="text-gray-700 dark:text-gray-200">Tascas Favoritas: </strong>
+                    <slot name="favs" />
+                </div>
+
+                <div v-if="$slots.reviews">
+                    <strong class="text-gray-700 dark:text-gray-200">Reviews: </strong>
+                    <slot name="reviews" />
+                </div>
+
+                <slot />
+
             </div>
         </div>
     </div>
 </template>
+

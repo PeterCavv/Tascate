@@ -2,10 +2,10 @@
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import ProfileLayout from "@/Layouts/ProfileLayout.vue";
 
 const props = defineProps({
     manager: Object,
-    can: Object,
 });
 
 const showDeleteModal = ref(false);
@@ -36,20 +36,21 @@ const deleteManager = () => {
 </style>
 
 <template>
+
   <Head :title="manager.user.name" />
 
   <MainLayoutTemp>
+    <ProfileLayout>
     <template #header>
       <div class="flex justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
           Detalles del Manager
         </h2>
         <div class="flex space-x-4">
-          <Link v-if="can.update" :href="route('managers.edit', manager.id)">
+          <Link :href="route('managers.edit', manager.id)">
             <Button label="Editar" icon="pi pi-pencil" severity="primary" />
           </Link>
           <Button
-            v-if="can.delete"
             label="Eliminar"
             icon="pi pi-trash"
             severity="danger"
@@ -109,5 +110,6 @@ const deleteManager = () => {
         </div>
       </div>
     </Dialog>
+  </ProfileLayout>
   </MainLayoutTemp>
 </template>

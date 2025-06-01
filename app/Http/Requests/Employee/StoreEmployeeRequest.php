@@ -24,6 +24,7 @@ class StoreEmployeeRequest extends FormRequest
                 'exists:tascas,id'
             ],
             'manager_id' => [
+                'nullable',
                 'exists:managers,id'
             ]
         ];

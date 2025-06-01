@@ -70,10 +70,10 @@ const deleteEmployee = () => {
             </template>
             <template #footer>
               <div class="flex justify-end space-x-2">
-                <Link :href="route('employees.show', employee.id)">
+                <Link :href="route('employees.show', employee)">
                   <Button icon="pi pi-eye" severity="info" text rounded />
                 </Link>
-                <Link :href="route('employees.edit', employee.id)">
+                <Link :href="route('employees.edit', employee)">
                   <Button icon="pi pi-pencil" severity="success" text rounded />
                 </Link>
                 <Button icon="pi pi-trash" severity="danger" text rounded @click="confirmDelete(employee)" />

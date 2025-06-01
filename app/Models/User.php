@@ -132,10 +132,10 @@ class User extends Authenticatable
         return $this->hasOne(Tasca::class);
     }
 
-    public function owner(): HasOne
-    {
-        return $this->hasOne(Owner::class);
-    }
+//    public function owner(): HasOne
+//    {
+//        return $this->hasOne(Owner::class);
+//    }
 
     public function posts(): HasMany
     {

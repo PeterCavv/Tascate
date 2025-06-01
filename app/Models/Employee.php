@@ -37,7 +37,9 @@ class Employee extends Model
         return $query->where('id', $employee_id)
             ->with('user:id,name,email,avatar')
             ->with('tasca:id,name')
-            ->with('manager.user:id,name,email,avatar');
+            ->with(['manager' => function($query) {
+                $query->with('user:id,name,email,avatar');
+            }]);
     }
     public function scopeAllEmployees($query)
     {

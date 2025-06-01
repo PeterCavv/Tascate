@@ -21,7 +21,7 @@ const form = useForm({
     name: '',
     email: '',
     tasca_id: '',
-    manager_id: '',
+    manager_id: null,
 });
 
 const showManagerField = ref(false);
@@ -34,12 +34,12 @@ watch(() => form.tasca_id, (newTascaId) => {
             form.manager_id = selectedTasca.value.manager.id;
             showManagerField.value = true;
         } else {
-            form.manager_id = '';
+            form.manager_id = null;
             showManagerField.value = false;
         }
     } else {
         selectedTasca.value = null;
-        form.manager_id = '';
+        form.manager_id = null;
         showManagerField.value = false;
     }
 });

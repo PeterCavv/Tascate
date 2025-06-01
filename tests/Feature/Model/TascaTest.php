@@ -1,9 +1,9 @@
 <?php
 
+use App\Enums\Role;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Manager;
-use App\Models\Owner;
 use App\Models\Reservation;
 use App\Models\Review;
 use App\Models\Tasca;
@@ -13,7 +13,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function (){
-    $this->tasca = Tasca::factory()->create();
+//    $this->tasca = Tasca::factory()->create();
+    $this->userTasca = User::factory()->create();
+    $this->userTasca->assignRole(Role::TASCA->value);
+
+    $this->tasca = $this->userTasca->tasca()->create([
+        'user_id' => $this->userTasca->id,
+    ]);
 });
 
 it('belongs to a User', function (){

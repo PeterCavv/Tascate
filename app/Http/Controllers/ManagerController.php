@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Employee\UpdateManagerRequest;
+use App\Http\Requests\Manager\UpdateManagerRequest;
 use App\Models\Employee;
 use App\Models\Manager;
 use App\Models\User;
@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use App\Enums\Role;
+use App\Models\Tasca;
 
 class ManagerController extends Controller
 {
@@ -49,8 +50,22 @@ class ManagerController extends Controller
     {
         $this->authorize('view', $manager);
 
+        $user = $manager->user;
+        $user->is_manager = true;
+        $user->is_employee = false;
+
         return Inertia::render('Managers/ManagerShow', [
-            'manager' => $manager,
+            'manager' => $manager->load(['user', 'tasca']),
+//            'can' => [
+//                'update' => auth()->user()->can('update', $manager),
+//                'delete' => auth()->user()->can('delete', $manager),
+//                'manage_employees' => [
+//                    'create' => auth()->user()->can('create', [Employee::class, $manager->tasca]),
+//                    'edit' => auth()->user()->can('update', [Employee::class, $manager->tasca]),
+//                    'delete' => auth()->user()->can('delete', [Employee::class, $manager->tasca]),
+//                ]
+//            ],
+            'user' => $user,
         ]);
     }
 
@@ -59,7 +74,8 @@ class ManagerController extends Controller
         $this->authorize('update', $manager);
 
         return Inertia::render('Managers/ManagerEdit', [
-            'user' => $manager,
+            'manager' => $manager->load('user'),
+            'tascas' => Tasca::all(),
         ]);
     }
 
@@ -69,7 +85,16 @@ class ManagerController extends Controller
 
         $validated = $request->validated();
 
-        $manager->update($validated);
+        DB::transaction(function () use ($manager, $validated) {
+            $manager->user->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ]);
+
+            $manager->update([
+                'tasca_id' => $validated['tasca_id'],
+            ]);
+        });
 
         return redirect()
             ->route('managers.show', $manager)
@@ -83,12 +108,12 @@ class ManagerController extends Controller
         DB::transaction(function () use ($manager) {
             // Primero actualizamos los empleados que tienen este manager
             $manager->employees()->update(['manager_id' => null]);
-            
+
             $user = $manager->user;
             $manager->delete();
-            
+
             // Comprobar si el usuario tiene más trabajos (como empleado o manager)
-            $hasMoreJobs = Employee::where('user_id', $user->id)->exists() || 
+            $hasMoreJobs = Employee::where('user_id', $user->id)->exists() ||
                           Manager::where('user_id', $user->id)->exists();
             if (!$hasMoreJobs) {
                 $user->delete();

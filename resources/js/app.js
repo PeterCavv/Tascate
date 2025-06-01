@@ -16,6 +16,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import FloatLabel from 'primevue/floatlabel';
 import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 import Card from 'primevue/card';
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
@@ -28,8 +29,6 @@ import InputNumber from 'primevue/inputnumber';
 import Fieldset from 'primevue/fieldset';
 import KeyFilter from 'primevue/keyfilter';
 import SplitButton from 'primevue/splitbutton';
-
-
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -61,7 +60,8 @@ createInertiaApp({
                     upload: 'Subir',
                     cancel: 'Cancelar'
                 }
-            });
+            })
+            .use(ToastService);
 
         // Register PrimeVue components globally
         app.component('InputText', InputText);

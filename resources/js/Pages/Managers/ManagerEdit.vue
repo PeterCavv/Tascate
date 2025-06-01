@@ -6,17 +6,51 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import Select from 'primevue/select';
+import { watch, ref } from 'vue';
 
 const props = defineProps({
-    manager: Object,
-    tascas: Array,
+    manager: {
+        type: Object,
+        required: true,
+        default: () => ({
+            id: null,
+            user: {
+                name: '',
+                email: ''
+            },
+            tasca_id: null,
+            tasca: {
+                id: null,
+                name: ''
+            }
+        })
+    },
+    tascas: {
+        type: Array,
+        default: () => []
+    },
 });
 
+const selectedTasca = ref(null);
+
 const form = useForm({
-    name: props.manager.user.name,
-    email: props.manager.user.email,
-    tasca_id: props.manager.tasca_id,
+    name: props.manager?.user?.name ?? '',
+    email: props.manager?.user?.email ?? '',
+    tasca_id: props.manager?.tasca_id ?? null,
 });
+
+watch(() => props.manager, (newManager) => {
+    if (newManager) {
+        form.name = newManager.user?.name ?? '';
+        form.email = newManager.user?.email ?? '';
+        form.tasca_id = newManager.tasca_id ?? null;
+        
+        if (newManager.tasca_id) {
+            selectedTasca.value = props.tascas.find(t => t.id === newManager.tasca_id);
+        }
+    }
+}, { immediate: true });
 
 const submit = () => {
     form.put(route('managers.update', props.manager.id), {

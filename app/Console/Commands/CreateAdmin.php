@@ -65,6 +65,7 @@ class CreateAdmin extends Command
             'email' => $email,
             'password' => Hash::make($password),
             'email_verified_at' => now(),
+            'role' => \App\Enums\Role::ADMIN->value,
         ]);
 
         $user->assignRole( \App\Enums\Role::ADMIN->value);

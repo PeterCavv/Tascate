@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\Role;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
-use App\Http\Requests\Employee\StoreManagerRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Models\Employee;
 use App\Models\Manager;
 use App\Models\Tasca;
 use App\Models\User;
-use App\Rules;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,11 +43,19 @@ class EmployeeController extends Controller
         $this->authorize('view', $employee);
 
         $employee_id = $employee->id;
-
         $employee = Employee::oneEmployee($employee_id)->first();
+
+        $user = $employee->user;
+        $user->is_manager = false;
+        $user->is_employee = true;
 
         return Inertia::render('Employees/EmployeeShow', [
             'employee' => $employee,
+            'can' => [
+                'update' => auth()->user()->can('update', $employee),
+                'delete' => auth()->user()->can('delete', $employee),
+            ],
+            'user' => $user,
         ]);
     }
 
@@ -88,7 +94,7 @@ class EmployeeController extends Controller
         $employee = Employee::create([
             'user_id' => $user->id,
             'tasca_id' => $validated['tasca_id'],
-            'manager_id' => $validated['manager_id'] ?? null,
+            'manager_id' => $validated['manager_id'],
         ]);
 
         return redirect()

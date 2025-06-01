@@ -6,17 +6,51 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import Select from 'primevue/select';
+import { watch, ref } from 'vue';
 
 const props = defineProps({
-    employee: Object,
-    managers: Array,
+    employee: {
+        type: Object,
+        required: true,
+        default: () => ({
+            id: null,
+            user: {
+                name: '',
+                email: ''
+            },
+            manager_id: null,
+            tasca: {
+                id: null,
+                name: ''
+            }
+        })
+    },
+    managers: {
+        type: Array,
+        default: () => []
+    },
 });
 
+const selectedManager = ref(null);
+
 const form = useForm({
-    name: props.employee.user.name,
-    email: props.employee.user.email,
-    manager_id: props.employee.manager_id,
+    name: props.employee?.user?.name ?? '',
+    email: props.employee?.user?.email ?? '',
+    manager_id: props.employee?.manager_id ?? null,
 });
+
+watch(() => props.employee, (newEmployee) => {
+    if (newEmployee) {
+        form.name = newEmployee.user?.name ?? '';
+        form.email = newEmployee.user?.email ?? '';
+        form.manager_id = newEmployee.manager_id ?? null;
+        
+        if (newEmployee.manager_id) {
+            selectedManager.value = props.managers.find(m => m.id === newEmployee.manager_id);
+        }
+    }
+}, { immediate: true });
 
 const submit = () => {
     form.put(route('employees.update', props.employee.id), {
@@ -66,6 +100,17 @@ const submit = () => {
               </div>
 
               <div>
+                <InputLabel for="tasca" value="Tasca" />
+                <TextInput
+                  id="tasca"
+                  type="text"
+                  class="mt-1 block w-full"
+                  :value="employee?.tasca?.name"
+                  disabled
+                />
+              </div>
+
+              <div>
                 <InputLabel for="manager_id" value="Manager" />
                 <Select
                   id="manager_id"
@@ -76,8 +121,8 @@ const submit = () => {
                   <option value="">Selecciona un manager</option>
                   <option
                     v-for="manager in managers"
-                    :key="manager.manager_id"
-                    :value="manager.manager_id"
+                    :key="manager.id"
+                    :value="manager.id"
                   >
                     {{ manager.user.name }}
                   </option>

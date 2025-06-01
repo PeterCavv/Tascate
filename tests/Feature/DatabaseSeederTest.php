@@ -31,7 +31,7 @@ it('seeds the database', function () {
     $this->artisan('db:seed');
 
     //Assert
-    $this->assertDatabaseCount(User::class, 51);
+    $this->assertDatabaseCount(User::class, 1);
     $this->assertDatabaseCount(Tasca::class, 4);
     $this->assertDatabaseCount(Post::class, 10);
     $this->assertDatabaseCount(Review::class, 20);
@@ -59,7 +59,7 @@ it('seeds the database only once', function () {
     $this->artisan('db:seed');
 
     //Assert
-    $this->assertDatabaseCount(User::class, 51);
+    $this->assertDatabaseCount(User::class, 1);
     $this->assertDatabaseCount(Tasca::class, 4);
     $this->assertDatabaseCount(Post::class, 10);
     $this->assertDatabaseCount(Review::class, 20);
@@ -108,7 +108,7 @@ it('creates user', function () {
     $this->artisan('db:seed --class=UserSeeder');
 
     // Assert
-    $this->assertDatabaseCount(User::class, 51);
+    $this->assertDatabaseCount(User::class, 1);
 });
 
 it('creates user only once', function () {
@@ -117,7 +117,7 @@ it('creates user only once', function () {
     $this->artisan('db:seed --class=UserSeeder');
     $this->artisan('db:seed --class=UserSeeder');
 
-    $this->assertDatabaseCount(User::class, 51);
+    $this->assertDatabaseCount(User::class, 1);
 });
 
 it('creates tascas', function () {

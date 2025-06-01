@@ -66,10 +66,10 @@ const deleteManager = () => {
             </template>
             <template #footer>
               <div class="flex justify-end space-x-2">
-                <Link :href="route('managers.show', manager.user.id)">
+                <Link :href="route('managers.show', manager)">
                   <Button icon="pi pi-eye" severity="info" text rounded />
                 </Link>
-                <Link :href="route('managers.edit', manager.id)">
+                <Link :href="route('managers.edit', manager)">
                   <Button icon="pi pi-pencil" severity="success" text rounded />
                 </Link>
                 <Button icon="pi pi-trash" severity="danger" text rounded @click="confirmDelete(manager)" />

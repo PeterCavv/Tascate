@@ -88,7 +88,7 @@ const deleteEmployee = () => {
                 </div>
                 <div class="field">
                   <label class="block text-sm font-medium text-gray-700">Manager</label>
-                  <p class="mt-1 text-sm text-gray-900">{{ employee.manager.user.name }}</p>
+                  <p class="mt-1 text-sm text-gray-900">{{ employee.manager ? employee.manager.user.name : 'No tiene manager asignado' }}</p>
                 </div>
               </div>
             </template>

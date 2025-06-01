@@ -1,13 +1,17 @@
 <?php
 
+use App\Enums\Role;
 use App\Models\Post;
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\artisan;
 
 uses(RefreshDatabase::class);
 beforeEach(function (){
-    artisan('db:seed --class=RoleSeeder');
+    $this->seed([
+        RoleSeeder::class,
+    ]);
 });
 
 it('Unauthorized user cannot access to a create-post view', function () {
@@ -90,9 +94,9 @@ it('Auth user can update a post', function () {
 it('A user cannot get into edit-page for another user posts', function () {
 
     $user = User::factory()->create();
-    $user2 = User::factory()->create([
-        'role' => 'customer'
-    ]);
+    $user2 = User::factory()->create();
+    $user2->assignRole(Role::CUSTOMER->value);
+
 
     $post = Post::factory()->create(['user_id' => $user->id]);
 
@@ -104,9 +108,8 @@ it('A user cannot get into edit-page for another user posts', function () {
 it('A user cannot update a post from another user', function () {
 
     $user = User::factory()->create();
-    $user2 = User::factory()->create([
-        'role' => 'customer'
-    ]);
+    $user2 = User::factory()->create();
+    $user2->assignRole(Role::CUSTOMER->value);
 
     $post = Post::factory()->create(['user_id' => $user->id]);
 
@@ -121,9 +124,8 @@ it('A user cannot update a post from another user', function () {
 it('A user cannot delete a post from another user', function () {
 
     $user = User::factory()->create();
-    $user2 = User::factory()->create([
-        'role' => 'customer'
-    ]);
+    $user2 = User::factory()->create();
+    $user2->assignRole(Role::CUSTOMER->value);
 
     $post = Post::factory()->create(['user_id' => $user->id]);
 

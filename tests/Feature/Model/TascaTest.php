@@ -10,16 +10,15 @@ use App\Models\Tasca;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+
 uses(RefreshDatabase::class);
 
 beforeEach(function (){
-//    $this->tasca = Tasca::factory()->create();
-    $this->userTasca = User::factory()->create();
-    $this->userTasca->assignRole(Role::TASCA->value);
-
-    $this->tasca = $this->userTasca->tasca()->create([
-        'user_id' => $this->userTasca->id,
+    $this->seed([
+        \Database\Seeders\RoleSeeder::class,
     ]);
+    $this->tasca = Tasca::factory()->create();
+
 });
 
 it('belongs to a User', function (){

@@ -15,29 +15,20 @@ beforeEach(function () {
         RoleSeeder::class,
     ]);
 
-    $this->user = User::factory()->create();
-    $this->user->assignRole(Role::CUSTOMER->value);
+    $this->customer = Customer::factory()->create();
 
-    $this->customer = $this->user->customer()->create([
-        'user_id' => $this->user->id,
-    ]);
+    $this->tasca = Tasca::factory()->create();
 
-    $this->tasca = User::factory()->create();
-    $this->tasca->assignRole(Role::TASCA->value);
-
-
-    $this->user->refresh();
-    $this->user->load('customer');
 });
 
 it('allows a customer to add a tasca to favorites if it is not already added', function () {
-    expect($this->user->can('addFavorite', $this->tasca))->toBeTrue();
+    expect($this->customer->user->can('addFavorite', $this->tasca))->toBeTrue();
 });
 
 it('denies a customer to add a tasca to favorites if it is already added', function () {
     $this->customer->favoriteTascas()->attach($this->tasca->id);
 
-    expect($this->user->can('addFavorite', $this->tasca))->toBeFalse();
+    expect($this->customer->user->can('addFavorite', $this->tasca))->toBeFalse();
 });
 
 it('denies a not customer to add a tasca to favorites', function () {

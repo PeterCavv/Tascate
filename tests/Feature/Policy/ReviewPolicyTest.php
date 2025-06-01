@@ -9,6 +9,8 @@ use App\Policies\ReviewPolicy;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+
+
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
@@ -16,15 +18,11 @@ beforeEach(function () {
         RoleSeeder::class,
     ]);
 
-    $this->userCustomer = User::factory()->create();
-    $this->userCustomer->assignRole(Role::CUSTOMER->value);
+    $this->userCustomer = Customer::factory()->create();
+    $this->userCustomer->user->assignRole(Role::CUSTOMER->value);
 
-    $this->customer = $this->userCustomer->customer()->create([
-        'user_id' => $this->userCustomer->id,
-    ]);
 
-    $this->tasca = User::factory()->create();
-    $this->tasca->assignRole(Role::TASCA->value);
+    $this->tasca = Tasca::factory()->create();
 
     $this->policy = new ReviewPolicy();
 
@@ -35,12 +33,12 @@ it('allows a Customer to create a Review into a Tasca', function () {
         'tasca_id' => $this->tasca->id
     ]);
 
-    expect($this->userCustomer->can('create', $review))->toBeTrue();
+    expect($this->userCustomer->user->can('create', $review))->toBeTrue();
 });
 
 it('denies a Customer to create a Review in a Tasca that he already reviewed', function () {
     $this->tasca->reviews()->create([
-        'customer_id' => $this->customer->id,
+        'customer_id' => $this->userCustomer->user_id,
         'body' => 'Great service!',
         'rating' => 5,
     ]);
@@ -49,7 +47,7 @@ it('denies a Customer to create a Review in a Tasca that he already reviewed', f
         'tasca_id' => $this->tasca->id
     ]);
 
-    expect($this->userCustomer->can('create', $newReview))->toBeFalse();
+    expect($this->userCustomer->user->can('create', $newReview))->toBeFalse();
 });
 
 it('prevents a User to create a Review into a Tasca if it is not a Customer', function () {
@@ -66,12 +64,12 @@ it('prevents a User to create a Review into a Tasca if it is not a Customer', fu
 
 it('allows a Customer to delete his own Review', function () {
     $review = $this->tasca->reviews()->create([
-        'customer_id' => $this->customer->id,
+        'customer_id' => $this->userCustomer->user_id,
         'body' => 'Great service!',
         'rating' => 5,
     ]);
 
-    expect($this->userCustomer->can('delete', $review))->toBeTrue();
+    expect($this->userCustomer->user->can('delete', $review))->toBeTrue();
 });
 
 it('allows an Admin to delete a Review', function (){
@@ -79,7 +77,7 @@ it('allows an Admin to delete a Review', function (){
     $admin->assignRole(Role::ADMIN->value);
 
     $review = $this->tasca->reviews()->create([
-        'customer_id' => $this->customer->id,
+        'customer_id' => $this->userCustomer->user_id,
         'body' => 'Great service!',
         'rating' => 5,
     ]);
@@ -89,12 +87,12 @@ it('allows an Admin to delete a Review', function (){
 
 it('allows a Tasca to delete one of his reviews', function (){
     $review = $this->tasca->reviews()->create([
-        'customer_id' => $this->customer->id,
+        'customer_id' => $this->userCustomer->user_id,
         'body' => 'Test',
         'rating' => 4,
     ]);
 
-    expect($this->tasca->can('delete', $review))->toBeTrue();
+    expect($this->tasca->user->can('delete', $review))->toBeTrue();
 });
 
 it('denies a Customer to delete a Review not written by him', function (){
@@ -102,7 +100,7 @@ it('denies a Customer to delete a Review not written by him', function (){
     $user->assignRole(Role::CUSTOMER->value);
 
     $review = $this->tasca->reviews()->create([
-        'customer_id' => $this->customer->id,
+        'customer_id' => $this->userCustomer->user_id,
         'body' => 'Great service!',
         'rating' => 5,
     ]);
@@ -113,12 +111,12 @@ it('denies a Customer to delete a Review not written by him', function (){
 
 it('allows a Customer to update his own review', function (){
     $review = $this->tasca->reviews()->create([
-        'customer_id' => $this->customer->id,
+        'customer_id' => $this->userCustomer->user_id,
         'body' => 'Great service!',
         'rating' => 5,
     ]);
 
-    expect($this->userCustomer->can('update', $review))->toBeTrue();
+    expect($this->userCustomer->user->can('update', $review))->toBeTrue();
 });
 
 it('denies a Customer to update a Review not written by him', function (){
@@ -126,7 +124,7 @@ it('denies a Customer to update a Review not written by him', function (){
     $user->assignRole(Role::CUSTOMER->value);
 
     $review = $this->tasca->reviews()->create([
-        'customer_id' => $this->customer->id,
+        'customer_id' => $this->userCustomer->user_id,
         'body' => 'Great service!',
         'rating' => 5,
     ]);

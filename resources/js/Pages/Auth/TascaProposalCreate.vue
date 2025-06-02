@@ -28,6 +28,7 @@ const form = useForm({
 const acceptedPrivacy = ref(false);
 const openModal = ref(false);
 
+/** * Submit the form to create a new Tasca proposal*/
 const submitForm = () => {
     form.submit("post", route('tascas-proposals.store'), {
         preserveScroll: true,
@@ -39,18 +40,27 @@ const submitForm = () => {
     });
 
 };
+
+/** * Handle file selection for CIF picture
+ * @param {Event} event
+ */
 function onFileSelectCif(event) {
     form.cif_picture_path = event.files.length ? event.files[0] : null
 }
 
+/** Handle file selection for DNI picture
+ * @param {Event} event
+ */
 function onFileSelectDni(event) {
     form.dni_picture_path = event.files.length ? event.files[0] : null
 }
 
+/** Clear the CIF picture path */
 function onFileClearCif() {
     form.cif_picture_path = null
 }
 
+/** Clear the DNI picture path */
 function onFileClearDni() {
     form.dni_picture_path = null
 }

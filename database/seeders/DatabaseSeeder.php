@@ -13,18 +13,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
         $this->call([
             RoleSeeder::class,
+//            PermissionSeeder::class,
             UserSeeder::class,
-            CustomerSeeder::class,
             TascaSeeder::class,
+            CustomerSeeder::class,
             ReviewSeeder::class,
             ReservationSeeder::class,
             PostSeeder::class,
             PictureSeeder::class,
+            CommentSeeder::class,
+            ManagerSeeder::class,
+            EmployeeSeeder::class,
             FriendshipSeeder::class,
         ]);
-
     }
 }

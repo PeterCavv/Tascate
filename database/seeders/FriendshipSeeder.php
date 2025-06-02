@@ -16,6 +16,6 @@ class FriendshipSeeder extends Seeder
             return;
         }
 
-        Friendship::factory()->count(15)->create();
+        Friendship::factory()->count(2)->create();
     }
 }

@@ -8,19 +8,32 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use \App\Traits\GetRandomOrCreate;
+
 
 class Tasca extends Model
 {
-    use HasFactory;
+    use HasFactory, GetRandomOrCreate;
 
     protected $fillable = [
-      'user_id',
-      'name',
-      'opening_time',
-      'closing_time',
-      'capacity',
-      'menu',
-      'address'
+        'user_id',
+        'name',
+        'address',
+        'telephone',
+        'reservation',
+        'reservation_price',
+        'menu',
+        'opening_time',
+        'closing_time',
+        'capacity',
+        'cif',
+        'picture',
+    ];
+
+    protected $casts = [
+        'reservation' => 'boolean',
+        'opening_time' => 'datetime:H:i',
+        'closing_time' => 'datetime:H:i',
     ];
 
     public function user(): BelongsTo
@@ -38,15 +51,15 @@ class Tasca extends Model
         return $this->hasOne(Manager::class);
     }
 
-    public function properties(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Owner::class,
-            'properties',
-            'tasca_id',
-            'owner_id'
-        );
-    }
+//    public function properties(): BelongsToMany
+//    {
+//        return $this->belongsToMany(
+//            Owner::class,
+//            'properties',
+//            'tasca_id',
+//            'owner_id'
+//        );
+//    }
 
     public function reviews(): HasMany
     {
@@ -66,5 +79,10 @@ class Tasca extends Model
             'tasca_id',
             'customer_id'
         );
+    }
+
+    public function getPictureUrlAttribute(): ?string
+    {
+        return $this->picture ? asset($this->picture) : null;
     }
 }

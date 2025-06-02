@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
 
     public function index()
     {
-        $users = User::all();
+        $users = User::with('roles')->get();
 
         if (auth()->check()) {
             $authUserId = auth()->user()->id;
@@ -21,6 +23,7 @@ class UserController extends Controller
         return Inertia::render('Users/Users', [
             'users' => $users,
             'authUserId' => $authUserId,
+            'role' => auth()->user() ? auth()->user()->getRoleNames() : [],
         ]);
     }
 
@@ -36,8 +39,10 @@ class UserController extends Controller
             $authUserId = null;
         }
 
+        $user->load('roles');
+
         return Inertia::render('Users/UserShow', [
-            'user' => $user,
+            'user' => $user->load('posts', 'customer.reviews'),
             'authUserId' => auth()->id(),
             'csrfToken' => csrf_token(),
         ]);
@@ -45,9 +50,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        if (auth()->user()->id !== $user->id) {
-            return redirect()->route('users.index')->with('error', 'No tienes permiso para editar este usuario.');
-        }
+        $this->authorize('update', $user);
 
         return Inertia::render('Users/EditUser', [
             'user' => $user,
@@ -56,9 +59,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        if (auth()->user()->id !== $user->id) {
-            return redirect()->route('users.index')->with('error', 'No tienes permiso para editar este usuario.');
-        }
+        $this->authorize('update', $user);
 
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
@@ -75,12 +76,22 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if (auth()->user()->id !== $user->id) {
-            return redirect()->route('users.index')->with('error', 'No tienes permiso para eliminar este usuario.');
-        }
+        $this->authorize('delete', $user);
 
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
+    }
+
+    public function getReviews(User $user)
+    {
+        $this->authorize('view', $user);
+
+        $reviews = $user->customer->reviews()->get();
+
+        return inertia('Reviews/ReviewIndex', [
+            'reviews' => $reviews->load('tasca'),
+            'user' => $user
+        ]);
     }
 }

@@ -23,4 +23,13 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function parentComment()
+    {
+        return $this->belongsTo(Comment::class, 'id_comment_father');
+    }
+
+    public function childComments()
+    {
+        return $this->hasMany(Comment::class, 'id_comment_father');
+    }
 }

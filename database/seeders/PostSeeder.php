@@ -16,6 +16,16 @@ class PostSeeder extends Seeder
             return;
         }
 
-        Post::factory()->count(10)->create();
+        $posts =Post::factory()->count(10)->create();
+
+        $users = \App\Models\User::all();
+
+        if ($users->count() > 0) {
+            $randomPosts = $posts->random(5);
+            foreach ($randomPosts as $post) {
+                $randomUser = $users->random();
+                $post->likedByUsers()->syncWithoutDetaching([$randomUser->id]);
+            }
+        }
     }
 }

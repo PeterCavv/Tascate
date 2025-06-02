@@ -11,11 +11,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Observers\UserObserver;
+use \App\Traits\GetRandomOrCreate;
 
+
+
+#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, GetRandomOrCreate;
 
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -46,13 +52,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['role_name'];
+
     /**
      * Return if the user is an admin.
      * @return bool
      */
     public function isAdmin(): bool
     {
-        return $this->role === Role::ADMIN;
+        return $this->hasRole(Role::ADMIN->value);
     }
 
     /**
@@ -61,7 +69,7 @@ class User extends Authenticatable
      */
     public function isCustomer(): bool
     {
-        return $this->role === Role::CUSTOMER;
+        return $this->hasRole(Role::CUSTOMER->value);
     }
 
     /**
@@ -70,22 +78,25 @@ class User extends Authenticatable
      */
     public function isTasca(): bool
     {
-        return $this->role === Role::TASCA;
+        return $this->hasRole(Role::TASCA->value);
     }
 
+    /**
+     * Return if the user is an employee.
+     * @return bool
+     */
     public function isEmployee(): bool
     {
-        return $this->role === Role::EMPLOYEE;
+        return $this->hasRole(Role::EMPLOYEE->value);
     }
 
+    /**
+     * Return if the user is a manager.
+     * @return bool
+     */
     public function isManager(): bool
     {
-        return $this->role === Role::MANAGER;
-    }
-
-    public function isOwner(): bool
-    {
-        return $this->role === Role::OWNER;
+        return $this->hasRole(Role::MANAGER->value);
     }
 
     /**
@@ -121,10 +132,10 @@ class User extends Authenticatable
         return $this->hasOne(Tasca::class);
     }
 
-    public function owner(): HasOne
-    {
-        return $this->hasOne(Owner::class);
-    }
+//    public function owner(): HasOne
+//    {
+//        return $this->hasOne(Owner::class);
+//    }
 
     public function posts(): HasMany
     {
@@ -177,5 +188,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id_1', 'user_id_2')
             ->wherePivot('status', 'blocked');
+    }
+
+    /**
+     * Get the user's role name.
+     *
+     * @return string
+     */
+    public function getRoleNameAttribute(): string
+    {
+        return $this->roles->first()?->name ?? '';
     }
 }

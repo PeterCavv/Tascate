@@ -7,17 +7,21 @@ use App\Models\Reservation;
 use App\Models\Tasca;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Database\Seeders\RoleSeeder;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->customerUser = User::factory()->create([
-        'role' => Role::CUSTOMER->value,
+    // Ensure roles exist
+    $this->seed([
+        RoleSeeder::class,
     ]);
 
-    $this->tascaUser = User::factory()->create([
-        'role' => Role::TASCA->value,
-    ]);
+    $this->customerUser = User::factory()->create();
+    $this->customerUser->assignRole(Role::CUSTOMER->value);
+
+    $this->tascaUser = User::factory()->create();
+    $this->tascaUser->assignRole(Role::TASCA->value);
 
     $this->customer = Customer::factory()->create([
         'user_id' => $this->customerUser->id,
@@ -49,9 +53,8 @@ it('denies a non-Customer user to delete a Reservation', function () {
 });
 
 it('denies a Customer to delete a Reservation that is not his', function () {
-    $otherCustomer = User::factory()->create([
-        'role' => Role::CUSTOMER->value,
-    ]);
+    $otherCustomer = User::factory()->create();
+    $otherCustomer->assignRole(Role::CUSTOMER->value);
 
     expect($otherCustomer->can('delete', $this->reservation))->toBeFalse();
 });
@@ -65,9 +68,8 @@ it('denies a non-Customer user to update a Reservation', function () {
 });
 
 it('denies a Customer to update a Reservation that is not his', function () {
-    $otherCustomer = User::factory()->create([
-        'role' => Role::CUSTOMER->value,
-    ]);
+    $otherCustomer = User::factory()->create();
+    $otherCustomer->assignRole(Role::CUSTOMER->value);
 
     expect($otherCustomer->can('update', $this->reservation))->toBeFalse();
 });

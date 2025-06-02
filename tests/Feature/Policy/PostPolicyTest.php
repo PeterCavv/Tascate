@@ -4,16 +4,22 @@ use App\Enums\Role;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\PermissionSeeder;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->admin = User::factory()->create([
-        'role' => Role::ADMIN->value
+    $this->seed([
+        RoleSeeder::class,
     ]);
-    $this->customer = User::factory()->create([
-        'role' => Role::CUSTOMER->value
-    ]);
+
+    $this->admin = User::factory()->create();
+    $this->admin->assignRole(Role::ADMIN->value);
+
+    $this->customer = User::factory()->create();
+    $this->customer->assignRole(Role::CUSTOMER->value);
+
     $this->post = Post::factory()->create([
         'user_id' => $this->customer->id
     ]);
@@ -33,7 +39,8 @@ it('allows admin to update any post', function () {
 });
 
 it('denies non-owner and non-admin to update post', function () {
-    $otherUser = User::factory()->create(['role' => Role::CUSTOMER->value]);
+    $otherUser = User::factory()->create();
+    $otherUser->assignRole(Role::CUSTOMER->value);
     expect($otherUser->can('update', $this->post))->toBeFalse();
 });
 
@@ -46,7 +53,8 @@ it('allows admin to delete any post', function () {
 });
 
 it('denies non-owner and non-admin to delete post', function () {
-    $otherUser = User::factory()->create(['role' => Role::CUSTOMER->value]);
+    $otherUser = User::factory()->create();
+    $otherUser->assignRole(Role::CUSTOMER->value);
     expect($otherUser->can('delete', $this->post))->toBeFalse();
 });
 
@@ -66,4 +74,4 @@ it('allows user to unlike a post they have liked', function () {
 
 it('denies user to unlike a post they have not liked', function () {
     expect($this->admin->can('unlike', $this->post))->toBeFalse();
-}); 
+});

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reservation extends Model
 {
@@ -13,15 +14,18 @@ class Reservation extends Model
         'tasca_id',
         'customer_id',
         'reservation_price',
-        'reservation_date'
+        'reservation_date',
+        'reservation_time',
+        'people',
+        'observations',
     ];
 
-    public function customer()
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    public function tasca()
+    public function tasca(): BelongsTo
     {
         return $this->belongsTo(Tasca::class);
     }

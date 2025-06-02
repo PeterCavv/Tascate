@@ -84,7 +84,6 @@ class TascaProposalController extends Controller
             'name' => $tascaProposal->owner_name,
             'email' => $tascaProposal->owner_email,
             'password' => Hash::make(Str::random(10)),
-            'role' => Role::TASCA,
             'dni' => $tascaProposal->dni,
             'telephone' => $tascaProposal->telephone,
         ]);

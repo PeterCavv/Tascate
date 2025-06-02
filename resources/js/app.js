@@ -83,6 +83,7 @@ createInertiaApp({
 
         app.directive('keyfilter', KeyFilter);
 
+
         app.mount(el);
     },
     progress: {

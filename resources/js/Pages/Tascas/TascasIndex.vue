@@ -2,11 +2,13 @@
 import {Head, router} from '@inertiajs/vue3'
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
-
+import {useI18n} from "vue-i18n";
 
 const {tascas} = defineProps({
     tascas: Array,
 })
+
+const { t } = useI18n();
 
 const { getRoundedRating } = useRatingCalculator();
 
@@ -28,10 +30,13 @@ function toggleFavorite(tasca) {
     <Head title="Tascas" />
 
     <div>
-        <h1 class="text-2xl font-bold mb-6">Lista de Tascas</h1>
+        <h1 class="text-2xl font-bold mb-6">
+            {{ t('messages.tascas.list')}}
+        </h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
             <div
+                v-if="tascas.length > 0"
                 v-for="tasca in tascas"
                 :key="tasca.id"
                 @click="router.visit(`/tascas/${tasca.id}`, { preserveState: true, preserveScroll: true })"
@@ -40,6 +45,7 @@ function toggleFavorite(tasca) {
                 <div class="bg-white shadow-md rounded-xl p-4 h-40 hover:shadow-lg transition flex items-end relative">
 
                     <button
+                        :title="tasca.is_favorite ? t('messages.tascas.unbookmark') : t('messages.tascas.bookmark')"
                         @click.stop
                         @click="toggleFavorite(tasca)"
                         class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-transform duration-200"
@@ -56,13 +62,18 @@ function toggleFavorite(tasca) {
                                     <span v-else class="text-gray-300 text-base">☆</span>
                                 </template>
                                 <template v-else>
-                                    <span class="text-sm text-gray-400 ml-2">Sin calificar</span>
+                                    <span class="text-sm text-gray-400 ml-2">
+                                        {{ t('messages.tascas.no_ratings') }}
+                                    </span>
                                 </template>
                             </div>
                         </div>
                         <p class="text-sm text-gray-500">{{ tasca.address }}</p>
                     </div>
                 </div>
+            </div>
+            <div v-else class="col-span-1 sm:col-span-2 lg:col-span-2 text-center">
+                <p class="text-gray-500">{{ t('messages.tascas.no_tascas') }}</p>
             </div>
         </div>
     </div>

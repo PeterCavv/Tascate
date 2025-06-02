@@ -4,6 +4,7 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
+import setupI18n from './i18n'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
 // PrimeVue imports
@@ -41,6 +42,7 @@ createInertiaApp({
         ),
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) });
+        const i18n = setupI18n(props.initialPage.props.translations, props.initialPage.props.locale)
 
         app.use(plugin)
             .use(ZiggyVue)
@@ -61,7 +63,8 @@ createInertiaApp({
                     cancel: 'Cancelar'
                 }
             })
-            .use(ToastService);
+            .use(ToastService)
+            .use(i18n)
 
         // Register PrimeVue components globally
         app.component('InputText', InputText);

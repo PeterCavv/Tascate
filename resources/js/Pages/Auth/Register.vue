@@ -1,6 +1,7 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import {useI18n} from "vue-i18n";
 
 const form = useForm({
     name: '',
@@ -8,6 +9,8 @@ const form = useForm({
     password: '',
     password_confirmation: '',
 });
+
+const { t } = useI18n();
 
 const submit = () => {
     form.post(route('register'), {
@@ -45,7 +48,9 @@ const submit = () => {
                                 aria-invalid="!!form.errors.name"
                                 aria-describedby="name-error"
                             />
-                            <label for="name">Name</label>
+                            <label for="name">
+                                {{ t('messages.user_data.name') }}
+                            </label>
                         </FloatLabel>
                         <small
                             v-if="form.errors.name"
@@ -72,7 +77,9 @@ const submit = () => {
                                 aria-invalid="!!form.errors.email"
                                 aria-describedby="email-error"
                             />
-                            <label for="email">Email</label>
+                            <label for="email">
+                                {{ t('messages.user_data.email') }}
+                            </label>
                         </FloatLabel>
                         <small
                             v-if="form.errors.email"
@@ -99,7 +106,9 @@ const submit = () => {
                                 aria-invalid="!!form.errors.password"
                                 aria-describedby="password-error"
                             />
-                            <label for="password">Password</label>
+                            <label for="password">
+                                {{ t('messages.auth.password') }}
+                            </label>
                         </FloatLabel>
                         <small
                             v-if="form.errors.password"
@@ -126,7 +135,9 @@ const submit = () => {
                                 aria-invalid="!!form.errors.password_confirmation"
                                 aria-describedby="password-confirmation-error"
                             />
-                            <label for="password_confirmation">Confirm Password</label>
+                            <label for="password_confirmation">
+                                {{ t('messages.auth.confirm_password') }}
+                            </label>
                         </FloatLabel>
                         <small
                             v-if="form.errors.password_confirmation"
@@ -145,12 +156,12 @@ const submit = () => {
                             class="text-xs text-blue-600 dark:text-blue-400 hover:underline w-full sm:w-auto text-center"
                             aria-label="Go to login page"
                         >
-                            Already registered?
+                            {{ t('messages.auth.already_registered') }}
                         </Link>
 
                         <Button
                             type="submit"
-                            label="Register"
+                            :label="t('messages.auth.register_button')"
                             :loading="form.processing"
                             :disabled="form.processing"
                             size="small"

@@ -1,11 +1,14 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import {useI18n} from "vue-i18n";
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
 });
+
+const { t } = useI18n();
 
 const form = useForm({
     email: '',
@@ -58,7 +61,9 @@ const submit = () => {
                                 aria-invalid="!!form.errors.email"
                                 aria-describedby="email-error"
                             />
-                            <label for="email" class="dark:text-gray-300">Email</label>
+                            <label for="email" class="dark:text-gray-300">
+                                {{ t('messages.user_data.email') }}
+                            </label>
                         </FloatLabel>
                         <small
                             v-if="form.errors.email"
@@ -85,7 +90,9 @@ const submit = () => {
                                 aria-invalid="!!form.errors.password"
                                 aria-describedby="password-error"
                             />
-                            <label for="password" class="dark:text-gray-300">Password</label>
+                            <label for="password" class="dark:text-gray-300">
+                                {{ t('messages.auth.password') }}
+                            </label>
                         </FloatLabel>
                         <small
                             v-if="form.errors.password"
@@ -109,28 +116,27 @@ const submit = () => {
                             for="remember"
                             class="text-xs text-gray-700 dark:text-gray-300"
                         >
-                            Remember me
+                            {{ t('messages.auth.remember') }}
                         </label>
                     </div>
 
                     <!-- Actions -->
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] items-center gap-3 mt-3">
                         <Link
                             v-if="canResetPassword"
                             :href="route('password.request')"
-                            class="text-xs text-blue-600 dark:text-blue-400 hover:underline w-full sm:w-auto text-center"
+                            class="text-xs text-blue-600 dark:text-blue-400 hover:underline text-center sm:text-left"
                             aria-label="Reset your password"
                         >
-                            Forgot your password?
+                            {{ t('messages.auth.forgot_password') }}
                         </Link>
 
                         <Button
                             type="submit"
-                            label="Log in"
+                            :label="t('messages.auth.login_button')"
                             :loading="form.processing"
                             :disabled="form.processing"
                             size="small"
-                            class="w-full sm:w-auto"
                             aria-busy="form.processing"
                         />
                     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Enums\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
@@ -46,6 +47,15 @@ class HandleInertiaRequests extends Middleware
                 'is_tasca'      => $request->user()?->hasRole(Role::TASCA->value),
                 'impersonating' => Session::has('impersonator_id'),
             ],
+
+            'locale' => App::getLocale(),
+
+            'translations' => function () {
+                return [
+                    'messages'   => trans('messages'),
+                    'validation' => trans('validation'),
+                ];
+            },
         ];
     }
 }

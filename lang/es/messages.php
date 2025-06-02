@@ -17,5 +17,14 @@ return [
         'confirm_password' => 'Confirmar contraseña',
         'already_registered' => '¿Ya estás registrado?',
         'register_button' => 'Registrarse',
+        'register_tasca' => '¿Quieres registrar una Tasca?',
+    ],
+    'tascas' => [
+        'list' => 'Lista de Tascas',
+        'no_tascas' => 'No hay Tascas disponibles. ¡Mantente atento a las actualizaciones!',
+        'no_ratings' => 'Sin calificar',
+        'bookmark' => 'Guardar como favorito',
+        'unbookmark' => 'Eliminar de favoritos',
+        'show_details' => 'Ver detalles',
     ],
 ];

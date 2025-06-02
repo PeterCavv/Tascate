@@ -39,6 +39,7 @@ function toggleFavorite(tasca) {
                 v-if="tascas.length > 0"
                 v-for="tasca in tascas"
                 :key="tasca.id"
+                :title="t('messages.tascas.show_details')"
                 @click="router.visit(`/tascas/${tasca.id}`, { preserveState: true, preserveScroll: true })"
                 class="mb-4 cursor-pointer relative"
             >

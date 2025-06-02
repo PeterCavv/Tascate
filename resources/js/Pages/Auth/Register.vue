@@ -159,6 +159,13 @@ const submit = () => {
                             {{ t('messages.auth.already_registered') }}
                         </Link>
 
+                        <Link
+                            :href="route('tascas-proposals.create')"
+                            class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                            ¿Quieres registrar una Tasca?
+                        </Link>
+
                         <Button
                             type="submit"
                             :label="t('messages.auth.register_button')"

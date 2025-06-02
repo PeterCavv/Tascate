@@ -1,21 +1,30 @@
 <?php
 
 return [
-    'welcome' => 'Welcome to Tascate!',
-    'logout' => 'Log out',
-    'profile' => 'Your profile',
+    'welcome' => '¡Bienvenido a Tascate!',
+    'logout' => 'Cerrar sesión',
+    'profile' => 'Tu perfil',
     'user_data' => [
-        'name' => 'Name',
-        'email' => 'Email',
+        'name' => 'Nombre',
+        'email' => 'Correo electrónico',
     ],
     'auth' => [
-        'password' => 'Password',
-        'remember' => 'Remember me',
-        'forgot_password' => 'Forgot your password?',
-        'login_button' => 'Login',
-        'register' => 'Don\'t have an account? Register',
-        'confirm_password' => 'Confirm password',
-        'already_registered' => 'Already registered?',
-        'register_button' => 'Register',
+        'password' => 'Contraseña',
+        'remember' => 'Recordarme',
+        'forgot_password' => '¿Olvidaste tu contraseña?',
+        'login_button' => 'Iniciar sesión',
+        'register' => '¿No tienes una cuenta? Regístrate',
+        'confirm_password' => 'Confirmar contraseña',
+        'already_registered' => '¿Ya estás registrado?',
+        'register_button' => 'Registrarse',
+        'register_tasca' => '¿Quieres registrar una Tasca?',
+    ],
+    'tascas' => [
+        'list' => 'Lista de Tascas',
+        'no_tascas' => 'No hay Tascas disponibles. ¡Mantente atento a las actualizaciones!',
+        'no_ratings' => 'Sin calificar',
+        'bookmark' => 'Guardar como favorito',
+        'unbookmark' => 'Eliminar de favoritos',
+        'show_details' => 'Ver detalles',
     ],
 ];

@@ -8,6 +8,12 @@ import CheckBox from 'primevue/checkbox';
 import FormLayout from "@/Layouts/FormLayout.vue";
 import {Head} from "@inertiajs/vue3";
 import Message from 'primevue/message';
+import {useToast} from "primevue/usetoast";
+import {useI18n} from "vue-i18n";
+import Dialog from 'primevue/dialog';
+
+const toast = useToast();
+const { t } = useI18n();
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -34,7 +40,14 @@ const submitForm = () => {
         preserveScroll: true,
         forceFormData: true,
         onError: (errors) => {
-            console.error('Errores:', errors);
+            Object.keys(errors).forEach(key => {
+                toast.add({
+                    severity: 'error',
+                    summary: t('messages.toast.error'),
+                    detail: errors[key],
+                    life: 3000,
+                });
+            });
         },
         preserveState: true,
     });
@@ -67,45 +80,54 @@ function onFileClearDni() {
 </script>
 
 <template>
+    <Toast/>
     <FormLayout>
         <Head title="Propuesta de Tasca" />
 
-        <template #title>Propuesta de registro de Tasca</template>
-        <template #subtitle>Complete todos los campos requeridos (*)</template>
+        <template #title>{{ t('messages.tasca_proposal.title') }}</template>
+        <template #subtitle>{{ t('messages.tasca_proposal.subtitle') }}</template>
 
         <form @submit.prevent="submitForm" class="space-y-6">
             <div>
-                <label for="tasca_name" class="block font-semibold">Nombre de la Tasca*</label>
-                <InputText
-                    id="tasca_name"
-                    v-model="form.tasca_name"
-                    v-keyfilter="/[a-zA-Z0-9 ]/"
-                    class="w-full"
-                    maxlength="100"
-                    placeholder="Nombre de la Tasca"
-                    aria-required="true"
-                />
-               <Message
-                 v-if="form.errors.tasca_name"
-                 severity="error"
-               size="small"
-                variant="simple"
-              >
-                {{ form.errors.tasca_name }}
-              </Message>
+                <FloatLabel variant="on">
+                    <label for="tasca_name" class="block font-semibold">
+                        {{ t('messages.tasca_proposal.name') }}*
+                    </label>
+                    <InputText
+                        id="tasca_name"
+                        v-model="form.tasca_name"
+                        v-keyfilter="/[a-zA-Z0-9 ]/"
+                        class="w-full"
+                        maxlength="100"
+                        aria-required="true"
+                        :invalid="form.errors.tasca_name"
+                    />
+                </FloatLabel>
+                <Message
+                    v-if="form.errors.tasca_name"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ form.errors.tasca_name }}
+                </Message>
             </div>
 
             <div>
-                <label for="address" class="block font-semibold">Dirección*</label>
-                <InputText
-                    id="address"
-                    v-model="form.address"
-                    v-keyfilter="/[a-zA-Z0-9 ,.]/"
-                    class="w-full"
-                    maxlength="200"
-                    placeholder="Dirección de la Tasca"
-                    aria-required="true"
-                />
+                <FloatLabel variant="on">
+                    <label for="address" class="block font-semibold">
+                        {{ t('messages.tasca_proposal.address') }}*
+                    </label>
+                    <InputText
+                        id="address"
+                        v-model="form.address"
+                        v-keyfilter="/[a-zA-Z0-9 ,.]/"
+                        class="w-full"
+                        maxlength="200"
+                        aria-required="true"
+                        :invalid="form.errors.address"
+                    />
+                </FloatLabel>
                 <Message
                     v-if="form.errors.address"
                     severity="error"
@@ -118,17 +140,21 @@ function onFileClearDni() {
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label for="telephone" class="block font-semibold">Teléfono*</label>
-                    <InputText
-                        id="telephone"
-                        v-model="form.telephone"
-                        v-keyfilter.int
-                        class="w-full"
-                        pattern="[0-9]{9}"
-                        maxlength="9"
-                        placeholder="Teléfono de contacto"
-                        aria-required="true"
-                    />
+                    <FloatLabel variant="on">
+                        <label for="telephone" class="block font-semibold">
+                            {{ t('messages.tasca_proposal.phone') }}*
+                        </label>
+                        <InputText
+                            id="telephone"
+                            v-model="form.telephone"
+                            v-keyfilter.int
+                            class="w-full"
+                            pattern="[0-9]{9}"
+                            maxlength="9"
+                            aria-required="true"
+                            :invalid="form.errors.telephone"
+                        />
+                    </FloatLabel>
                     <Message
                         v-if="form.errors.telephone"
                         severity="error"
@@ -139,16 +165,20 @@ function onFileClearDni() {
                     </Message>
                 </div>
                 <div>
-                    <label for="cif" class="block font-semibold">CIF*</label>
-                    <InputText
-                        id="cif"
-                        v-model="form.cif"
-                        v-keyfilter="/[A-Z0-9]/"
-                        class="w-full"
-                        maxlength="9"
-                        placeholder="CIF de la empresa"
-                        aria-required="true"
-                    />
+                    <FloatLabel variant="on">
+                        <label for="cif" class="block font-semibold">
+                            {{ t('messages.tasca_proposal.cif') }}*
+                        </label>
+                        <InputText
+                            id="cif"
+                            v-model="form.cif"
+                            v-keyfilter="/[A-Z0-9]/"
+                            class="w-full"
+                            maxlength="9"
+                            aria-required="true"
+                            :invalid="form.errors.cif"
+                        />
+                    </FloatLabel>
                     <Message
                         v-if="form.errors.cif"
                         severity="error"
@@ -159,16 +189,20 @@ function onFileClearDni() {
                     </Message>
                 </div>
                 <div>
-                    <label for="nif" class="block font-semibold">NIF*</label>
-                    <InputText
-                        id="nif"
-                        v-model="form.dni"
-                        v-keyfilter="/[A-Z0-9]/"
-                        class="w-full"
-                        maxlength="9"
-                        placeholder="NIF del propietario"
-                        aria-required="true"
-                    />
+                    <FloatLabel variant="on">
+                        <label for="nif" class="block font-semibold">
+                            {{ t('messages.tasca_proposal.nif') }}*
+                        </label>
+                        <InputText
+                            id="nif"
+                            v-model="form.dni"
+                            v-keyfilter="/[A-Z0-9]/"
+                            class="w-full"
+                            maxlength="9"
+                            aria-required="true"
+                            :invalid="form.errors.dni"
+                        />
+                    </FloatLabel>
                     <Message
                         v-if="form.errors.dni"
                         severity="error"
@@ -182,16 +216,20 @@ function onFileClearDni() {
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="owner_name" class="block font-semibold">Nombre del Propietario*</label>
-                    <InputText
-                        id="owner_name"
-                        v-model="form.owner_name"
-                        v-keyfilter="/[a-zA-Z ]/"
-                        class="w-full"
-                        maxlength="50"
-                        placeholder="Ingresa el nombre del propietario"
-                        aria-required="true"
-                    />
+                    <FloatLabel variant="on">
+                        <label for="owner_name" class="block font-semibold">
+                            {{ t('messages.tasca_proposal.owner_name') }}*
+                        </label>
+                        <InputText
+                            id="owner_name"
+                            v-model="form.owner_name"
+                            v-keyfilter="/[a-zA-Z ]/"
+                            class="w-full"
+                            maxlength="50"
+                            aria-required="true"
+                            :invalid="form.errors.owner_name"
+                        />
+                    </FloatLabel>
                     <Message
                         v-if="form.errors.owner_name"
                         severity="error"
@@ -202,16 +240,20 @@ function onFileClearDni() {
                     </Message>
                 </div>
                 <div>
-                    <label for="owner_email" class="block font-semibold">Email del Propietario*</label>
-                    <InputText
-                        id="owner_email"
-                        v-model="form.owner_email"
-                        v-keyfilter="/[a-zA-Z0-9@._+\-]/"
-                        class="w-full"
-                        maxlength="120"
-                        placeholder="Ingresa un email válido"
-                        aria-required="true"
-                    />
+                    <FloatLabel variant="on">
+                        <label for="owner_email" class="block font-semibold">
+                            {{ t('messages.tasca_proposal.email') }}*
+                        </label>
+                        <InputText
+                            id="owner_email"
+                            v-model="form.owner_email"
+                            v-keyfilter="/[a-zA-Z0-9@._+\-]/"
+                            class="w-full"
+                            maxlength="120"
+                            aria-required="true"
+                            :invalid="form.errors.owner_email"
+                        />
+                    </FloatLabel>
                     <Message
                         v-if="form.errors.owner_email"
                         severity="error"
@@ -225,7 +267,9 @@ function onFileClearDni() {
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="cif_picture" class="block font-semibold mb-1">CIF de la Empresa</label>
+                    <label for="cif_picture" class="block font-semibold mb-1">
+                        {{ t('messages.tasca_proposal.cif_file') }}
+                    </label>
                     <FileUpload
                         inputId="cif_picture"
                         name="cif_picture"
@@ -251,7 +295,9 @@ function onFileClearDni() {
                 </div>
 
                 <div>
-                    <label for="dni_picture" class="block font-semibold mb-1">DNI del Representante Legal</label>
+                    <label for="dni_picture" class="block font-semibold mb-1">
+                        {{ t('messages.tasca_proposal.nif_file') }}
+                    </label>
                     <FileUpload
                         id="dni_picture"
                         name="dni_picture"
@@ -279,13 +325,12 @@ function onFileClearDni() {
 
             <div class="text-xs text-gray-400">
                 <p>
-                    De conformidad con el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD), le informamos de que los datos personales proporcionados serán tratados por TASCATE con la finalidad de gestionar el registro del establecimiento en nuestra plataforma.
-                    Los datos no se cederán a terceros salvo obligación legal. Puede ejercer sus derechos escribiendo a tascate_administracion@gmail.com.
+                    {{ t('messages.tasca_proposal.privacy_policy') }}
                     <span
                         @click="openModal = true"
                         class="underline text-blue-400 hover:text-blue-600 cursor-pointer"
                     >
-                        Política de Privacidad
+                        {{ t('messages.privacy_policy.title') }}
                     </span>.
                 </p>
             </div>
@@ -297,7 +342,9 @@ function onFileClearDni() {
                     inputId="acceptedPrivacy"
                     binary
                 />
-                <label for="acceptedPrivacy" class="ml-1">He leído y acepto la Política de Privacidad</label>
+                <label for="acceptedPrivacy" class="ml-1">
+                    {{ t('messages.tasca_proposal.check_terms') }}
+                </label>
             </div>
 
             <Button
@@ -305,23 +352,19 @@ function onFileClearDni() {
                 class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition disabled:cursor-not-allowed disabled:bg-gray-400"
                 :disabled="!acceptedPrivacy"
             >
-                Enviar Propuesta
+                {{ t('messages.tasca_proposal.submit') }}
             </Button>
         </form>
     </FormLayout>
-    <transition name="fade">
-        <PoliticaPrivacidadModal v-if="openModal" @close="openModal = false" />
-    </transition>
-</template>
 
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.2s ease;
-}
-.fade-enter-from, .fade-leave-to {
-    opacity: 0;
-}
-:deep(.p-fileupload-file-status){
-    display: none !important;
-}
-</style>
+    <Dialog v-model:visible="openModal"
+            modal
+            :header="t('messages.privacy_policy.title')"
+            :style="{ width: '50rem', padding: '2rem' }"
+            :closable="false"
+            :dismissableMask="true"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+    >
+        <PoliticaPrivacidadModal @close="openModal = false" />
+    </Dialog>
+</template>

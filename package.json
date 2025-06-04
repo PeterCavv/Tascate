@@ -20,6 +20,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@fawmi/vue-google-maps": "^0.9.79",
         "@inertiajs/inertia": "^0.11.1",
         "@primeuix/themes": "^1.1.1",
         "primeicons": "^7.0.0",

@@ -17,6 +17,10 @@ use App\Http\Controllers\PostCommentController;
 
 Route::get('/', WelcomePageController::class)->name('welcome');
 
+Route::get('/map', function() {
+    return Inertia::render('Map');
+});
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

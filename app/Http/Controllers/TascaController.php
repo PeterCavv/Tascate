@@ -14,8 +14,8 @@ class TascaController extends Controller
 
     public function index()
     {
-$tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
-->map(function ($tasca) {
+        $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
+        ->map(function ($tasca) {
             if(auth()->check()) {
                 $user = auth()->user();
 

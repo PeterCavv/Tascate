@@ -4,6 +4,11 @@ import {Link, useForm} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
 import {ref} from "vue";
 import {Head} from "@inertiajs/vue3";
+import {useToast} from "primevue/usetoast";
+import { useI18n } from 'vue-i18n'
+
+const toast = useToast();
+const { t } = useI18n()
 
 const {tascaProposal} = defineProps({
     tascaProposal: Object
@@ -44,7 +49,14 @@ const submitForm = () => {
                 form.reset();
             },
             onError: (errors) => {
-                console.error(errors);
+                Object.keys(errors).forEach((key) => {
+                    toast.add({
+                        severity: 'error',
+                        summary: t('messages.toast.error'),
+                        detail: errors[key][0],
+                        life: 3000,
+                    });
+                });
             },
         }) :
         form.put(route('tascas-proposals.update', tascaProposal.id), {
@@ -66,6 +78,8 @@ function openImageModal(path) {
 
 <template>
     <Head :title="`Propuesta de Tasca nº ${tascaProposal.id}`"/>
+
+    <Toast/>
 
     <div class="max-w-4xl mx-auto p-6 bg-white rounded shadow space-y-6">
         <Link :href="`/tascas-proposals`" class="text-green-500 hover:underline">

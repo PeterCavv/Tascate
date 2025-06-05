@@ -8,6 +8,7 @@ import 'primeicons/primeicons.css';
 import Message from 'primevue/message';
 import "primeicons/primeicons.css";
 import { onMounted, ref } from 'vue';
+import {Link} from "@inertiajs/vue3";
 
 const { auth } = usePage().props
 
@@ -54,8 +55,9 @@ const toggleFavorite = (tasca) => {
 
 const mapContainer = ref(null);
 
-const lat = 19.4326;
-const lng = -99.1332;
+
+const lat = parseFloat(tasca.latitude);
+const lng = parseFloat(tasca.longitude);
 
 onMounted(() => {
     if (!window.google) {
@@ -135,7 +137,11 @@ function initMap() {
     new window.google.maps.Marker({
         position: { lat, lng },
         map,
-        title: "Ubicación central",
+        title: tasca.name,
+        icon: {
+            url: '/images/tascate-192x192px.png',
+            scaledSize: new window.google.maps.Size(40, 40),
+        },
     });
 }
 
@@ -186,6 +192,13 @@ function initMap() {
                             Mejores valorados
                         </Message>
                     </div>
+                    <Link
+                        v-if="auth.user && auth.is_tasca && auth.user.id === tasca.user.id"
+                        :href="`/${tasca.id}/map-set`"
+                        class="px-4 py-1.5 rounded-full bg-blue-600 text-white text-sm font-semibold shadow-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
+                    >
+                        {{ auth.user ? "Añadir ubicación tasca" : "Inicia sesión para acceder al mapa" }}
+                    </Link>
 
                     <!-- Botón alineado a la derecha -->
                     <div v-if="tasca.reservation && (!auth.user || !auth.is_tasca)">
@@ -312,12 +325,16 @@ function initMap() {
                     <p class="pt-3 text-gray-500">No hay reseñas disponibles.</p>
                 </div>
             </div>
+            <div v-if="tasca.latitude && tasca.longitude">
+                <h1 class="text-xl font-bold mb-2">Mapa </h1>
+                <div ref="mapContainer" class="map-container" style="height: 500px; width: 100%"></div>
+            </div>
+            <div v-else>
+                <p class="text-gray-500">No hay mapa disponible para esta tasca.</p>
+            </div>
         </div>
     </div>
-    <div>
-        <h1 class="text-xl font-bold mb-2">Mapa </h1>
-        <div ref="mapContainer"  class="map-container" style="height: 500px; width: 50%"></div>
-    </div>
+
 
     <transition name="fade">
         <div

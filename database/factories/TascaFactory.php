@@ -32,6 +32,8 @@ class TascaFactory extends Factory
             'telephone' => $this->faker->numerify('6########'),
             'cif' => $this->faker->unique()->numerify('#########'),
             'picture' => 'TascaPictures/Foto_Bar_Predeterminada.jpg',
+            'latitude' => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
         ];
     }
 

@@ -3,14 +3,21 @@ import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import ReservationForm from "@/Components/ReservationForm.vue";
 import { useDateFormatter } from "@/Composables/useDateFormatter.js";
 import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
-import {Head, router, usePage} from '@inertiajs/vue3';
-import 'primeicons/primeicons.css';
-import Message from 'primevue/message';
+import { Head, router, usePage } from "@inertiajs/vue3";
 import "primeicons/primeicons.css";
-import { onMounted, ref } from 'vue';
-import {Link} from "@inertiajs/vue3";
+import Message from "primevue/message";
+import { onMounted, ref, watch } from "vue";
+import { Link } from "@inertiajs/vue3";
+import { nextTick } from 'vue';
 
-const { auth } = usePage().props
+
+let map = null;
+
+const activeSection = ref("map"); // "map" o "reviews"
+
+
+
+const { auth } = usePage().props;
 
 const { tasca } = defineProps({
     tasca: Object,
@@ -28,8 +35,8 @@ defineOptions({
 });
 
 const isOpenMoreThan8Hours = (tasca) => {
-    const [openH, openM] = tasca.opening_time.split(':').map(Number);
-    const [closeH, closeM] = tasca.closing_time.split(':').map(Number);
+    const [openH, openM] = tasca.opening_time.split(":").map(Number);
+    const [closeH, closeM] = tasca.closing_time.split(":").map(Number);
 
     const open = new Date();
     open.setHours(openH, openM, 0);
@@ -42,27 +49,26 @@ const isOpenMoreThan8Hours = (tasca) => {
     if (diff < 0) diff += 24;
 
     return diff > 8;
-}
+};
 
 const toggleFavorite = (tasca) => {
-    router.post(route('tascas.toggle-favorite', tasca), {}, {
+    router.post(route("tascas.toggle-favorite", tasca), {}, {
         preserveState: true,
         preserveScroll: true,
     });
 };
 
-//Mapa
+// Mapa
 
 const mapContainer = ref(null);
-
 
 const lat = parseFloat(tasca.latitude);
 const lng = parseFloat(tasca.longitude);
 
 onMounted(() => {
     if (!window.google) {
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCT_1eMwNr8Cw9gDXCaRdjaOEGAgQzjuNQ`;
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
         script.async = true;
         script.defer = true;
         script.onload = initMap;
@@ -76,59 +82,59 @@ function initMap() {
     const summerStyle = [
         {
             elementType: "geometry",
-            stylers: [{ color: "#e4fdd9" }] // fondo verde lima claro
+            stylers: [{ color: "#e4fdd9" }], // fondo verde lima claro
         },
         {
             elementType: "labels.text.fill",
-            stylers: [{ color: "#6b9b2e" }] // texto verde vibrante
+            stylers: [{ color: "#6b9b2e" }], // texto verde vibrante
         },
         {
             elementType: "labels.text.stroke",
-            stylers: [{ color: "#ffffff" }] // borde blanco
+            stylers: [{ color: "#ffffff" }], // borde blanco
         },
         {
             featureType: "administrative",
             elementType: "geometry",
-            stylers: [{ color: "#c5f277" }] // lime intenso
+            stylers: [{ color: "#c5f277" }], // lime intenso
         },
         {
             featureType: "poi",
             elementType: "geometry",
-            stylers: [{ color: "#faffb4" }] // amarillo suave
+            stylers: [{ color: "#faffb4" }], // amarillo suave
         },
         {
             featureType: "poi.park",
             elementType: "geometry",
-            stylers: [{ color: "#b7f77d" }] // verde hoja
+            stylers: [{ color: "#b7f77d" }], // verde hoja
         },
         {
             featureType: "road",
             elementType: "geometry",
-            stylers: [{ color: "#fce764" }] // amarillo pastel
+            stylers: [{ color: "#fce764" }], // amarillo pastel
         },
         {
             featureType: "road",
             elementType: "labels.text.fill",
-            stylers: [{ color: "#a0a000" }] // texto amarillo oscuro
+            stylers: [{ color: "#a0a000" }], // texto amarillo oscuro
         },
         {
             featureType: "transit.line",
             elementType: "geometry",
-            stylers: [{ color: "#ffe46b" }]
+            stylers: [{ color: "#ffe46b" }],
         },
         {
             featureType: "water",
             elementType: "geometry",
-            stylers: [{ color: "#aef1dd" }] // agua turquesa clara
+            stylers: [{ color: "#aef1dd" }], // agua turquesa clara
         },
         {
             featureType: "water",
             elementType: "labels.text.fill",
-            stylers: [{ color: "#53c190" }]
-        }
+            stylers: [{ color: "#53c190" }],
+        },
     ];
 
-    const map = new window.google.maps.Map(mapContainer.value, {
+    map = new window.google.maps.Map(mapContainer.value, {
         center: { lat, lng },
         zoom: 14,
         styles: summerStyle,
@@ -139,11 +145,25 @@ function initMap() {
         map,
         title: tasca.name,
         icon: {
-            url: '/images/tascate-192x192px.png',
+            url: "/images/tascate-192x192px.png",
             scaledSize: new window.google.maps.Size(40, 40),
         },
     });
 }
+
+watch(activeSection, (newValue) => {
+    if (newValue === 'map') {
+        nextTick(() => {
+            setTimeout(() => {
+                if (mapContainer.value) {
+                    mapContainer.value.innerHTML = '';
+                    initMap();
+                }
+            }, 500);
+        });
+    }
+});
+
 
 </script>
 
@@ -245,15 +265,114 @@ function initMap() {
                 <span class="font-medium">{{ tasca.closing_time }}</span>
             </div>
 
-            <div class="py-3">
-                <h3 class="text-lg font-semibold text-gray-700 mb-2">Reseñas</h3>
+            <div class="flex justify-center gap-4 my-6">
                 <button
-                    v-if="auth.user && auth.is_customer && user_review.length === 0"
-                    @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
-                    class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
+                    @click="activeSection = 'map'"
+                    :class="[
+      'px-4 py-2 rounded-full font-semibold transition duration-300',
+      activeSection === 'map'
+        ? 'bg-green-600 text-white shadow'
+        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+    ]"
                 >
-                    Dejar una reseña
+                    Mapa
                 </button>
+
+                <button
+                    @click="activeSection = 'reviews'"
+                    :class="[
+      'px-4 py-2 rounded-full font-semibold transition duration-300',
+      activeSection === 'reviews'
+        ? 'bg-green-600 text-white shadow'
+        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+    ]"
+                >
+                    Reseñas
+                </button>
+            </div>
+
+            <transition name="slide-horizontal" mode="out-in">
+                <div :key="activeSection">
+                    <div v-if="activeSection === 'map' && tasca.latitude && tasca.longitude">
+                        <div ref="mapContainer" class="map-container"></div>
+                    </div>
+
+                    <div v-else-if="activeSection === 'reviews'">
+                        <h1 class="text-xl font-bold mb-2">Reseñas</h1>
+                        <button
+                            v-if="auth.user && auth.is_customer && user_review.length === 0"
+                            @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
+                            class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
+                        >
+                            Dejar una reseña
+                        </button>
+                        <div v-if="tasca.reviews.length > 0">
+                            <ul class="divide-y divide-gray-200">
+                                <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
+                                    <template v-for="i in 5" :key="i">
+                                        <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
+                                        <span v-else class="text-gray-300 text-xl">☆</span>
+                                    </template>
+                                    <template v-if="auth.user && review.customer.user.id === auth.user.id">
+                                        <button
+                                            @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
+                                            class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
+                                        >
+                                            Editar reseña
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                    </template>
+                                    <template v-if="auth.user && auth.user.id === tasca.user.id">
+                                        <i class="pi pi-trash text-red-500 cursor-pointer hover:text-red-700 ml-3"
+                                           @click="router.delete(route('reviews.destroy', { tasca: tasca, review: review.id }))"
+                                           title="Eliminar reseña"></i>
+                                    </template>
+                                    <p class="text-sm text-gray-800">
+                                        "{{ review.body }}"
+                                        <span
+                                            v-if="review.created_at !== review.updated_at"
+                                            class="italic text-gray-500 text-xs"
+                                        >
+                                    Editado
+                                </span>
+                                    </p>
+                                    <div class="mt-1 flex items-center flex-wrap gap-2">
+                                        <p
+                                            @click="router.visit(`/users/${review.customer.user.id}`)"
+                                            class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
+                                            – {{ review.customer.user.name }}
+                                        </p>
+                                        <p
+                                            v-if="isToday(review.created_at)"
+                                            class="text-xs text-gray-500 mt-1"
+                                        >
+                                            Publicado hoy
+                                        </p>
+                                        <p
+                                            v-else
+                                            class="text-xs text-gray-500 mt-1"
+                                        >
+                                            {{ formateDateToDDMMYYYY(review.created_at) }}
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <p class="pt-3 text-gray-500">No hay reseñas disponibles.</p>
+                        </div>
+                    </div>
+
+                    <div v-else>
+                        <div v-if="tasca.latitude && tasca.longitude">
+                            <div ref="mapContainer" class="h-96 w-full border-2 border-black rounded-2xl shadow-lg"></div>
+                        </div>
+                        <div v-else>
+                            <p class="text-gray-500">No hay mapa disponible para esta tasca.</p>
+                        </div>
+                    </div>
+                </div>
+            </transition>
 
                 <!-- PHONE ONLY -->
                 <div class="block sm:hidden mb-4 w-full">
@@ -268,73 +387,8 @@ function initMap() {
                         <div class="text-sm text-gray-600 mt-1">123 reseñas</div>
                     </div>
                 </div>
-
-                <div v-if="tasca.reviews.length > 0">
-                    <ul class="divide-y divide-gray-200">
-                        <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
-                            <template v-for="i in 5" :key="i">
-                                <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
-                                <span v-else class="text-gray-300 text-xl">☆</span>
-                            </template>
-                            <template v-if="auth.user && review.customer.user.id === auth.user.id">
-                                <button
-                                    @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
-                                    class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
-                                >
-                                    Editar reseña
-                                    <i class="pi pi-pencil"></i>
-                                </button>
-                            </template>
-                            <template v-if="auth.user && auth.user.id === tasca.user.id">
-                                <i class="pi pi-trash text-red-500 cursor-pointer hover:text-red-700 ml-3"
-                                   @click="router.delete(route('reviews.destroy', { tasca: tasca, review: review.id }))"
-                                   title="Eliminar reseña"></i>
-                            </template>
-                            <p class="text-sm text-gray-800">
-                                "{{ review.body }}"
-                                <span
-                                    v-if="review.created_at !== review.updated_at"
-                                    class="italic text-gray-500 text-xs"
-                                >
-                                    Editado
-                                </span>
-                            </p>
-                            <div class="mt-1 flex items-center flex-wrap gap-2">
-                                <p
-                                    @click="router.visit(`/users/${review.customer.user.id}`)"
-                                    class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
-                                    – {{ review.customer.user.name }}
-                                </p>
-                                <p
-                                    v-if="isToday(review.created_at)"
-                                    class="text-xs text-gray-500 mt-1"
-                                >
-                                    Publicado hoy
-                                </p>
-                                <p
-                                    v-else
-                                    class="text-xs text-gray-500 mt-1"
-                                >
-                                    {{ formateDateToDDMMYYYY(review.created_at) }}
-                                </p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div v-else>
-                    <p class="pt-3 text-gray-500">No hay reseñas disponibles.</p>
-                </div>
-            </div>
-            <div v-if="tasca.latitude && tasca.longitude">
-                <h1 class="text-xl font-bold mb-2">Mapa </h1>
-                <div ref="mapContainer" class="map-container" style="height: 500px; width: 100%"></div>
-            </div>
-            <div v-else>
-                <p class="text-gray-500">No hay mapa disponible para esta tasca.</p>
-            </div>
         </div>
     </div>
-
 
     <transition name="fade">
         <div
@@ -395,4 +449,34 @@ function initMap() {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+.slide-horizontal-enter-active,
+.slide-horizontal-leave-active {
+    transition: transform 0.4s ease;
+    position: absolute;
+    width: 100%;
+}
+
+.slide-horizontal-enter-from {
+    transform: translateX(100%);
+}
+.slide-horizontal-leave-to {
+    transform: translateX(-100%);
+}
+
+.slide-horizontal-enter-active,
+.slide-horizontal-leave-active {
+    transition: transform 0.4s ease;
+    position: absolute;
+    width: 100%;
+}
+
+.slide-horizontal-enter-from {
+    transform: translateX(100%);
+}
+.slide-horizontal-leave-to {
+    transform: translateX(-100%);
+}
+
+
 </style>

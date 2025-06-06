@@ -44,9 +44,21 @@ defineOptions({
 function initMap() {
     const defaultCenter = { lat: 37.9838, lng: -1.1285 };
 
+    const mapStyles = [
+        {
+            featureType: "poi",
+            stylers: [{ visibility: "off" }], // Hide points of interest
+        },
+        {
+            featureType: "poi.business",
+            stylers: [{ visibility: "off" }], // Hide businesses
+        },
+    ];
+
     map = new window.google.maps.Map(mapContainer.value, {
         center: defaultCenter,
         zoom: 14,
+        styles: mapStyles,
     });
 
     marker = new window.google.maps.Marker({
@@ -54,8 +66,8 @@ function initMap() {
         map,
         draggable: true,
         icon: {
-            url: '/images/tascate-192x192px.png',
-            scaledSize: new window.google.maps.Size(40, 40),
+            url: "/images/tascate-icon-map.png",
+            scaledSize: new window.google.maps.Size(30, 40),
         },
     });
 

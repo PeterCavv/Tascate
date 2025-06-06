@@ -50,36 +50,38 @@ function toggleFavorite(tasca) {
                         alt="Imagen de {{ tasca.name }}"
                         class="absolute inset-0 w-full h-full object-cover rounded-xl z-0"
                     />
-                    <button
-                        :title="tasca.is_favorite ? t('messages.tascas.unbookmark') : t('messages.tascas.bookmark')"
-                        @click.stop
-                        @click="toggleFavorite(tasca)"
-                        class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-transform duration-200"
-                    >
-                        <i :class="tasca.is_favorite ? 'pi pi-bookmark-fill text-gray-600' : 'pi pi-bookmark'"></i>
-                    </button>
+                    <div class="absolute inset-0 rounded-xl bg-black bg-opacity-40 p-4 flex flex-col justify-end text-white">
+                        <button
+                            :title="tasca.is_favorite ? t('messages.tascas.unbookmark') : t('messages.tascas.bookmark')"
+                            @click.stop
+                            @click="toggleFavorite(tasca)"
+                            class="absolute top-2 right-2 text-white hover:text-gray-200 transition-transform duration-200"
+                        >
+                            <i :class="tasca.is_favorite ? 'pi pi-bookmark-fill' : 'pi pi-bookmark'"></i>
+                        </button>
 
-                    <div class="text-left relative z-10 bg-white rounded-lg p-2 opacity-90">
-                        <div class="flex items-center mb-1 ">
-                            <h2 class="text-xl font-extrabold text-gray-900 truncate">{{ tasca.name }}</h2>
-                            <div class="flex items-center ml-2">
-                                <template v-if="tasca.reviews.length > 0" v-for="i in 5" :key="i">
-                                    <span v-if="i <= getRoundedRating(tasca)" class="text-yellow-400 text-base">★</span>
-                                    <span v-else class="text-gray-300 text-base">☆</span>
-                                </template>
-                                <template v-else>
-                                    <span class="text-sm text-gray-400 ml-2">
-                                        {{ t('messages.tascas.no_ratings') }}
-                                    </span>
-                                </template>
+                        <div class="text-left relative z-10 rounded-lg p-2 opacity-90">
+                            <div class="flex items-center mb-1 ">
+                                <h2 class="text-3xl font-extrabold truncate">{{ tasca.name }}</h2>
+                                <div class="flex items-center ml-2">
+                                    <template v-if="tasca.reviews.length > 0" v-for="i in 5" :key="i">
+                                        <span v-if="i <= getRoundedRating(tasca)" class="text-yellow-400 text-base">★</span>
+                                        <span v-else class="text-base">☆</span>
+                                    </template>
+                                    <template v-else>
+                                        <span class="text-sm ml-2">
+                                            {{ t('messages.tascas.no_ratings') }}
+                                        </span>
+                                    </template>
+                                </div>
                             </div>
+                            <p class="text-sm ">{{ tasca.address }}</p>
                         </div>
-                        <p class="text-sm text-gray-500">{{ tasca.address }}</p>
                     </div>
                 </div>
             </div>
             <div v-else class="col-span-1 sm:col-span-2 lg:col-span-2 text-center">
-                <p class="text-gray-500">{{ t('messages.tascas.no_tascas') }}</p>
+                <p>{{ t('messages.tascas.no_tascas') }}</p>
             </div>
         </div>
     </div>

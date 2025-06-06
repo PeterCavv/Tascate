@@ -145,8 +145,8 @@ function initMap() {
         map,
         title: tasca.name,
         icon: {
-            url: "/images/tascate-192x192px.png",
-            scaledSize: new window.google.maps.Size(40, 40),
+            url: "/images/tascate-icon-map.png",
+            scaledSize: new window.google.maps.Size(30, 40),
         },
     });
 }

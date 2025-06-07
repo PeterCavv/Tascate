@@ -72,8 +72,7 @@ class TascaProposalController extends Controller
         $clonedProposal->status = ManageStatus::PENDING->value;
         $clonedProposal->save();
 
-        return redirect()->route('tascas-proposals.index')->with(
-            'success', 'La Propuesta de Tasca se ha clonado correctamente.');
+        return redirect()->route('tascas-proposals.index');
     }
 
     public function approve(TascaProposal $tascaProposal)

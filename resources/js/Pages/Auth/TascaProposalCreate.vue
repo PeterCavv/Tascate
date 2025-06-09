@@ -51,7 +51,6 @@ const submitForm = () => {
         },
         preserveState: true,
     });
-
 };
 
 /** * Handle file selection for CIF picture

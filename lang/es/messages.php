@@ -65,4 +65,14 @@ return [
         'user_rights' => 'Derechos del Usuario',
         'contact_info' => 'Información de Contacto',
     ],
+    'employee_form' => [
+        'employee_create' => 'Crear Empleado',
+        'name' => 'Nombre',
+        'email' => 'Email',
+        'tasca' => 'Tasca',
+        'manager' => 'Manager',
+        'manager_assigned_auto' => 'Manager asignado automáticamente.',
+        'cancel' => 'Cancelar',
+        'create_employee' => 'Crear Empleado',
+    ]
 ];

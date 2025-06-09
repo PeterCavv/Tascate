@@ -13,6 +13,7 @@ use Inertia\ResponseFactory;
 use App\Mail\ReservationCreatedMail;
 use App\Mail\ReservationCancelledMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationTascaMail;
 
 class ReservationController extends Controller
 {
@@ -67,6 +68,7 @@ class ReservationController extends Controller
 
         $reservation = Reservation::create($validated);
 
+
         Mail::to($reservation->customer->user->email)->queue(
             new ReservationCreatedMail(
                 $reservation->tasca,
@@ -75,6 +77,13 @@ class ReservationController extends Controller
             )
         );
 
+        Mail::to($reservation->tasca->user->email)->queue(
+            new ReservationTascaMail(
+                $reservation->customer->user,
+                $reservation,
+                $reservation->tasca
+            )
+        );
         return redirect()->route('reservations.show', $reservation)->with('success',
             'Reserva creada correctamente. ¡Disfruta de la experiencia!');
     }

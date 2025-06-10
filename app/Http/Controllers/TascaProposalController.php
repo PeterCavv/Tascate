@@ -51,7 +51,8 @@ class TascaProposalController extends Controller
 
         TascaProposal::create($validated);
 
-        return Inertia::render('Auth/TascaProposalCreated');
+        return Inertia::render('Auth/TascaProposalCreated')
+            ->with('success', __('messages.toast.reservation_created'));
     }
 
     public function update(UpdateTascaProposalRequest $request, TascaProposal $tascaProposal)

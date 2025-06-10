@@ -48,6 +48,8 @@ class HandleInertiaRequests extends Middleware
                 'impersonating' => Session::has('impersonator_id'),
             ],
 
+            'toast' => fn () => $request->session()->get('toast'),
+
             'locale' => App::getLocale(),
 
             'translations' => function () {

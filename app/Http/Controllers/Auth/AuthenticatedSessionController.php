@@ -33,7 +33,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->route('tascas.index')
+            ->with('toast', [
+                'severity' => 'info',
+                'summary' => __('messages.toast.welcome'),
+                'detail' => __('messages.toast.welcome_details', ['name' => auth()->user()->name]),
+            ]);
     }
 
     /**

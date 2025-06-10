@@ -9,7 +9,10 @@ import Message from "primevue/message";
 import { onMounted, ref, watch } from "vue";
 import { Link } from "@inertiajs/vue3";
 import { nextTick } from 'vue';
+import Button from "primevue/button";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 
 let map = null;
 
@@ -181,8 +184,9 @@ watch(activeSection, (newValue) => {
                 <i
                     v-if="auth.user && auth.is_tasca && auth.user.id === tasca.user.id"
                     @click="router.visit(route('tascas.edit', { tasca: tasca.id }))"
-                    title="Editar"
-                    class="pi pi-pen-to-square absolute top-4 right-4 text-white text-xl hover:text-green-400 cursor-pointer"></i>
+                    :title="t('messages.tasca.edit')"
+                    class="pi pi-pen-to-square absolute top-4 right-4 text-white text-xl hover:text-green-400
+                    cursor-pointer transition"></i>
 
                 <h2 class="text-3xl font-bold">{{ tasca.name }}</h2>
                 <p class="text-sm">{{ tasca.address }}</p>
@@ -190,10 +194,11 @@ watch(activeSection, (newValue) => {
                 <div class="mt-2 flex justify-between items-center flex-wrap gap-2">
                     <div class="flex gap-2 flex-wrap">
                         <Message
+                            :icon="tasca.reservation ? 'pi pi-check' : 'pi pi-times'"
                             :severity="tasca.reservation ? 'success' : 'error'"
                             size="small"
                         >
-                            {{ tasca.reservation ? "Permite reservas" : "No permite reservas" }}
+                            {{ tasca.reservation ? t('messages.tasca.reservation_allowed') : t('messages.tasca.reservation_not_allowed') }}
                         </Message>
                         <Message
                             v-if="isOpenMoreThan8Hours(tasca)"
@@ -201,7 +206,7 @@ watch(activeSection, (newValue) => {
                             severity="info"
                             size="small"
                         >
-                            Horario extenso
+                            {{ t('messages.tasca.extensive_hours') }}
                         </Message>
                         <Message
                             v-if="tasca.reviews.length >= 1 && getRoundedRating(tasca) >= 4"
@@ -209,7 +214,7 @@ watch(activeSection, (newValue) => {
                             severity="warn"
                             size="small"
                         >
-                            Mejores valorados
+                            {{ t('messages.tasca.top_rated') }}
                         </Message>
                     </div>
                     <Link
@@ -220,14 +225,12 @@ watch(activeSection, (newValue) => {
                         {{ auth.user ? "Añadir ubicación tasca" : "Inicia sesión para acceder al mapa" }}
                     </Link>
 
-                    <!-- Botón alineado a la derecha -->
                     <div v-if="tasca.reservation && (!auth.user || !auth.is_tasca)">
                         <Button
+                            :label="auth.user ? t('messages.tasca.make_reservation') : t('messages.tasca.login_to_reserve')"
                             @click="auth.user ? openReservation = true : router.visit('/login')"
-                            class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
-                        >
-                            {{ auth.user ? "Realizar Reserva" : "Inicia sesión para reservar" }}
-                        </Button>
+                            class="px-4 py-1.5 rounded-full focus:ring-offset-1"
+                        />
                     </div>
                 </div>
             </div>
@@ -244,23 +247,31 @@ watch(activeSection, (newValue) => {
                         <span v-else class="text-gray-300 text-base">☆</span>
                     </template>
                     <template v-else>
-                        <span class="text-sm text-gray-400 ml-2">Sin calificar</span>
+                        <span class="text-sm text-gray-400 ml-2">
+                            {{ t('messages.tasca.no_rating') }}
+                        </span>
                     </template>
                 </div>
-                <div class="text-sm text-gray-600 mt-1">{{ tasca.reviews.length }} reseña/s</div>
-                <button
+                <div class="text-sm text-gray-600 mt-1">
+                    {{ tasca.reviews.length + t('messages.tasca.reviews')}}
+                </div>
+                <Button
+                    v-if="!auth.is_tasca"
                     @click.stop
                     @click="toggleFavorite(tasca)"
-                    class="text-gray-400 hover:text-gray-600 transition-transform duration-200 mt-3 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1"
-                >
-                    <i :class="tasca.is_favorite ? 'pi pi-bookmark-fill text-gray-600 text-3xl' : 'pi pi-bookmark text-3xl'"></i>
-                </button>
+                    variant="text"
+                    class="mt-1"
+                    rounded
+                    :icon="tasca.is_favorite ? 'pi pi-bookmark-fill' : 'pi pi-bookmark text-3xl'"
+                />
             </div>
         </div>
 
         <div class="pr-0 sm:pr-44">
             <div class="py-1">
-                <h3 class="text-lg font-semibold text-gray-700 mb-2">Horario</h3>
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">
+                    {{ t('messages.tasca.schedule') }}
+                </h3>
                 <span class="font-medium">{{ tasca.opening_time }} - </span>
                 <span class="font-medium">{{ tasca.closing_time }}</span>
             </div>
@@ -299,14 +310,14 @@ watch(activeSection, (newValue) => {
 
                     <div v-else-if="activeSection === 'reviews'">
                         <h1 class="text-xl font-bold mb-2">Reseñas</h1>
-                        <button
+                        <Button
+                            :label="t('messages.tasca.leave_review')"
                             v-if="auth.user && auth.is_customer && user_review.length === 0"
                             @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
-                            class="px-4 py-1.5 rounded-full bg-green-600 text-white text-sm font-semibold shadow-md hover:bg-green-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1"
-                        >
-                            Dejar una reseña
-                        </button>
-                        <div v-if="tasca.reviews.length > 0">
+                            variant="outlined"
+                            class="px-4 py-1.5 focus:ring-offset-1"
+                        />
+                         <div v-if="tasca.reviews.length > 0">
                             <ul class="divide-y divide-gray-200">
                                 <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
                                     <template v-for="i in 5" :key="i">
@@ -318,14 +329,14 @@ watch(activeSection, (newValue) => {
                                             @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
                                             class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
                                         >
-                                            Editar reseña
+                                            {{ t('messages.tasca.edit_review') }}
                                             <i class="pi pi-pencil"></i>
                                         </button>
                                     </template>
                                     <template v-if="auth.user && auth.user.id === tasca.user.id">
                                         <i class="pi pi-trash text-red-500 cursor-pointer hover:text-red-700 ml-3"
                                            @click="router.delete(route('reviews.destroy', { tasca: tasca, review: review.id }))"
-                                           title="Eliminar reseña"></i>
+                                           :title="t('messages.tasca.delete_review')"></i>
                                     </template>
                                     <p class="text-sm text-gray-800">
                                         "{{ review.body }}"
@@ -333,8 +344,8 @@ watch(activeSection, (newValue) => {
                                             v-if="review.created_at !== review.updated_at"
                                             class="italic text-gray-500 text-xs"
                                         >
-                                    Editado
-                                </span>
+                                            {{ t('messages.tasca.edited') }}
+                                        </span>
                                     </p>
                                     <div class="mt-1 flex items-center flex-wrap gap-2">
                                         <p
@@ -346,7 +357,7 @@ watch(activeSection, (newValue) => {
                                             v-if="isToday(review.created_at)"
                                             class="text-xs text-gray-500 mt-1"
                                         >
-                                            Publicado hoy
+                                            {{ t('messages.tasca.published_today') }}
                                         </p>
                                         <p
                                             v-else
@@ -359,7 +370,9 @@ watch(activeSection, (newValue) => {
                             </ul>
                         </div>
                         <div v-else>
-                            <p class="pt-3 text-gray-500">No hay reseñas disponibles.</p>
+                            <p class="pt-3 text-gray-500">
+                                {{ t('messages.tasca.no_reviews') }}
+                            </p>
                         </div>
                     </div>
 
@@ -384,9 +397,12 @@ watch(activeSection, (newValue) => {
                                 <span v-else class="text-gray-300 text-lg">☆</span>
                             </template>
                         </div>
-                        <div class="text-sm text-gray-600 mt-1">123 reseñas</div>
+                        <span class="text-sm text-gray-600 mt-1">
+                            {{ tasca.reviews.length + t('messages.tasca.reviews')}}
+                        </span>
                     </div>
                 </div>
+
         </div>
     </div>
 
@@ -412,8 +428,6 @@ watch(activeSection, (newValue) => {
         </div>
     </transition>
 </template>
-
-
 
 <style>
 .fade-enter-active,

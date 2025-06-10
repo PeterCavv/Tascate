@@ -132,7 +132,11 @@ class EmployeeController extends Controller
 
         return redirect()
             ->route('employees.show', $employee)
-            ->with('success', 'Empleado creado exitosamente.');
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.created'),
+                'detail' => __('messages.toast.employee_created'),
+            ]);;
     }
 
     public function edit(Employee $employee)
@@ -165,7 +169,11 @@ class EmployeeController extends Controller
 
         return redirect()
             ->route('employees.show', $employee)
-            ->with('success', 'Empleado actualizado exitosamente.');
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => __('messages.toast.employee_updated'),
+            ]);
     }
 
     public function destroy(Employee $employee)
@@ -185,7 +193,11 @@ class EmployeeController extends Controller
 
         return redirect()
             ->route('employees.index')
-            ->with('success', 'Empleado eliminado exitosamente.');
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.deleted'),
+                'detail' => __('messages.toast.employee_deleted'),
+            ]);
     }
 
     public function promote(Employee $employee)
@@ -213,6 +225,7 @@ class EmployeeController extends Controller
         $employee->delete();
             return redirect()
                 ->route('managers.show', $manager)
+
                 ->with('success', 'Empleado promovido a manager exitosamente.');
     }
     public function demote(Manager $manager)
@@ -234,6 +247,7 @@ class EmployeeController extends Controller
         ]);
 
         $manager->delete();
+
 
         return redirect()
             ->route('employees.show', $employee)

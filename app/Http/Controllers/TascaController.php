@@ -85,8 +85,12 @@ class TascaController extends Controller
 
         $tasca->update($validated);
 
-        return redirect()->route('tascas.show', $tasca)->with('success',
-            'Tasca actualizada correctamente.');
+        return redirect()->route('tascas.show', $tasca)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => __('messages.toast.tasca_updated'),
+            ]);
     }
 
     public function toggleFavorite(Tasca $tasca)

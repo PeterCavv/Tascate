@@ -1,69 +1,3 @@
-<script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {Link, useForm} from "@inertiajs/vue3";
-import 'primeicons/primeicons.css';
-import {ref} from "vue";
-import {Head} from "@inertiajs/vue3";
-
-const {tascaProposal} = defineProps({
-    tascaProposal: Object
-});
-
-const showImageModal = ref(false);
-const imageToShow = ref('');
-
-const form = useForm({
-    tasca_name: tascaProposal.tasca_name,
-    address: tascaProposal.address,
-    telephone: tascaProposal.telephone,
-    cif: tascaProposal.cif,
-    dni_picture_path: tascaProposal.dni_picture_path,
-    owner_name: tascaProposal.owner_name,
-    owner_email: tascaProposal.owner_email,
-    dni: tascaProposal.dni,
-    cif_picture_path: tascaProposal.cif_picture_path,
-    status: tascaProposal.status || '',
-});
-
-defineOptions({
-    layout: MainLayoutTemp,
-});
-
-const statusOptions = [
-    {label: 'Pendiente', value: 'pending'},
-    {label: 'Aprobada', value: 'accepted'},
-    {label: 'Rechazada', value: 'rejected'},
-
-];
-
-const submitForm = () => {
-    form.status === 'accepted' ?
-        form.post(route('tascas-proposals.approve', {tascaProposal: tascaProposal.id}), {
-            preserveScroll: true,
-            onSuccess: () => {
-                form.reset();
-            },
-            onError: (errors) => {
-                console.error(errors);
-            },
-        }) :
-        form.put(route('tascas-proposals.update', tascaProposal.id), {
-            method: 'patch',
-            onSuccess: () => {
-                form.reset();
-            },
-            onError: (errors) => {
-                console.error(errors);
-            },
-        })
-}
-
-function openImageModal(path) {
-    imageToShow.value = `/imagen-privada/${path}`;
-    showImageModal.value = true;
-}
-</script>
-
 <template>
     <Head :title="`Propuesta de Tasca nº ${tascaProposal.id}`"/>
 
@@ -141,6 +75,84 @@ function openImageModal(path) {
         </div>
     </transition>
 </template>
+
+<script setup>
+import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import {Link, useForm} from "@inertiajs/vue3";
+import 'primeicons/primeicons.css';
+import {ref} from "vue";
+import {Head} from "@inertiajs/vue3";
+import {useToast} from "primevue/usetoast";
+import { useI18n } from 'vue-i18n'
+
+const toast = useToast();
+const { t } = useI18n()
+
+const {tascaProposal} = defineProps({
+    tascaProposal: Object
+});
+
+const showImageModal = ref(false);
+const imageToShow = ref('');
+
+const form = useForm({
+    tasca_name: tascaProposal.tasca_name,
+    address: tascaProposal.address,
+    telephone: tascaProposal.telephone,
+    cif: tascaProposal.cif,
+    dni_picture_path: tascaProposal.dni_picture_path,
+    owner_name: tascaProposal.owner_name,
+    owner_email: tascaProposal.owner_email,
+    dni: tascaProposal.dni,
+    cif_picture_path: tascaProposal.cif_picture_path,
+    status: tascaProposal.status || '',
+});
+
+defineOptions({
+    layout: MainLayoutTemp,
+});
+
+const statusOptions = [
+    {label: 'Pendiente', value: 'pending'},
+    {label: 'Aprobada', value: 'accepted'},
+    {label: 'Rechazada', value: 'rejected'},
+
+];
+
+const submitForm = () => {
+    form.status === 'accepted' ?
+        form.post(route('tascas-proposals.approve', {tascaProposal: tascaProposal.id}), {
+            preserveScroll: true,
+            onSuccess: () => {
+                form.reset();
+            },
+            onError: (errors) => {
+                Object.keys(errors).forEach((key) => {
+                    toast.add({
+                        severity: 'error',
+                        summary: t('messages.toast.error'),
+                        detail: errors[key][0],
+                        life: 3000,
+                    });
+                });
+            },
+        }) :
+        form.put(route('tascas-proposals.update', tascaProposal.id), {
+            method: 'patch',
+            onSuccess: () => {
+                form.reset();
+            },
+            onError: (errors) => {
+                console.error(errors);
+            },
+        })
+}
+
+function openImageModal(path) {
+    imageToShow.value = `/imagen-privada/${path}`;
+    showImageModal.value = true;
+}
+</script>
 
 <style scoped>
 .fade-enter-active, .fade-leave-active {

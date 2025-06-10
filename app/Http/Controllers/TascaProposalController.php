@@ -69,13 +69,17 @@ class TascaProposalController extends Controller
     {
         $this->authorize('update', $tascaProposal);
 
-        $tascaProposal->status = $request->validated()['status'];
-        $tascaProposal->save();
+        $tascaProposal->update($request->validated());
+       
         if ($tascaProposal->status === ManageStatus::REJECTED) {
             Mail::to($tascaProposal->owner_email)->queue(new TascaProporsalRejectedMail($tascaProposal));
         }
-        return redirect()->route('tascas-proposals.index')->with(
-            'success', 'La Propuesta de Tasca se ha actualizado correctamente.');
+      
+        return redirect()->route('tascas-proposals.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.updated'),
+            'detail' => __('messages.toast.tasca_proposal_updated'),
+        ]);
     }
 
     public function clone(TascaProposal $tascaProposal)
@@ -86,8 +90,12 @@ class TascaProposalController extends Controller
         $clonedProposal->status = ManageStatus::PENDING->value;
         $clonedProposal->save();
 
-        return redirect()->route('tascas-proposals.index')->with(
-            'success', 'La Propuesta de Tasca se ha clonado correctamente.');
+        return redirect()->route('tascas-proposals.index')
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.cloned'),
+                'detail' => __('messages.toast.tasca_proposal_cloned'),
+            ]);
     }
 
     public function approve(TascaProposal $tascaProposal)
@@ -116,7 +124,11 @@ class TascaProposalController extends Controller
 
         Mail::to($tascaProposal->owner_email)->queue(new TascaProporsalAprovedMail($tascaProposal));
 
-        return redirect()->route('tascas-proposals.index')->with(
-            'success', 'La Propuesta de Tasca se ha aprobado y el usuario ha sido creado correctamente.');
+         return redirect()->route('tascas-proposals.index')
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => __('messages.toast.tasca_created'),
+            ]);
     }
 }

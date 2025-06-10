@@ -51,8 +51,7 @@ class TascaProposalController extends Controller
 
         TascaProposal::create($validated);
 
-        return Inertia::render('Auth/TascaProposalCreated')
-            ->with('success', __('messages.toast.reservation_created'));
+        return Inertia::render('Auth/TascaProposalCreated');
     }
 
     public function update(UpdateTascaProposalRequest $request, TascaProposal $tascaProposal)
@@ -61,8 +60,11 @@ class TascaProposalController extends Controller
 
         $tascaProposal->update($request->validated());
 
-        return redirect()->route('tascas-proposals.index')->with(
-            'success', 'La Propuesta de Tasca se ha actualizado correctamente.');
+        return redirect()->route('tascas-proposals.index')->with('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.updated'),
+            'detail' => __('messages.toast.tasca_proposal_updated'),
+        ]);
     }
 
     public function clone(TascaProposal $tascaProposal)
@@ -73,7 +75,12 @@ class TascaProposalController extends Controller
         $clonedProposal->status = ManageStatus::PENDING->value;
         $clonedProposal->save();
 
-        return redirect()->route('tascas-proposals.index');
+        return redirect()->route('tascas-proposals.index')
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.cloned'),
+                'detail' => __('messages.toast.tasca_proposal_cloned'),
+            ]);
     }
 
     public function approve(TascaProposal $tascaProposal)
@@ -101,7 +108,10 @@ class TascaProposalController extends Controller
         $tascaProposal->update(['status' => ManageStatus::ACCEPTED->value]);
 
         return redirect()->route('tascas-proposals.index')
-            ->with(
-            'success', 'La Propuesta de Tasca se ha aprobado y el usuario ha sido creado correctamente.');
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => __('messages.toast.tasca_created'),
+            ]);
     }
 }

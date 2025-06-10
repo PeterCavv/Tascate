@@ -38,6 +38,8 @@ class ReservationController extends Controller
     public function show(Reservation $reservation)
     {
 
+        $this->authorize('show', $reservation);
+
         if ($reservation->tasca->picture) {
             $reservation->tasca->picture = asset($reservation->tasca->picture);
         }

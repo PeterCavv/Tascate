@@ -1,7 +1,15 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
-import { ref, onMounted, onUnmounted } from 'vue'
+import {ref, onMounted, onUnmounted, watch} from 'vue'
 import Loading from "@/Components/Loading.vue";
+import { usePage } from '@inertiajs/vue3';
+import Toast from "primevue/toast";
+import {useToast} from "primevue/usetoast";
+import {useI18n} from "vue-i18n";
+
+const page = usePage()
+const toast = useToast()
+const {t} = useI18n();
 
 const sidebarOpen = ref(false);
 const visible = ref(false);
@@ -31,9 +39,25 @@ function showModal() {
     visible.value = true
 }
 
+watch(
+    () => page.props.toast,
+    (toastMessage) => {
+        console.log(toastMessage);
+        if (toastMessage) {
+            toast.add({
+                severity: toastMessage.severity ?? 'success',
+                summary: toastMessage.summary ?? t('messages.toast.success'),
+                detail: toastMessage.detail ?? '',
+                life: 3000,
+            })
+        }
+    },
+    { immediate: true }
+)
 </script>
 
 <template>
+    <Toast position="bottom-center"/>
     <transition name="fade">
         <Loading v-if="isLoading"/>
     </transition>

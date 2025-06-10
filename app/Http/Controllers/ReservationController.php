@@ -63,8 +63,12 @@ class ReservationController extends Controller
 
         $reservation = Reservation::create($validated);
 
-        return redirect()->route('reservations.show', $reservation)->with('success',
-            'Reserva creada correctamente. ¡Disfruta de la experiencia!');
+        return redirect()->route('reservations.show', $reservation)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.created'),
+                'detail' => __('messages.toast.reservation_created'),
+            ]);
     }
 
     /**
@@ -82,8 +86,11 @@ class ReservationController extends Controller
         $reservation->delete();
 
         return redirect()->route('reservations.index',
-        )->with('success',
-            'Reserva cancelada correctamente. :(');
+        )->with('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.deleted'),
+            'detail' => __('messages.toast.reservation_deleted'),
+        ]);
     }
 
     /**

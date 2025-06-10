@@ -4,10 +4,12 @@ import {Head, router} from "@inertiajs/vue3";
 import ReservationForm from "@/Components/ReservationForm.vue";
 import { useDateFormatter } from "@/Composables/useDateFormatter.js";
 import {ref} from "vue";
+import Calendar from "@/Components/Calendar.vue";
 
 const {reservation} = defineProps({
     reservation: Object,
     reservation_path: String,
+    reservation_date: String
 });
 
 const { formateDateToDDMMYYYY } = useDateFormatter();
@@ -28,16 +30,7 @@ function cancelReservation(){
     <Head title="Reserva" />
 
     <div class="flex flex-col-reverse lg:flex-row gap-8 p-4">
-        <div class="bg-white rounded-xl shadow-lg p-6 w-full lg:w-1/3 min-h-[300px] flex flex-col items-center justify-center">
-            <h3 class="text-gray-800 text-xl font-semibold mb-3">
-                📅
-            </h3>
-            <!-- SUSTITUIR POR EL MAPA -->
-            <div class="text-3xl text-gray-700 font-bold">
-
-            </div>
-        </div>
-
+        <Calendar :selectedDate="reservation_date" />
         <div class="w-full lg:w-2/3">
             <div class="text-4xl font-bold text-gray-800 mb-4">
                 {{ formateDateToDDMMYYYY(reservation.reservation_date) }} - {{ reservation.reservation_time }}

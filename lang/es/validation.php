@@ -158,6 +158,17 @@ return [
         'name' => 'Nombre',
         'email' => 'Email',
         'tasca' => 'Tasca',
-        'manager' => 'Manager'
+        'manager' => 'Manager',
+        'tasca_name' => 'Nombre de la tasca',
+        'address' => 'Dirección',
+        'telephone' => 'Teléfono',
+        'cif' => 'CIF',
+        'cif_picture_path' => 'CIF de la empresa',
+        'owner_name' => 'Nombre del propietario',
+        'owner_email' => 'Email del propietario',
+        'dni' => 'NIF',
+        'dni_picture_path' => 'DNI del representante legal',
+        'status' => 'Estado',
+        'password' => 'Contraseña'
     ]
 ];

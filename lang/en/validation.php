@@ -155,9 +155,20 @@ return [
     'url'                    => 'The :attribute field must be a valid URL.',
     'uuid'                   => 'The :attribute field must be a valid UUID.',
     'attributes' => [
-        'name' => 'Nombre',
+        'name' => 'Name',
         'email' => 'Email',
         'tasca' => 'Tasca',
-        'manager' => 'Manager'
+        'manager' => 'Manager',
+        'tasca_name' => 'Tasca name',
+        'address' => 'Address',
+        'telephone' => 'Telephone',
+        'cif' => 'CIF',
+        'cif_picture_path' => 'CIF picture',
+        'owner_name' => 'Owner name',
+        'owner_email' => 'Owner email',
+        'dni' => 'NIF',
+        'dni_picture_path' => 'DNI picture',
+        'status' => 'Status',
+        'password' => 'Password'
     ]
 ];

@@ -428,3 +428,69 @@ watch(activeSection, (newValue) => {
         </div>
     </transition>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+    transition: transform 0.3s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+    transform: translateX(100%);
+}
+.slide-enter-to,
+.slide-leave-from {
+    transform: translateX(0);
+}
+
+.map-container {
+    height: 500px;
+    width: 100%;
+    border: 2px solid black;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.slide-horizontal-enter-active,
+.slide-horizontal-leave-active {
+    transition: transform 0.4s ease;
+    position: absolute;
+    width: 100%;
+}
+
+.slide-horizontal-enter-from {
+    transform: translateX(100%);
+}
+.slide-horizontal-leave-to {
+    transform: translateX(-100%);
+}
+
+.slide-horizontal-enter-active,
+.slide-horizontal-leave-active {
+    transition: transform 0.4s ease;
+    position: absolute;
+    width: 100%;
+}
+
+.slide-horizontal-enter-from {
+    transform: translateX(100%);
+}
+.slide-horizontal-leave-to {
+    transform: translateX(-100%);
+}
+
+
+</style>

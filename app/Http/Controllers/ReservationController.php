@@ -6,6 +6,7 @@ use App\Events\ReservationCancelEvent;
 use App\Http\Requests\Reservation\StoreReservationRequest;
 use App\Http\Requests\Reservation\UpdateReservationRequest;
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
@@ -53,6 +54,8 @@ class ReservationController extends Controller
         return inertia('Reservations/ReservationShow', [
             'reservation' => $reservation->load('customer', 'tasca'),
             'reservation_path' => $reservation_path,
+            'reservation_date' => Carbon::parse($reservation->reservation_date)->format('Y-m-d'),
+
         ]);
     }
 

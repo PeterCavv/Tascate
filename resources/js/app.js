@@ -8,6 +8,7 @@ import setupI18n from './i18n'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import ToastLayout from "@/Layouts/ToastLayout.vue";
 
+
 // PrimeVue imports
 import PrimeVue from 'primevue/config';
 import 'primeicons/primeicons.css';
@@ -31,8 +32,10 @@ import InputNumber from 'primevue/inputnumber';
 import Fieldset from 'primevue/fieldset';
 import KeyFilter from 'primevue/keyfilter';
 import SplitButton from 'primevue/splitbutton';
+import Calendar from 'primevue/calendar'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

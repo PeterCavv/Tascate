@@ -39,25 +39,29 @@ function showModal() {
     visible.value = true
 }
 
+const toastControl = (toastMessage) => {
+    console.log(toastMessage);
+    if (toastMessage) {
+        toast.add({
+            severity: toastMessage.severity ?? 'success',
+            summary: toastMessage.summary ?? t('messages.toast.success'),
+            detail: toastMessage.detail ?? '',
+            life: 3000,
+        })
+    }
+}
+
 watch(
     () => page.props.toast,
     (toastMessage) => {
         console.log(toastMessage);
-        if (toastMessage) {
-            toast.add({
-                severity: toastMessage.severity ?? 'success',
-                summary: toastMessage.summary ?? t('messages.toast.success'),
-                detail: toastMessage.detail ?? '',
-                life: 3000,
-            })
-        }
+        toastControl(toastMessage);
     },
     { immediate: true }
 )
 </script>
 
 <template>
-    <Toast position="bottom-center"/>
     <transition name="fade">
         <Loading v-if="isLoading"/>
     </transition>

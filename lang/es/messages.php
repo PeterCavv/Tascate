@@ -40,6 +40,8 @@ return [
         'deleted' => 'Eliminado',
         'created' => 'Creado',
         'success' => 'Éxito',
+        'welcome' => 'Bienvenido a Tascate',
+        'welcome_details' => '¡Hola de nuevo, :name!',
         'succes_details' => 'Tarea realizada correctamente'
     ],
     'tasca_proposal' => [

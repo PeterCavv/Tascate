@@ -73,7 +73,6 @@ const submit = () => {
 </script>
 
 <template>
-    <Toast/>
     <FormLayout>
         <div class="w-full max-w-md mx-auto">
             <div class="text-center mb-6">

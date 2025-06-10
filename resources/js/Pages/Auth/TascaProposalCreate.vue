@@ -1,85 +1,4 @@
-<script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {useForm} from "@inertiajs/vue3";
-import {ref} from "vue";
-import PoliticaPrivacidadModal from "@/Components/PoliticaPrivacidadModal.vue";
-import FileUpload from 'primevue/fileupload';
-import CheckBox from 'primevue/checkbox';
-import FormLayout from "@/Layouts/FormLayout.vue";
-import {Head} from "@inertiajs/vue3";
-import Message from 'primevue/message';
-import {useToast} from "primevue/usetoast";
-import {useI18n} from "vue-i18n";
-import Dialog from 'primevue/dialog';
-
-const toast = useToast();
-const { t } = useI18n();
-
-defineOptions({
-    layout: MainLayoutTemp,
-});
-
-const form = useForm({
-    tasca_name: "",
-    address: "",
-    telephone: "",
-    cif: "",
-    cif_picture_path: "",
-    owner_name: "",
-    owner_email: "",
-    dni: "",
-    dni_picture_path: "",
-});
-
-const acceptedPrivacy = ref(false);
-const openModal = ref(false);
-
-/** * Submit the form to create a new Tasca proposal*/
-const submitForm = () => {
-    form.submit("post", route('tascas-proposals.store'), {
-        preserveScroll: true,
-        forceFormData: true,
-        onError: (errors) => {
-            Object.keys(errors).forEach(key => {
-                toast.add({
-                    severity: 'error',
-                    summary: t('messages.toast.error'),
-                    detail: errors[key],
-                    life: 3000,
-                });
-            });
-        },
-        preserveState: true,
-    });
-};
-
-/** * Handle file selection for CIF picture
- * @param {Event} event
- */
-function onFileSelectCif(event) {
-    form.cif_picture_path = event.files.length ? event.files[0] : null
-}
-
-/** Handle file selection for DNI picture
- * @param {Event} event
- */
-function onFileSelectDni(event) {
-    form.dni_picture_path = event.files.length ? event.files[0] : null
-}
-
-/** Clear the CIF picture path */
-function onFileClearCif() {
-    form.cif_picture_path = null
-}
-
-/** Clear the DNI picture path */
-function onFileClearDni() {
-    form.dni_picture_path = null
-}
-</script>
-
 <template>
-    <Toast/>
     <FormLayout>
         <Head title="Propuesta de Tasca" />
 
@@ -367,3 +286,84 @@ function onFileClearDni() {
         <PoliticaPrivacidadModal @close="openModal = false" />
     </Dialog>
 </template>
+
+<script setup>
+import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import {useForm} from "@inertiajs/vue3";
+import {ref} from "vue";
+import PoliticaPrivacidadModal from "@/Components/PoliticaPrivacidadModal.vue";
+import FileUpload from 'primevue/fileupload';
+import CheckBox from 'primevue/checkbox';
+import FormLayout from "@/Layouts/FormLayout.vue";
+import {Head} from "@inertiajs/vue3";
+import Message from 'primevue/message';
+import {useToast} from "primevue/usetoast";
+import {useI18n} from "vue-i18n";
+import Dialog from 'primevue/dialog';
+
+const toast = useToast();
+const { t } = useI18n();
+
+defineOptions({
+    layout: MainLayoutTemp,
+});
+
+const form = useForm({
+    tasca_name: "",
+    address: "",
+    telephone: "",
+    cif: "",
+    cif_picture_path: "",
+    owner_name: "",
+    owner_email: "",
+    dni: "",
+    dni_picture_path: "",
+});
+
+const acceptedPrivacy = ref(false);
+const openModal = ref(false);
+
+/** * Submit the form to create a new Tasca proposal*/
+const submitForm = () => {
+    form.submit("post", route('tascas-proposals.store'), {
+        preserveScroll: true,
+        forceFormData: true,
+        onError: (errors) => {
+            Object.keys(errors).forEach(key => {
+                toast.add({
+                    severity: 'error',
+                    summary: t('messages.toast.error'),
+                    detail: errors[key],
+                    life: 3000,
+                });
+            });
+        },
+        preserveState: true,
+    });
+};
+
+/** * Handle file selection for CIF picture
+ * @param {Event} event
+ */
+function onFileSelectCif(event) {
+    form.cif_picture_path = event.files.length ? event.files[0] : null
+}
+
+/** Handle file selection for DNI picture
+ * @param {Event} event
+ */
+function onFileSelectDni(event) {
+    form.dni_picture_path = event.files.length ? event.files[0] : null
+}
+
+/** Clear the CIF picture path */
+function onFileClearCif() {
+    form.cif_picture_path = null
+}
+
+/** Clear the DNI picture path */
+function onFileClearDni() {
+    form.dni_picture_path = null
+}
+</script>
+

@@ -14,6 +14,8 @@ Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.sh
 Route::get('/tascas/{tasca}/edit', [TascaController::class, 'edit'])->name('tascas.edit')->middleware('auth');
 Route::post('/tascas/{tasca}', [TascaController::class, 'update'])->name('tascas.update')->middleware('auth');
 Route::post('/tascas/{tasca}/toggle-favorite', [TascaController::class, 'toggleFavorite'])->name('tascas.toggle-favorite')->middleware('auth');
+Route::get('/{tasca}/map-set',[TascaController::class, 'editTascaLocation'])->name('tascas.map-set')->middleware('auth');
+Route::post('/{tasca}/map-set', [TascaController::class, 'setTascaLocation'])->name('update.map')->middleware('auth');
 
 // Reservations Routes
 

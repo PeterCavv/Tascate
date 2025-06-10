@@ -116,8 +116,8 @@ const submit = () => {
                       class="mt-1 block w-full"
                       v-model="form.manager_id"
                       :options="props.managers.map(manager => ({ label: manager.user.name, value: manager.id }))"
-                      option-label="label"
-                      option-value="value"
+                      :option-label="'label'"
+                      :option-value="'value'"
                       required
                   />
                 <InputError :message="form.errors.manager_id" class="mt-2" />

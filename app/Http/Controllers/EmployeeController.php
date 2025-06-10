@@ -6,6 +6,7 @@ use App\Enums\Role;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Models\Employee;
+use App\Models\Manager;
 use App\Models\Tasca;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -21,22 +22,43 @@ class EmployeeController extends Controller
     {
         $this->authorize('viewAny', Employee::class);
 
+
         $authUser = auth()->user();
 
         if(!$authUser->isAdmin()) {
             $tascaId = $authUser->tasca_id;
+            $manager = Manager::where('tasca_id', $tascaId)
+                ->first();
+            if ($manager) {
+                $manager->load('user:id,name,email');
+            }
             $employees = Employee::tascaEmployees($tascaId)->get();
         }else{
             $employees = Employee::allEmployees()->get();
         }
 
         if ($authUser->isManager()){
+            $manager = $authUser->manager;
+            if ($manager) {
+                $manager->load('user:id,name,email');
+            }
             $employees = Employee::where('manager_id', $authUser->manager->id)
                 ->with(['user:id,name,email'])
                 ->get();
         }
 
+        if ($authUser->isTasca()) {
+            $manager = $authUser->tasca->manager;
+             if ($manager) {
+                 $manager->load('user:id,name,email');
+             }
+            $employees = Employee::where('tasca_id', $authUser->tasca->id)
+                ->with(['user:id,name,email'])
+                ->get();
+        }
+
         return Inertia::render('Employees/Employees', [
+            'manager' => $manager ?? null,
             'employees' => $employees,
         ]);
     }
@@ -68,16 +90,24 @@ class EmployeeController extends Controller
             $tascas = Tasca::with(['manager.user:id,name,email'])->get();
             return Inertia::render('Employees/EmployeeForm', [
                 'tascas' => $tascas,
-                'auth' => auth()->user()->load('employee'),
             ]);
         }
-
-        $tascas = Tasca::where('id', $authUser->manager->tasca_id)
-            ->with(['manager.user:id,name,email'])
-            ->get();
-        return Inertia::render('Employees/EmployeeForm', [
-            'tascas' => $tascas,
-        ]);
+        if ($authUser->isTasca()) {
+            $tascas = Tasca::where('id', $authUser->tasca->id)
+                ->with(['manager.user:id,name,email'])
+                ->get();
+            return Inertia::render('Employees/EmployeeForm', [
+                'tascas' => $tascas,
+            ]);
+        }
+        if ($authUser->isManager()) {
+            $tascas = Tasca::where('id', $authUser->manager->tasca_id)
+                ->with(['manager.user:id,name,email'])
+                ->get();
+            return Inertia::render('Employees/EmployeeForm', [
+                'tascas' => $tascas,
+            ]);
+        }
     }
 
     public function store(StoreEmployeeRequest $request)
@@ -129,6 +159,9 @@ class EmployeeController extends Controller
         $validated = $request->validated();
 
         $employee->user->update($validated);
+        $employee->update([
+            'manager_id' => $validated['manager_id'],
+        ]);
 
         return redirect()
             ->route('employees.show', $employee)
@@ -157,14 +190,53 @@ class EmployeeController extends Controller
 
     public function promote(Employee $employee)
     {
+        $manager = Manager::where('tasca_id', $employee->tasca_id)
+            ->with('user:id,name,email')
+            ->get();
+        if ($manager->count() > 0) {
+            return redirect()
+                ->route('employees.index')
+                ->with('success', 'No se puede promover al empleado porque ya existe un manager para esta tasca.');
+        }
+
         $this->authorize('promote', $employee);
+        $manager = Manager::create([
+            'user_id' => $employee->user_id,
+            'tasca_id' => $employee->tasca_id,
+        ]);
 
-        $manager = $employee;
-        $manager->promote($employee);
+        $user = $employee->user;
 
+        $user->removeRole(Role::EMPLOYEE->value);
+        $user->assignRole(Role::MANAGER->value);
+
+        $employee->delete();
             return redirect()
                 ->route('managers.show', $manager)
                 ->with('success', 'Empleado promovido a manager exitosamente.');
+    }
+    public function demote(Manager $manager)
+    {
+        $this->authorize('demote', $manager);
 
+        $user = $manager->user;
+
+        if ($user->hasRole(Role::MANAGER->value)) {
+            $user->removeRole(Role::MANAGER->value);
+        }
+
+        $user->assignRole(Role::EMPLOYEE->value);
+
+        $employee = Employee::create([
+            'user_id' => $user->id,
+            'tasca_id' => $manager->tasca_id,
+            'manager_id' => null, // El empleado no tiene manager
+        ]);
+
+        $manager->delete();
+
+        return redirect()
+            ->route('employees.show', $employee)
+            ->with('success', 'Empleado degradado a empleado exitosamente.');
     }
 }

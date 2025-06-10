@@ -64,9 +64,16 @@ class ManagerController extends Controller
     {
         $this->authorize('update', $manager);
 
+        if (auth()->user()->isAdmin()) {
+            $tascas = Tasca::all();
+        }
+        else {
+            $tascas = Tasca::where('id', $manager->tasca_id)->get();
+        }
+
         return Inertia::render('Managers/ManagerEdit', [
             'manager' => $manager->load('user'),
-            'tascas' => Tasca::all(),
+            'tascas' => $tascas,
         ]);
     }
 
@@ -120,9 +127,17 @@ class ManagerController extends Controller
     {
         $this->authorize('demote', $manager);
 
-        $employee = $manager;
-        $employee->demote($manager);
+        $employee = Employee::create([
+            'user_id' => $manager->user_id,
+            'tasca_id' => $manager->tasca_id,
+        ]);
 
+        $user = $manager->user;
+
+        $user->removeRole(Role::MANAGER->value);
+        $user->assignRole(Role::EMPLOYEE->value);
+
+        $manager->delete();
             return redirect()
                 ->route('employees.show', $employee)
                 ->with('success', 'Manager degradado a empleado exitosamente.');

@@ -13,7 +13,8 @@ class Manager extends Model
     use HasFactory, GetRandomOrCreate;
 
     protected $fillable = [
-        'user_id'
+        'user_id',
+        'tasca_id'
     ];
 
     public function user()

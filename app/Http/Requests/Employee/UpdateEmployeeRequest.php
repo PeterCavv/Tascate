@@ -19,7 +19,11 @@ class UpdateEmployeeRequest extends FormRequest
                 'required',
                 'string',
                 'max:255'
-            ]
+            ],
+            'manager_id' => [
+                'required',
+                'exists:managers,id',
+            ],
         ];
     }
 

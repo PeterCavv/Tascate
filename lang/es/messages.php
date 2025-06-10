@@ -34,6 +34,7 @@ return [
         'reservation_created' => 'Reserva realizada. ¡Que disfrutes!',
         'reservation_deleted' => 'Reserva cancelada. ¡Esperamos que vuelvas pronto!',
         'reservation_updated' => 'Reserva actualizada correctamente.',
+        'tasca_updated' => 'Tasca actualizada correctamente.',
         'error' => 'Error',
         'saved' => 'Guardado',
         'updated' => 'Actualizado',
@@ -120,7 +121,16 @@ return [
         'delete_review' => 'Eliminar reseña',
         'edited' => 'Editado',
         'published_today' => 'Publicado hoy',
-        'no_reviews' => 'No hay reseñas disponibles.'
+        'no_reviews' => 'No hay reseñas disponibles.',
+        'edit_form' => [
+            'title' => 'Editar Tasca',
+            'name' => 'Nombre*',
+            'address' => 'Dirección*',
+            'telephone' => 'Teléfono*',
+            'capacity' => 'Capacidad',
+            'opening_time' => 'Apertura',
+            'closing_time' => 'Cierre'
+        ]
     ],
     'buttons' => [
         'close' => 'Cerrar',

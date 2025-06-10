@@ -100,7 +100,8 @@ class TascaProposalController extends Controller
 
         $tascaProposal->update(['status' => ManageStatus::ACCEPTED->value]);
 
-        return redirect()->route('tascas-proposals.index')->with(
+        return redirect()->route('tascas-proposals.index')
+            ->with(
             'success', 'La Propuesta de Tasca se ha aprobado y el usuario ha sido creado correctamente.');
     }
 }

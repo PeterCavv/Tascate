@@ -73,9 +73,9 @@
                         </span>
                     </template>
                 </div>
-                <span class="text-sm text-gray-600 mt-1">
+                <div class="text-sm text-gray-600 mt-1">
                     {{ tasca.reviews.length + t('messages.tasca.reviews')}}
-                </span>
+                </div>
                 <Button
                     v-if="!auth.is_tasca"
                     @click.stop

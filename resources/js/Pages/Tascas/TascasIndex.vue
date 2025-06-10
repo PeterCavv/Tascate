@@ -50,7 +50,7 @@ function toggleFavorite(tasca) {
                         alt="Imagen de {{ tasca.name }}"
                         class="absolute inset-0 w-full h-full object-cover rounded-xl z-0"
                     />
-                    <div class="absolute inset-0 rounded-xl bg-black bg-opacity-40 p-4 flex flex-col justify-end text-white">
+                    <div class="absolute inset-0 rounded-xl bg-black bg-opacity-50 p-4 flex flex-col justify-end text-white">
                         <button
                             :title="tasca.is_favorite ? t('messages.tascas.unbookmark') : t('messages.tascas.bookmark')"
                             @click.stop
@@ -62,7 +62,7 @@ function toggleFavorite(tasca) {
 
                         <div class="text-left relative z-10 rounded-lg p-2 opacity-90">
                             <div class="flex items-center mb-1 ">
-                                <h2 class="text-3xl font-extrabold truncate">{{ tasca.name }}</h2>
+                                <h2 class="text-2xl font-extrabold truncate">{{ tasca.name }}</h2>
                                 <div class="flex items-center ml-2">
                                     <template v-if="tasca.reviews.length > 0" v-for="i in 5" :key="i">
                                         <span v-if="i <= getRoundedRating(tasca)" class="text-yellow-400 text-base">★</span>

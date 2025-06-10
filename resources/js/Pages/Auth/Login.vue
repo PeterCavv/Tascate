@@ -1,28 +1,3 @@
-<script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import {useI18n} from "vue-i18n";
-
-defineProps({
-    canResetPassword: Boolean,
-    status: String,
-});
-
-const { t } = useI18n();
-
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
-
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
-};
-</script>
-
 <template>
     <GuestLayout>
         <Head title="Log in" />
@@ -45,7 +20,6 @@ const submit = () => {
                     class="p-2 space-y-2 w-full max-w-sm mx-auto"
                     aria-label="Login form"
                 >
-                    <!-- Email -->
                     <div class="p-1"></div>
                     <div class="space-y-1">
                         <FloatLabel>
@@ -56,52 +30,57 @@ const submit = () => {
                                 class="w-full dark:text-gray-100 dark:placeholder-gray-400"
                                 autocomplete="username"
                                 autofocus
-                                required
                                 aria-required="true"
                                 aria-invalid="!!form.errors.email"
                                 aria-describedby="email-error"
+                                :invalid="form.errors.email"
                             />
                             <label for="email" class="dark:text-gray-300">
                                 {{ t('messages.user_data.email') }}
                             </label>
                         </FloatLabel>
-                        <small
+                        <Message
                             v-if="form.errors.email"
                             id="email-error"
-                            class="p-error block mt-1 text-xs dark:text-red-300"
-                            role="alert"
+                            severity="error"
+                            size="small"
+                            variant="simple"
                         >
                             {{ form.errors.email }}
-                        </small>
+                        </Message>
                     </div>
 
-                    <!-- Password -->
                     <div class="p-1"></div>
                     <div class="space-y-1">
                         <FloatLabel>
-                            <InputText
+                            <IconField>
+
+                            </IconField>
+                            <Password
                                 id="password"
-                                type="password"
+                                :feedback="false"
                                 v-model="form.password"
-                                class="w-full dark:text-gray-100 dark:placeholder-gray-400"
+                                toggleMask
+                                class="w-full"
+                                inputClass="w-full dark:text-gray-100 dark:placeholder-gray-400"
                                 autocomplete="current-password"
-                                required
                                 aria-required="true"
-                                aria-invalid="!!form.errors.password"
                                 aria-describedby="password-error"
+                                :invalid="form.errors.password"
                             />
                             <label for="password" class="dark:text-gray-300">
                                 {{ t('messages.auth.password') }}
                             </label>
                         </FloatLabel>
-                        <small
+                        <Message
                             v-if="form.errors.password"
                             id="password-error"
-                            class="p-error block mt-1 text-xs dark:text-red-300"
-                            role="alert"
+                            severity="error"
+                            size="small"
+                            variant="simple"
                         >
                             {{ form.errors.password }}
-                        </small>
+                        </Message>
                     </div>
 
                     <!-- Remember Me -->
@@ -145,3 +124,31 @@ const submit = () => {
         </main>
     </GuestLayout>
 </template>
+
+<script setup>
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import {useI18n} from "vue-i18n";
+import Message from "primevue/message";
+import Checkbox from "primevue/checkbox";
+import Password from "primevue/password";
+
+defineProps({
+    canResetPassword: Boolean,
+    status: String,
+});
+
+const { t } = useI18n();
+
+const form = useForm({
+    email: '',
+    password: '',
+    remember: false,
+});
+
+const submit = () => {
+    form.post(route('login'), {
+        onFinish: () => form.reset('password'),
+    });
+};
+</script>

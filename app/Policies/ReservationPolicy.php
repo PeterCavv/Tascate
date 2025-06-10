@@ -16,6 +16,11 @@ class ReservationPolicy
         return $user->isCustomer();
     }
 
+    public function show(User $user, Reservation $reservation)
+    {
+        return $this->canManage($user, $reservation);
+    }
+
     public function delete(User $user, Reservation $reservation): bool
     {
         return $this->canManage($user, $reservation);

@@ -43,6 +43,8 @@ class ReservationController extends Controller
     public function show(Reservation $reservation)
     {
 
+        $this->authorize('show', $reservation);
+
         if ($reservation->tasca->picture) {
             $reservation->tasca->picture = asset($reservation->tasca->picture);
         }
@@ -68,7 +70,6 @@ class ReservationController extends Controller
 
         $reservation = Reservation::create($validated);
 
-
         Mail::to($reservation->customer->user->email)->queue(
             new ReservationCreatedMail(
                 $reservation->tasca,
@@ -84,8 +85,13 @@ class ReservationController extends Controller
                 $reservation->tasca
             )
         );
-        return redirect()->route('reservations.show', $reservation)->with('success',
-            'Reserva creada correctamente. ¡Disfruta de la experiencia!');
+      
+        return redirect()->route('reservations.show', $reservation)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.created'),
+                'detail' => __('messages.toast.reservation_created'),
+            ]);
     }
 
     /**
@@ -103,8 +109,11 @@ class ReservationController extends Controller
         event(new ReservationCancelEvent($reservation, $reservation->customer, $reservation->tasca));
 
         return redirect()->route('reservations.index',
-        )->with('success',
-            'Reserva cancelada correctamente. :(');
+        )->with('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.deleted'),
+            'detail' => __('messages.toast.reservation_deleted'),
+        ]);
     }
 
     /**

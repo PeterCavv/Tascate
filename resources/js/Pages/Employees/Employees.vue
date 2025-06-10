@@ -54,13 +54,13 @@ const deleteEmployee = () => {
 
       <Card v-if="manager" class="hover:shadow-lg transition-shadow ">
           <template #header>
-              <div class="flex items-center space-x-4 p-4 bg-lime-100">
-                  <Avatar :image="manager.user.avatar || '/default-avatar.png'" :label="manager.user.name ? manager.user.name.charAt(0) : 'M'" size="large" shape="circle" />
+              <div class="flex items-center space-x-4 p-4 bg-lime-200 border border-lime-400 rounded-lg">
+                  <Avatar :image="manager.user.avatar || '/default-avatar.png'" :label="manager.user.name ? manager.user.name.charAt(0) : 'M'" size="large" shape="circle" class="border border-lime-500" />
                   <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate">
-                          {{ manager.user.name }}
+                      <p class="text-sm font-medium text-lime-700 truncate">
+                          {{ manager.user.name }} <span class="text-xs text-lime-600">(Manager)</span>
                       </p>
-                      <p class="text-sm text-gray-500 truncate">
+                      <p class="text-sm text-lime-600 truncate">
                           {{ manager.user.email }}
                       </p>
                   </div>

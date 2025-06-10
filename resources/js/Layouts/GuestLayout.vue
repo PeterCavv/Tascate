@@ -5,16 +5,16 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div
-        class="w-screen min-h-screen bg-cover bg-left bg-no-repeat flex items-center p-4 sm:p-10"
+        class="w-screen min-h-screen bg-cover bg-left bg-no-repeat flex items-center sm:items-start sm:pt-20 lg:pt-24 xl:pt-28 p-4 sm:p-10"
         style="background-image: url('/images/login_v5.svg');"
     >
-        <div class="w-full max-w-xs mx-auto sm:mx-auto sm:ml-10 md:ml-20 lg:ml-32 xl:ml-40 text-center sm:text-left">
+        <div class="w-full max-w-xs mx-auto sm:mx-auto sm:ml-10 md:ml-20 lg:ml-32 xl:ml-40 text-center sm:text-left sm:-mt-8 md:-mt-12">
             <div class="flex justify-center sm:justify-start mb-106 sm:mb-4">
                 <Link href="/" class="mx-auto sm:mx-0 w-full max-w-md transition-transform duration-300 hover:scale-110">
-                    <ApplicationLogo class="sm:translate-y-[30%] mx-auto sm:mx-0" />
+                    <ApplicationLogo class="sm:translate-y-[15%] mx-auto sm:mx-0" />
                 </Link>
             </div>
-            <div class="mx-auto sm:mx-0 w-full max-w-md bg-white/30 dark:bg-[#121212]/30 rounded-xl p-4 backdrop-blur-md">
+            <div class="mx-auto sm:mx-0 w-full max-w-md bg-white/30 dark:bg-[#121212]/30 rounded-xl py-5 backdrop-blur-md">
                 <slot/>
             </div>
         </div>

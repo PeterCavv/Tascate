@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import setupI18n from './i18n'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import ToastLayout from "@/Layouts/ToastLayout.vue";
 
 
 // PrimeVue imports
@@ -44,8 +45,14 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) });
-        const i18n = setupI18n(props.initialPage.props.translations, props.initialPage.props.locale)
+        const app = createApp({
+            render: () => h(ToastLayout, null, {
+                default: () => h(App, props)
+            }),
+        });
+
+        const i18n = setupI18n(props.initialPage.props.translations, props.initialPage.props.locale);
+
 
         app.use(plugin)
             .use(ZiggyVue)

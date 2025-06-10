@@ -33,6 +33,7 @@ return [
         'error_saving' => 'Error al procesar la solicitud',
         'reservation_created' => 'Reserva realizada. ¡Que disfrutes!',
         'reservation_deleted' => 'Reserva cancelada. ¡Esperamos que vuelvas pronto!',
+        'reservation_updated' => 'Reserva actualizada correctamente.',
         'error' => 'Error',
         'saved' => 'Guardado',
         'updated' => 'Actualizado',
@@ -92,8 +93,11 @@ return [
         'buttons' => [
             'create' => 'Reservar',
             'update' => 'Actualizar Reserva',
+            'edit' => 'Editar reserva',
+            'cancel' => 'Cancelar reserva'
         ],
         'price_text' => 'Precio de la reserva: ',
+        'picture_alt' =>'Foto de la tasca',
         'payment_info' => 'El pago de la reserva se realiza a través de una plataforma segura. Si decides cancelar con más de 2 horas de antelación, te reembolsaremos el importe total de la reserva. En caso contrario, no será posble realizar el reembolso.',
     ],
 ];

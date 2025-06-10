@@ -1,29 +1,3 @@
-<script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import {Head, router} from "@inertiajs/vue3";
-import ReservationForm from "@/Components/ReservationForm.vue";
-import { useDateFormatter } from "@/Composables/useDateFormatter.js";
-import {ref} from "vue";
-
-const {reservation} = defineProps({
-    reservation: Object,
-    reservation_path: String,
-});
-
-const { formateDateToDDMMYYYY } = useDateFormatter();
-
-const openReservation = ref(false);
-
-defineOptions({
-    layout: MainLayoutTemp,
-});
-
-function cancelReservation(){
-    router.delete(`/reservations/${reservation.id}`, { preserveState: true, preserveScroll: true })
-}
-
-</script>
-
 <template>
     <Head title="Reserva" />
 
@@ -46,13 +20,16 @@ function cancelReservation(){
             <div class="relative h-44 rounded-xl overflow-hidden shadow-lg mb-4">
                 <img
                     :src="reservation_path"
-                    alt="Foto de la tasca"
+                    :alt="t('messages.reservation.picture_alt')"
                     class="absolute inset-0 object-cover w-full h-full"
                 />
                 <div class="absolute inset-0 bg-black bg-opacity-40 p-4 flex flex-col justify-end text-white">
                     <h2
                         class="text-2xl font-bold underline hover:text-green-300 transition cursor-pointer"
-                    @click="router.visit(`/tascas/${reservation.tasca.id}`, { preserveState: true, preserveScroll: true })">
+                    @click="router.visit(
+                        `/tascas/${reservation.tasca.id}`,
+                        { preserveState: true, preserveScroll: true })"
+                    >
                         {{ reservation.tasca.name }}
                     </h2>
                     <p class="text-sm">{{ reservation.tasca.address }}</p>
@@ -60,23 +37,40 @@ function cancelReservation(){
             </div>
 
             <div class="text-sm text-gray-700 mb-6 space-y-1">
-                <p><strong>Personas:</strong> {{ reservation.people }}</p>
-                <p><strong>Observaciones:</strong> {{ reservation.observations || '—' }}</p>
+                <p>
+                    <strong>
+                        {{ t('messages.reservation.labels.people') }}:
+                    </strong>
+                    {{ reservation.people }}
+                </p>
+                <p>
+                    <strong>
+                        {{ t('messages.reservation.labels.observations') }}:
+                    </strong>
+                    {{ reservation.observations || '—' }}
+                </p>
             </div>
 
             <div class="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-                <button
+                <Button
                     @click="openReservation = true"
-                    class="flex-1 px-4 py-2 rounded-full bg-green-600 text-white font-semibold shadow-md hover:bg-green-700 transition"
+                    class="flex-1 px-4 py-2"
+                    rounded
+                    raised
                 >
-                    Editar Reserva
-                </button>
-                <button
-                    @click="router.delete(`/reservations/${reservation.id}`, { preserveState: true, preserveScroll: true })"
-                    class="flex-1 px-4 py-2 rounded-full bg-green-100 text-green-800 font-semibold shadow-md hover:bg-green-200 transition"
+                    {{ t('messages.reservation.buttons.edit') }}
+                </Button>
+                <Button
+                    @click="router.delete(
+                        `/reservations/${reservation.id}`,
+                        { preserveState: true, preserveScroll: true })"
+                    class="flex-1 px-4 py-2"
+                    severity="primary"
+                    variant="outlined"
+                    rounded
                 >
-                    Cancelar Reserva
-                </button>
+                    {{ t('messages.reservation.buttons.cancel') }}
+                </Button>
             </div>
         </div>
     </div>
@@ -108,6 +102,36 @@ function cancelReservation(){
         </div>
     </transition>
 </template>
+
+<script setup>
+import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import {Head, router} from "@inertiajs/vue3";
+import ReservationForm from "@/Components/ReservationForm.vue";
+import { useDateFormatter } from "@/Composables/useDateFormatter.js";
+import {ref} from "vue";
+import Button from "primevue/button";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
+
+const {reservation} = defineProps({
+    reservation: Object,
+    reservation_path: String,
+});
+
+const { formateDateToDDMMYYYY } = useDateFormatter();
+
+const openReservation = ref(false);
+
+defineOptions({
+    layout: MainLayoutTemp,
+});
+
+function cancelReservation(){
+    router.delete(`/reservations/${reservation.id}`, { preserveState: true, preserveScroll: true })
+}
+
+</script>
 
 <style>
 .fade-enter-active,

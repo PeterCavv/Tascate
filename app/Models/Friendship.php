@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use App\Enums\FriendshipStatus;
+use App\Enums\ManageStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Friendship extends Pivot
 {
+    use HasFactory;
+
     protected $table = 'friendships';
 
     protected $casts = [
-        'status' => FriendshipStatus::class,
+        'status' => ManageStatus::class,
     ];
 
     protected $fillable = [
@@ -37,7 +40,7 @@ class Friendship extends Pivot
      */
     public function accept()
     {
-        $this->status = FriendshipStatus::ACCEPTED;
+        $this->status = ManageStatus::ACCEPTED;
         $this->save();
     }
 
@@ -47,7 +50,7 @@ class Friendship extends Pivot
      */
     public function blocked()
     {
-        $this->status = FriendshipStatus::BLOCKED;
+        $this->status = ManageStatus::BLOCKED;
         $this->save();
     }
 

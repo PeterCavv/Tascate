@@ -6,7 +6,7 @@
         "dev": "vite"
     },
     "devDependencies": {
-        "@inertiajs/vue3": "^2.0.0",
+        "@inertiajs/vue3": "^2.0.11",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/vite": "^4.0.0",
         "@vitejs/plugin-vue": "^5.0.0",
@@ -20,7 +20,15 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@fawmi/vue-google-maps": "^0.9.79",
+        "@inertiajs/inertia": "^0.11.1",
+        "@primeuix/themes": "^1.1.1",
+        "flatpickr": "^4.6.13",
         "primeicons": "^7.0.0",
-        "primevue": "^3.53.1"
+        "primevue": "^4.3.4",
+        "vee-validate": "^4.15.0",
+        "vue-i18n": "^11.1.5",
+        "yup": "^1.6.1",
+        "ziggy-js": "^2.5.2"
     }
 }

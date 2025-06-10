@@ -8,6 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('properties', function (Blueprint $table) {
+            //
             $table->id();
             $table->foreignId('owner_id')->constrained('owners')->onDelete('cascade');
             $table->foreignId('tasca_id')->constrained('tascas')->onDelete('cascade');

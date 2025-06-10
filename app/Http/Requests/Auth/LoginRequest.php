@@ -32,6 +32,14 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+            'email' => __('validation.attributes.email'),
+            'password' => __('validation.attributes.password'),
+        ];
+    }
+
     /**
      * Attempt to authenticate the request's credentials.
      *

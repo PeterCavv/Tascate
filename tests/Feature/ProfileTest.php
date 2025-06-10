@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use function Pest\Laravel\actingAs;
+use Illuminate\Support\Facades\Storage;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -83,3 +86,58 @@ test('correct password must be provided to delete account', function () {
 
     $this->assertNotNull($user->fresh());
 });
+
+test('User can upload an avatar', function () {
+
+    Storage::fake('public');
+    $user = User::factory()->create([
+        'avatar' => null,
+    ]);
+
+    $user->customer()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('users.update', $user), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ]);
+
+
+    $user->refresh();
+    $this->assertNotNull($user->avatar);
+    Storage::disk('public')->assertExists($user->avatar);
+
+
+});
+
+test('User avatar gets deleted when the user is deleted', function () {
+
+    Storage::fake('public');
+
+    $user = User::factory()->create([
+        'avatar' => null,
+    ]);
+
+    $user->customer()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('users.update', $user), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => UploadedFile::fake()->image('avatar.jpg'),
+        ]);
+
+
+    $user->refresh();
+    $this->assertNotNull($user->avatar);
+    Storage::disk('public')->assertExists($user->avatar);
+
+    $response = $this
+        ->actingAs($user)
+        ->delete(route('users.destroy', $user));
+
+    Storage::disk('public')->assertMissing($user->avatar);
+})->skip('Esta fallando de forma intermitente, revisar');

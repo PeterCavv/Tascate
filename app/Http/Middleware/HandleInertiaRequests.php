@@ -2,7 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -29,11 +32,32 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $shared = parent::share($request);
+
         return [
-            ...parent::share($request),
+            ...$shared,
             'auth' => [
-                'user' => $request->user(),
+                ...($shared['auth'] ?? []),
+                'user'          => $request->user()?->load('tasca'),
+                'role' => $request?->user()?->role_name ?? '',
+                'is_admin'      => $request->user()?->hasRole(Role::ADMIN->value),
+                'is_customer'   => $request->user()?->hasRole(Role::CUSTOMER->value),
+                'is_employee'   => $request->user()?->hasRole(Role::EMPLOYEE->value),
+                'is_manager'    => $request->user()?->hasRole(Role::MANAGER->value),
+                'is_tasca'      => $request->user()?->hasRole(Role::TASCA->value),
+                'impersonating' => Session::has('impersonator_id'),
             ],
+
+            'toast' => fn () => $request->session()->get('toast'),
+
+            'locale' => App::getLocale(),
+
+            'translations' => function () {
+                return [
+                    'messages'   => trans('messages'),
+                    'validation' => trans('validation'),
+                ];
+            },
         ];
     }
 }

@@ -1,3 +1,175 @@
+<script setup>
+import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import ReservationForm from "@/Components/ReservationForm.vue";
+import { useDateFormatter } from "@/Composables/useDateFormatter.js";
+import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
+import { Head, router, usePage } from "@inertiajs/vue3";
+import "primeicons/primeicons.css";
+import Message from "primevue/message";
+import { onMounted, ref, watch } from "vue";
+import { Link } from "@inertiajs/vue3";
+import { nextTick } from 'vue';
+import Button from "primevue/button";
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
+
+let map = null;
+
+const activeSection = ref("map"); // "map" o "reviews"
+
+
+
+const { auth } = usePage().props;
+
+const { tasca } = defineProps({
+    tasca: Object,
+    tasca_picture_path: String,
+    user_review: Object,
+});
+
+const { formateDateToDDMMYYYY, isToday } = useDateFormatter();
+const { getRoundedRating } = useRatingCalculator();
+
+const openReservation = ref(false);
+
+defineOptions({
+    layout: MainLayoutTemp,
+});
+
+const isOpenMoreThan8Hours = (tasca) => {
+    const [openH, openM] = tasca.opening_time.split(":").map(Number);
+    const [closeH, closeM] = tasca.closing_time.split(":").map(Number);
+
+    const open = new Date();
+    open.setHours(openH, openM, 0);
+
+    const close = new Date();
+    close.setHours(closeH, closeM, 0);
+
+    let diff = (close - open) / (1000 * 60 * 60);
+
+    if (diff < 0) diff += 24;
+
+    return diff > 8;
+};
+
+const toggleFavorite = (tasca) => {
+    router.post(route("tascas.toggle-favorite", tasca), {}, {
+        preserveState: true,
+        preserveScroll: true,
+    });
+};
+
+// Mapa
+
+const mapContainer = ref(null);
+
+const lat = parseFloat(tasca.latitude);
+const lng = parseFloat(tasca.longitude);
+
+onMounted(() => {
+    if (!window.google) {
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+        script.async = true;
+        script.defer = true;
+        script.onload = initMap;
+        document.head.appendChild(script);
+    } else {
+        initMap();
+    }
+});
+
+function initMap() {
+    const summerStyle = [
+        {
+            elementType: "geometry",
+            stylers: [{ color: "#e4fdd9" }], // fondo verde lima claro
+        },
+        {
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#6b9b2e" }], // texto verde vibrante
+        },
+        {
+            elementType: "labels.text.stroke",
+            stylers: [{ color: "#ffffff" }], // borde blanco
+        },
+        {
+            featureType: "administrative",
+            elementType: "geometry",
+            stylers: [{ color: "#c5f277" }], // lime intenso
+        },
+        {
+            featureType: "poi",
+            elementType: "geometry",
+            stylers: [{ color: "#faffb4" }], // amarillo suave
+        },
+        {
+            featureType: "poi.park",
+            elementType: "geometry",
+            stylers: [{ color: "#b7f77d" }], // verde hoja
+        },
+        {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [{ color: "#fce764" }], // amarillo pastel
+        },
+        {
+            featureType: "road",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#a0a000" }], // texto amarillo oscuro
+        },
+        {
+            featureType: "transit.line",
+            elementType: "geometry",
+            stylers: [{ color: "#ffe46b" }],
+        },
+        {
+            featureType: "water",
+            elementType: "geometry",
+            stylers: [{ color: "#aef1dd" }], // agua turquesa clara
+        },
+        {
+            featureType: "water",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#53c190" }],
+        },
+    ];
+
+    map = new window.google.maps.Map(mapContainer.value, {
+        center: { lat, lng },
+        zoom: 14,
+        styles: summerStyle,
+    });
+
+    new window.google.maps.Marker({
+        position: { lat, lng },
+        map,
+        title: tasca.name,
+        icon: {
+            url: "/images/tascate-icon-map.png",
+            scaledSize: new window.google.maps.Size(30, 40),
+        },
+    });
+}
+
+watch(activeSection, (newValue) => {
+    if (newValue === 'map') {
+        nextTick(() => {
+            setTimeout(() => {
+                if (mapContainer.value) {
+                    mapContainer.value.innerHTML = '';
+                    initMap();
+                }
+            }, 500);
+        });
+    }
+});
+
+
+</script>
+
 <template>
     <Head :title="tasca.name" />
 
@@ -45,6 +217,13 @@
                             {{ t('messages.tasca.top_rated') }}
                         </Message>
                     </div>
+                    <Link
+                        v-if="auth.user && auth.is_tasca && auth.user.id === tasca.user.id"
+                        :href="`/${tasca.id}/map-set`"
+                        class="px-4 py-1.5 rounded-full bg-blue-600 text-white text-sm font-semibold shadow-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
+                    >
+                        {{ auth.user ? "Añadir ubicación tasca" : "Inicia sesión para acceder al mapa" }}
+                    </Link>
 
                     <div v-if="tasca.reservation && (!auth.user || !auth.is_tasca)">
                         <Button
@@ -97,17 +276,116 @@
                 <span class="font-medium">{{ tasca.closing_time }}</span>
             </div>
 
-            <div class="py-3">
-                <h3 class="text-lg font-semibold text-gray-700 mb-2">
-                    {{ t('messages.tasca.reviews_section') }}
-                </h3>
-                <Button
-                    :label="t('messages.tasca.leave_review')"
-                    v-if="auth.user && auth.is_customer && user_review.length === 0"
-                    @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
-                    variant="outlined"
-                    class="px-4 py-1.5 focus:ring-offset-1"
-                />
+            <div class="flex justify-center gap-4 my-6">
+                <button
+                    @click="activeSection = 'map'"
+                    :class="[
+      'px-4 py-2 rounded-full font-semibold transition duration-300',
+      activeSection === 'map'
+        ? 'bg-green-600 text-white shadow'
+        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+    ]"
+                >
+                    Mapa
+                </button>
+
+                <button
+                    @click="activeSection = 'reviews'"
+                    :class="[
+      'px-4 py-2 rounded-full font-semibold transition duration-300',
+      activeSection === 'reviews'
+        ? 'bg-green-600 text-white shadow'
+        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+    ]"
+                >
+                    Reseñas
+                </button>
+            </div>
+
+            <transition name="slide-horizontal" mode="out-in">
+                <div :key="activeSection">
+                    <div v-if="activeSection === 'map' && tasca.latitude && tasca.longitude">
+                        <div ref="mapContainer" class="map-container"></div>
+                    </div>
+
+                    <div v-else-if="activeSection === 'reviews'">
+                        <h1 class="text-xl font-bold mb-2">Reseñas</h1>
+                        <Button
+                            :label="t('messages.tasca.leave_review')"
+                            v-if="auth.user && auth.is_customer && user_review.length === 0"
+                            @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
+                            variant="outlined"
+                            class="px-4 py-1.5 focus:ring-offset-1"
+                        />
+                         <div v-if="tasca.reviews.length > 0">
+                            <ul class="divide-y divide-gray-200">
+                                <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
+                                    <template v-for="i in 5" :key="i">
+                                        <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
+                                        <span v-else class="text-gray-300 text-xl">☆</span>
+                                    </template>
+                                    <template v-if="auth.user && review.customer.user.id === auth.user.id">
+                                        <button
+                                            @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
+                                            class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
+                                        >
+                                            {{ t('messages.tasca.edit_review') }}
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                    </template>
+                                    <template v-if="auth.user && auth.user.id === tasca.user.id">
+                                        <i class="pi pi-trash text-red-500 cursor-pointer hover:text-red-700 ml-3"
+                                           @click="router.delete(route('reviews.destroy', { tasca: tasca, review: review.id }))"
+                                           :title="t('messages.tasca.delete_review')"></i>
+                                    </template>
+                                    <p class="text-sm text-gray-800">
+                                        "{{ review.body }}"
+                                        <span
+                                            v-if="review.created_at !== review.updated_at"
+                                            class="italic text-gray-500 text-xs"
+                                        >
+                                            {{ t('messages.tasca.edited') }}
+                                        </span>
+                                    </p>
+                                    <div class="mt-1 flex items-center flex-wrap gap-2">
+                                        <p
+                                            @click="router.visit(`/users/${review.customer.user.id}`)"
+                                            class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
+                                            – {{ review.customer.user.name }}
+                                        </p>
+                                        <p
+                                            v-if="isToday(review.created_at)"
+                                            class="text-xs text-gray-500 mt-1"
+                                        >
+                                            {{ t('messages.tasca.published_today') }}
+                                        </p>
+                                        <p
+                                            v-else
+                                            class="text-xs text-gray-500 mt-1"
+                                        >
+                                            {{ formateDateToDDMMYYYY(review.created_at) }}
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-else>
+                            <p class="pt-3 text-gray-500">
+                                {{ t('messages.tasca.no_reviews') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div v-else>
+                        <div v-if="tasca.latitude && tasca.longitude">
+                            <div ref="mapContainer" class="h-96 w-full border-2 border-black rounded-2xl shadow-lg"></div>
+                        </div>
+                        <div v-else>
+                            <p class="text-gray-500">No hay mapa disponible para esta tasca.</p>
+                        </div>
+                    </div>
+                </div>
+            </transition>
 
                 <!-- PHONE ONLY -->
                 <div class="block sm:hidden mb-4 w-full">
@@ -125,64 +403,6 @@
                     </div>
                 </div>
 
-                <div v-if="tasca.reviews.length > 0">
-                    <ul class="divide-y divide-gray-200">
-                        <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
-                            <template v-for="i in 5" :key="i">
-                                <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
-                                <span v-else class="text-gray-300 text-xl">☆</span>
-                            </template>
-                            <template v-if="auth.user && review.customer.user.id === auth.user.id">
-                                <button
-                                    @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
-                                    class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
-                                >
-                                    {{ t('messages.tasca.edit_review') }}
-                                    <i class="pi pi-pencil"></i>
-                                </button>
-                            </template>
-                            <template v-if="auth.user && auth.user.id === tasca.user.id">
-                                <i class="pi pi-trash text-red-500 cursor-pointer hover:text-red-700 ml-3"
-                                   @click="router.delete(route('reviews.destroy', { tasca: tasca, review: review.id }))"
-                                   :title="t('messages.tasca.delete_review')"></i>
-                            </template>
-                            <p class="text-sm text-gray-800">
-                                "{{ review.body }}"
-                                <span
-                                    v-if="review.created_at !== review.updated_at"
-                                    class="italic text-gray-500 text-xs"
-                                >
-                                    {{ t('messages.tasca.edited') }}
-                                </span>
-                            </p>
-                            <div class="mt-1 flex items-center flex-wrap gap-2">
-                                <p
-                                    @click="router.visit(`/users/${review.customer.user.id}`)"
-                                    class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
-                                    – {{ review.customer.user.name }}
-                                </p>
-                                <p
-                                    v-if="isToday(review.created_at)"
-                                    class="text-xs text-gray-500 mt-1"
-                                >
-                                    {{ t('messages.tasca.published_today') }}
-                                </p>
-                                <p
-                                    v-else
-                                    class="text-xs text-gray-500 mt-1"
-                                >
-                                    {{ formateDateToDDMMYYYY(review.created_at) }}
-                                </p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div v-else>
-                    <p class="pt-3 text-gray-500">
-                        {{ t('messages.tasca.no_reviews') }}
-                    </p>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -208,88 +428,3 @@
         </div>
     </transition>
 </template>
-
-<script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
-import ReservationForm from "@/Components/ReservationForm.vue";
-import { useDateFormatter } from "@/Composables/useDateFormatter.js";
-import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
-import {Head, router, usePage} from '@inertiajs/vue3';
-import {ref} from "vue";
-import 'primeicons/primeicons.css';
-import Message from 'primevue/message';
-import "primeicons/primeicons.css";
-import Button from "primevue/button";
-import {useI18n} from "vue-i18n";
-
-const { t } = useI18n();
-const { auth } = usePage().props
-
-const { tasca } = defineProps({
-    tasca: Object,
-    tasca_picture_path: String,
-    user_review: Object,
-});
-
-const { formateDateToDDMMYYYY, isToday } = useDateFormatter();
-const { getRoundedRating } = useRatingCalculator();
-
-const openReservation = ref(false);
-
-defineOptions({
-    layout: MainLayoutTemp,
-});
-
-const isOpenMoreThan8Hours = (tasca) => {
-    const [openH, openM] = tasca.opening_time.split(':').map(Number);
-    const [closeH, closeM] = tasca.closing_time.split(':').map(Number);
-
-    const open = new Date();
-    open.setHours(openH, openM, 0);
-
-    const close = new Date();
-    close.setHours(closeH, closeM, 0);
-
-    let diff = (close - open) / (1000 * 60 * 60);
-
-    if (diff < 0) diff += 24;
-
-    return diff > 8;
-}
-
-const toggleFavorite = (tasca) => {
-    router.post(route('tascas.toggle-favorite', tasca), {}, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-};
-
-</script>
-
-<style>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-.fade-enter-to,
-.fade-leave-from {
-    opacity: 1;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-    transition: transform 0.3s ease;
-}
-.slide-enter-from,
-.slide-leave-to {
-    transform: translateX(100%);
-}
-.slide-enter-to,
-.slide-leave-from {
-    transform: translateX(0);
-}
-</style>

@@ -13,6 +13,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TascaProposalMail;
+use App\Mail\TascaProporsalAprovedMail;
+use App\Mail\TascaProporsalRejectedMail;
 
 class TascaProposalController extends Controller
 {
@@ -49,7 +53,14 @@ class TascaProposalController extends Controller
             $validated['cif_picture_path'] = $request->file('cif_picture_path')->store('cif', 'private');
         }
 
-        TascaProposal::create($validated);
+        $tascaProporsal = TascaProposal::create($validated);
+
+        $adminsEmails = User::whereHas('roles', function ($query) {
+            $query->where('name', Role::ADMIN->value);
+        })->get()->pluck('email');
+
+        Mail::to($adminsEmails)->queue(new TascaProposalMail($tascaProporsal));
+
 
         return Inertia::render('Auth/TascaProposalCreated');
     }
@@ -59,7 +70,11 @@ class TascaProposalController extends Controller
         $this->authorize('update', $tascaProposal);
 
         $tascaProposal->update($request->validated());
-
+       
+        if ($tascaProposal->status === ManageStatus::REJECTED) {
+            Mail::to($tascaProposal->owner_email)->queue(new TascaProporsalRejectedMail($tascaProposal));
+        }
+      
         return redirect()->route('tascas-proposals.index')->with('toast', [
             'severity' => 'success',
             'summary' => __('messages.toast.updated'),
@@ -107,7 +122,9 @@ class TascaProposalController extends Controller
 
         $tascaProposal->update(['status' => ManageStatus::ACCEPTED->value]);
 
-        return redirect()->route('tascas-proposals.index')
+        Mail::to($tascaProposal->owner_email)->queue(new TascaProporsalAprovedMail($tascaProposal));
+
+         return redirect()->route('tascas-proposals.index')
             ->with('toast', [
                 'severity' => 'success',
                 'summary' => __('messages.toast.updated'),

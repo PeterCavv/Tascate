@@ -6,6 +6,7 @@ use App\Enums\Role;
 use App\Http\Requests\Tasca\UpdateTascaRequest;
 use App\Models\Tasca;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TascaController extends Controller
@@ -125,5 +126,32 @@ class TascaController extends Controller
         return Inertia::render('Tascas/TascasIndex', [
             'tascas' => $favoriteTascas,
         ]);
+    }
+
+    public function editTascaLocation(Tasca $tasca){
+
+        $this->authorize('update', $tasca);
+
+        return Inertia::render('Tascas/TascaLocationEdit', [
+            'tasca' => $tasca,
+        ]);
+    }
+
+    public function setTascaLocation(Request $request, Tasca $tasca)
+    {
+        $this->authorize('update', $tasca);
+
+        $validated = $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $tasca->latitude = $validated['latitude'];
+        $tasca->longitude = $validated['longitude'];
+
+        $tasca->save();
+
+        return redirect()->route('tascas.show', $tasca)->with('success',
+            'Ubicación de la tasca actualizada correctamente.');
     }
 }

@@ -53,14 +53,18 @@
                     <div class="p-1"></div>
                     <div class="space-y-1">
                         <FloatLabel>
-                            <InputText
+                            <IconField>
+
+                            </IconField>
+                            <Password
                                 id="password"
-                                type="password"
+                                :feedback="false"
                                 v-model="form.password"
-                                class="w-full dark:text-gray-100 dark:placeholder-gray-400"
+                                toggleMask
+                                class="w-full"
+                                inputClass="w-full dark:text-gray-100 dark:placeholder-gray-400"
                                 autocomplete="current-password"
                                 aria-required="true"
-                                aria-invalid="!!form.errors.password"
                                 aria-describedby="password-error"
                                 :invalid="form.errors.password"
                             />
@@ -126,6 +130,8 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import {useI18n} from "vue-i18n";
 import Message from "primevue/message";
+import Checkbox from "primevue/checkbox";
+import Password from "primevue/password";
 
 defineProps({
     canResetPassword: Boolean,

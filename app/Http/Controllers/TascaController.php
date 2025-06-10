@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Role;
 use App\Http\Requests\Tasca\UpdateTascaRequest;
+use App\Models\Reservation;
 use App\Models\Tasca;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -149,5 +150,19 @@ class TascaController extends Controller
 
         return redirect()->route('tascas.show', $tasca)->with('success',
             'Ubicación de la tasca actualizada correctamente.');
+    }
+    public function gestion()
+    {
+        $this->authorize('update', auth()->user()->tasca);
+
+
+
+        $reservations = Reservation::where('tasca_id', auth()->user()->tasca->id)
+            ->with('customer.user')
+            ->get();
+
+        return Inertia::render('Tascas/TascaGestion', [
+            'reservations' => $reservations,
+        ]);
     }
 }

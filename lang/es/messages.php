@@ -102,4 +102,27 @@ return [
         'picture_alt' =>'Foto de la tasca',
         'payment_info' => 'El pago de la reserva se realiza a través de una plataforma segura. Si decides cancelar con más de 2 horas de antelación, te reembolsaremos el importe total de la reserva. En caso contrario, no será posble realizar el reembolso.',
     ],
+    'tasca' => [
+        'edit' => 'Editar',
+        'reservation_allowed' => 'Permite reservas',
+        'reservation_not_allowed' => 'No permite reservas',
+        'extensive_hours' => 'Horario extenso',
+        'top_rated' => 'Mejores valorados',
+        'make_reservation' => 'Realizar Reserva',
+        'login_to_reserve' => 'Inicia sesión para reservar',
+        'rating' => 'Calificación',
+        'no_rating' => 'Sin calificar',
+        'reviews' => ' reseña/s',
+        'schedule' => 'Horario',
+        'reviews_section' => 'Reseñas',
+        'leave_review' => 'Dejar una reseña',
+        'edit_review' => 'Editar reseña',
+        'delete_review' => 'Eliminar reseña',
+        'edited' => 'Editado',
+        'published_today' => 'Publicado hoy',
+        'no_reviews' => 'No hay reseñas disponibles.'
+    ],
+    'buttons' => [
+        'close' => 'Cerrar',
+    ],
 ];

@@ -31,11 +31,15 @@ return [
         'bookmark_added' => 'Tasca guardada como favorita',
         'bookmark_removed' => 'Tasca eliminada de favoritos',
         'error_saving' => 'Error al procesar la solicitud',
+        'reservation_created' => 'Reserva realizada. ¡Que disfrutes!',
+        'reservation_deleted' => 'Reserva cancelada. ¡Esperamos que vuelvas pronto!',
         'error' => 'Error',
         'saved' => 'Guardado',
         'updated' => 'Actualizado',
         'deleted' => 'Eliminado',
         'created' => 'Creado',
+        'success' => 'Éxito',
+        'succes_details' => 'Tarea realizada correctamente'
     ],
     'tasca_proposal' => [
         'title' => 'Propuesta de registro de Tasca',
@@ -74,5 +78,22 @@ return [
         'manager_assigned_auto' => 'Manager asignado automáticamente.',
         'cancel' => 'Cancelar',
         'create_employee' => 'Crear Empleado',
-    ]
+    ],
+    'reservation' => [
+        'title_create' => 'Reservar en ',
+        'title_edit' => 'Reserva en ',
+        'labels' => [
+            'name' => 'Nombre',
+            'reservation_date' => 'Fecha de reserva',
+            'reservation_time' => 'Hora de la reserva',
+            'people' => 'Nº Personas',
+            'observations' => 'Observaciones',
+        ],
+        'buttons' => [
+            'create' => 'Reservar',
+            'update' => 'Actualizar Reserva',
+        ],
+        'price_text' => 'Precio de la reserva: ',
+        'payment_info' => 'El pago de la reserva se realiza a través de una plataforma segura. Si decides cancelar con más de 2 horas de antelación, te reembolsaremos el importe total de la reserva. En caso contrario, no será posble realizar el reembolso.',
+    ],
 ];

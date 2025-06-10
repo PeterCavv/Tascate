@@ -4,7 +4,7 @@
             v-model="date"
             inline
             showWeek
-            :disabled="true"
+            :disabled="false"
             class="w-full sm:w-[30rem] pointer-events-none"
         />
     </div>

@@ -53,24 +53,22 @@
 
             <div class="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                 <Button
+                    :label="t('messages.reservation.buttons.edit')"
                     @click="openReservation = true"
                     class="flex-1 px-4 py-2"
-                    rounded
+                    icon="pi pi-file-edit"
                     raised
-                >
-                    {{ t('messages.reservation.buttons.edit') }}
-                </Button>
+                />
                 <Button
+                    :label="t('messages.reservation.buttons.cancel')"
                     @click="router.delete(
                         `/reservations/${reservation.id}`,
                         { preserveState: true, preserveScroll: true })"
                     class="flex-1 px-4 py-2"
-                    severity="primary"
+                    icon="pi pi-ban"
+                    severity="contrast"
                     variant="outlined"
-                    rounded
-                >
-                    {{ t('messages.reservation.buttons.cancel') }}
-                </Button>
+                />
             </div>
         </div>
     </div>
@@ -111,6 +109,7 @@ import { useDateFormatter } from "@/Composables/useDateFormatter.js";
 import {ref} from "vue";
 import Button from "primevue/button";
 import {useI18n} from "vue-i18n";
+import 'primeicons/primeicons.css'
 
 const {t} = useI18n();
 

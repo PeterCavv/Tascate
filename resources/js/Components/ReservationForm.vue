@@ -94,6 +94,7 @@
                         transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-400
                         focus:ring-offset-1"
                         :label="isEdit ? t('messages.reservation.buttons.update') : t('messages.reservation.buttons.create')"
+                        :icon="isEdit ? 'pi pi-save' : 'pi pi-credit-card'"
                     />
 
                     <p v-if="!isEdit" class="font-bold text-green-950">

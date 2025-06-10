@@ -1,5 +1,5 @@
 <template>
-    <Toast position="top-center"/>
+    <Toast :position="form.errors ? 'top-center' : 'bottom-center' "/>
 
     <div class="max-w-2xl mx-auto p-6 space-y-6">
         <h2 class="text-2xl font-bold text-gray-800">
@@ -175,6 +175,12 @@ const submitReservation = () => {
         onSuccess: () => {
             emit('close');
             form.reset();
+            toast.add({
+                severity: 'success',
+                summary: t('messages.toast.updated'),
+                detail: t('messages.toast.reservation_updated'),
+                life: 3000,
+            });
         },
         onError: (errors) => {
             console.error(errors);

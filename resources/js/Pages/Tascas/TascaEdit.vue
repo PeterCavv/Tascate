@@ -212,7 +212,7 @@ const submitForm = () => {
                         accept="image/*"
                         mode="basic"
                         :auto="false"
-                        :maxFileSize="1000000"
+                        :maxFileSize="2000000"
                         :maxFiles="1"
                         :showUploadButton="false"
                         @select="handleFileUpload"

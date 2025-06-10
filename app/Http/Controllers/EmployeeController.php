@@ -30,6 +30,12 @@ class EmployeeController extends Controller
             $employees = Employee::allEmployees()->get();
         }
 
+        if ($authUser->isManager()){
+            $employees = Employee::where('manager_id', $authUser->manager->id)
+                ->with(['user:id,name,email'])
+                ->get();
+        }
+
         return Inertia::render('Employees/Employees', [
             'employees' => $employees,
         ]);
@@ -66,7 +72,12 @@ class EmployeeController extends Controller
             ]);
         }
 
-        return Inertia::render('Employees/EmployeeForm');
+        $tascas = Tasca::where('id', $authUser->manager->tasca_id)
+            ->with(['manager.user:id,name,email'])
+            ->get();
+        return Inertia::render('Employees/EmployeeForm', [
+            'tascas' => $tascas,
+        ]);
     }
 
     public function store(StoreEmployeeRequest $request)
@@ -98,8 +109,16 @@ class EmployeeController extends Controller
     {
         $this->authorize('update', $employee);
 
+        $managers = $employee->tasca->manager()
+            ->with('user:id,name,email')
+            ->get();
+
+        foreach ($managers as $manager) {
+            $manager->load('user:id,name,email');
+        }
         return Inertia::render('Employees/EditEmployee', [
-            'employee' => $employee,
+            'employee' => $employee->load('tasca', 'user'),
+            'managers' => $managers,
         ]);
     }
 

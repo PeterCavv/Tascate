@@ -1,0 +1,20 @@
+{
+    "name": "Tascate",
+    "short_name": "Tascate",
+    "icons": [
+        {
+            "src": "/images/tascate-192x192px.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/tascate-512x512px.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000"
+} 

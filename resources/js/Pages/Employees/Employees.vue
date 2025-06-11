@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import Card from 'primevue/card';
 import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
@@ -41,7 +41,7 @@ const deleteEmployee = () => {
 <template>
   <Head title="Empleados" />
 
-  <MainLayoutTemp>
+  <MainLayout>
     <template #header>
       <div class="flex justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Empleados</h2>
@@ -108,5 +108,5 @@ const deleteEmployee = () => {
         </div>
       </div>
     </Dialog>
-  </MainLayoutTemp>
+  </MainLayout>
 </template>

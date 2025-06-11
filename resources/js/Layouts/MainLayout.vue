@@ -79,19 +79,26 @@ watch(
             ]"
         >
             <!-- Logo and Toggle -->
-            <div class="p-4 flex items-center justify-center border-b border-gray-200">
+            <div class="-p-5 flex items-center justify-center border-b border-gray-200 relative h-20 overflow-hidden">
                 <button
                     @click="isSidebarCollapsed = !isSidebarCollapsed"
-                    class="focus:outline-none hover:scale-105 transition-transform duration-300 ease-bounce"
+                    class="focus:outline-none hover:scale-105 transition-transform duration-300 ease-bounce relative w-full h-full"
                 >
-                    <ApplicationLogo
+                    <img 
+                        src="/images/tascate.svg"
                         :class="[
-                            'transition-all duration-500 ease-bounce transform',
-                            isSidebarCollapsed
-                                ? 'scale-75 opacity-80 rotate-0'
-                                : 'scale-100 opacity-100 rotate-[2deg]',
-                            'w-13 h-13 mx-auto'
+                            'absolute w-24 h-24 transition-all duration-500 ease-bounce -mt-12',
+                            isSidebarCollapsed ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
                         ]"
+                        alt="Tascate Logo"
+                    />
+                    <img 
+                        src="/images/tascate-letra-oscura-v3.svg"
+                        :class="[
+                            'absolute w-72 h-24 transition-all duration-500 ease-bounce -mt-11',
+                            isSidebarCollapsed ? 'opacity-0 translate-y-full' : 'opacity-100 translate-y-0'
+                        ]"
+                        alt="Tascate Text"
                     />
                 </button>
             </div>

@@ -61,6 +61,22 @@ watch(
     },
     { immediate: true }
 )
+
+// Add a watcher to trigger the jelly effect when sidebar state changes
+watch(isSidebarCollapsed, (newValue) => {
+    if (!newValue) {
+        // Add a small delay to ensure the text is visible before animation
+        setTimeout(() => {
+            const linkTexts = document.querySelectorAll('.link-text')
+            linkTexts.forEach(text => {
+                text.classList.remove('jelly')
+                // Force a reflow
+                void text.offsetWidth
+                text.classList.add('jelly')
+            })
+        }, 50)
+    }
+})
 </script>
 
 <template>
@@ -84,7 +100,7 @@ watch(
                     @click="isSidebarCollapsed = !isSidebarCollapsed"
                     class="focus:outline-none hover:scale-105 transition-transform duration-300 ease-bounce relative w-full h-full"
                 >
-                    <img 
+                    <img
                         src="/images/tascate.svg"
                         :class="[
                             'absolute w-24 h-24 transition-all duration-500 ease-bounce -mt-12',
@@ -92,7 +108,7 @@ watch(
                         ]"
                         alt="Tascate Logo"
                     />
-                    <img 
+                    <img
                         src="/images/tascate-letra-oscura-v3.svg"
                         :class="[
                             'absolute w-72 h-24 transition-all duration-500 ease-bounce -mt-11',
@@ -103,49 +119,6 @@ watch(
                 </button>
             </div>
 
-            <!--            <div class=" p-3 flex items-center justify-center border-b border-gray-200">-->
-<!--                <button @click="isSidebarCollapsed = !isSidebarCollapsed" class="focus:outline-none">-->
-<!--                    <ApplicationLogo class="w-14 h-14 mx-auto" />-->
-<!--                </button>-->
-<!--            </div>-->
-
-<!--            <div class="p-3 flex items-center justify-center border-b border-gray-200">-->
-<!--                <button @click="isSidebarCollapsed = !isSidebarCollapsed" class="focus:outline-none">-->
-<!--                    <ApplicationLogo-->
-<!--                        :class="[-->
-<!--                'transition-all duration-300 ease-in-out',-->
-<!--                isSidebarCollapsed ? 'w-14 h-14 mx-auto' : 'w-13 h-13 mx-auto'-->
-<!--            ]"-->
-<!--                    />-->
-<!--                </button>-->
-<!--            </div>-->
-
-            <!--            <div class="p-4 flex items-center justify-between border-b border-gray-200">-->
-<!--                <Link href="/" class="flex items-center space-x-3">-->
-<!--                    <ApplicationLogo class="w-15 h-15" />-->
-<!--                    <span v-if="!isSidebarCollapsed" class="text-lg font-semibold text-gray-900">Tascate</span>-->
-<!--                </Link>-->
-<!--                <button-->
-<!--                    @click="isSidebarCollapsed = !isSidebarCollapsed"-->
-<!--                    class="text-gray-600 hover:text-gray-900 transition-colors"-->
-<!--                >-->
-<!--                    <i :class="['pi', isSidebarCollapsed ? 'pi-angle-right' : 'pi-angle-left']"></i>-->
-<!--                </button>-->
-<!--            </div>-->
-
-            <!--            <div class="p-4 flex items-center justify-between border-b border-gray-200">-->
-<!--                <Link href="/" class="flex items-center space-x-3">-->
-<!--                    <ApplicationLogo class="w-15 h-15" />-->
-<!--                    <span v-if="!isSidebarCollapsed" class="text-lg font-semibold text-gray-900">Tascate</span>-->
-<!--                </Link>-->
-<!--                <button-->
-<!--                    @click="isSidebarCollapsed = !isSidebarCollapsed"-->
-<!--                    class="text-gray-600 hover:text-gray-900 transition-colors"-->
-<!--                >-->
-<!--                    <i :class="['pi', isSidebarCollapsed ? 'pi-angle-right' : 'pi-angle-left']"></i>-->
-<!--                </button>-->
-<!--            </div>-->
-
             <!-- Navigation -->
             <nav class="flex-1 space-y-2 p-4 overflow-y-auto custom-scrollbar">
                 <!-- Common User Links -->
@@ -153,154 +126,250 @@ watch(
                     <Link
                         href="/tascas"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas')
                         }"
                     >
                         <i class="pi pi-list text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Tascas</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Tascas</span>
                     </Link>
 
                     <Link
                         v-if="$page.props.auth.user && !$page.props.auth.is_employee && !$page.props.auth.is_manager"
                         href="/tascas/favorites"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas/favorites'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas/favorites')
                         }"
                     >
-                        <i class="pi pi-star text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Tascas Guardadas</span>
+                        <i class="pi pi-bookmark text-lg"></i>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Tascas Guardadas</span>
                     </Link>
 
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.is_admin"
                         href="/users"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/users'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/users')
                         }"
                     >
                         <i class="pi pi-users text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Usuarios</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Usuarios</span>
                     </Link>
 
                     <Link
                         href="/posts"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/posts'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/posts')
                         }"
                     >
                         <i class="pi pi-comments text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Posts</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Posts</span>
                     </Link>
 
                     <Link
                         v-if="$page.props.auth.user"
                         href="/liked-posts"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/liked-posts'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/liked-posts')
                         }"
                     >
                         <i class="pi pi-heart text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Posts Favoritos</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Posts Favoritos</span>
                     </Link>
 
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.is_admin"
                         href="/tascas-proposals"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas-proposals'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas-proposals')
                         }"
                     >
                         <i class="pi pi-send text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Peticiones</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Peticiones de Tascas</span>
                     </Link>
 
                     <Link
                         v-if="($page.props.auth.user && $page.props.auth.is_admin) || ($page.props.auth.user && $page.props.auth.is_tasca) || ($page.props.auth.user && $page.props.auth.is_manager)"
                         href="/employees"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/employees'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/employees')
                         }"
                     >
-                        <i class="pi pi-id-card text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Empleados</span>
+                        <i class="pi pi-hammer text-lg"></i>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Empleados</span>
                     </Link>
 
                     <Link
                         v-if="($page.props.auth.user && $page.props.auth.is_admin) || ($page.props.auth.user && $page.props.auth.is_tasca)"
                         href="/managers"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/managers'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/managers')
                         }"
                     >
-                        <i class="pi pi-user-plus text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Managers</span>
+                        <i class="pi pi-bolt text-lg"></i>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Managers</span>
                     </Link>
 
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.is_customer"
                         href="/reservations"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/reservations'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/reservations')
                         }"
                     >
                         <i class="pi pi-calendar text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Reservas</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Reservas</span>
                     </Link>
 
                     <Link
                         href="/about"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/about'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/about')
                         }"
                     >
                         <i class="pi pi-info-circle text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">About Us</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>About Us</span>
                     </Link>
 
                     <Link
                         v-if="!$page.props.auth.user"
                         href="/login"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/login'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/login')
                         }"
                     >
                         <i class="pi pi-sign-in text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Login</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Login</span>
                     </Link>
 
                     <Link
                         v-if="!$page.props.auth.user"
                         href="/register"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/register')
                         }"
                     >
                         <i class="pi pi-user-plus text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Registro</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Registro</span>
                     </Link>
                 </div>
 
@@ -309,37 +378,61 @@ watch(
                     <Link
                         :href="`/tascas/${$page.props.auth.user.tasca?.id}`"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith(`/tascas/${$page.props.auth.user.tasca?.id}`),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith(`/tascas/${$page.props.auth.user.tasca?.id}`)
                         }"
                     >
                         <i class="pi pi-home text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Mi Tasca</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Mi Tasca</span>
                     </Link>
 
                     <Link
                         href="/register"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/register')
                         }"
                     >
                         <i class="pi pi-users text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Empleados</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Empleados</span>
                     </Link>
 
                     <Link
                         href="/register"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{ 
+                        :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),
                             'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/register')
                         }"
                     >
                         <i class="pi pi-box text-lg"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-3">Stock</span>
+                        <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Stock</span>
                     </Link>
                 </div>
 
@@ -351,12 +444,20 @@ watch(
                     class="flex items-center px-4 py-3 rounded-xl text-red-600 bg-transparent hover:bg-red-50 hover:text-red-700 transition-all duration-300 ease-bounce hover:scale-[1.02] w-full"
                 >
                     <i class="pi pi-sign-out text-lg"></i>
-                    <span v-if="!isSidebarCollapsed" class="ml-3">Logout</span>
+                    <span
+  v-show="!isSidebarCollapsed"
+  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+  :class="{
+    'opacity-100 translate-x-0': !isSidebarCollapsed,
+    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+    'jelly': !isSidebarCollapsed
+  }"
+>Logout</span>
                 </Link>
             </nav>
 
             <!-- Footer -->
-            <div class="p-4 border-t border-gray-200">
+            <div class="p-6 border-t border-gray-200">
                 <Link
                     href="/accessibility"
                     class="flex items-center text-xs text-gray-500 hover:text-gray-700 transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -399,6 +500,18 @@ watch(
                 <span class="font-semibold text-gray-800">Tascate</span>
             </header>
 
+            <!-- User Profile Avatar -->
+            <div v-if="$page.props.auth.user" class="absolute top-7 right-10 flex items-center space-x-2">
+                <Link
+                    :href="`/users/${$page.props.auth.user.id}`"
+                    class="flex items-center space-x-2 hover:scale-105 transition-transform duration-300 ease-bounce"
+                >
+                    <div class="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-semibold text-lg shadow-elegant">
+                        {{ $page.props.auth.user.name ? $page.props.auth.user.name.charAt(0).toUpperCase() : 'U' }}
+                    </div>
+                </Link>
+            </div>
+
             <!-- Scrollable Content -->
             <main class="flex-1 overflow-y-auto p-8 custom-scrollbar">
                 <div
@@ -431,6 +544,24 @@ watch(
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+/* Jelly animation for links */
+@keyframes jelly {
+    0% { transform: scale(1); }
+    20% { transform: scale(1.3); }
+    40% { transform: scale(0.9); }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.link-text {
+    display: inline-block;
+    transform-origin: left center;
+}
+
+.link-text.jelly {
+    animation: jelly 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
 }
 
 /* Custom scrollbar */
@@ -484,5 +615,9 @@ watch(
 .overflow-y-auto {
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
+}
+
+.ease-soft {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>

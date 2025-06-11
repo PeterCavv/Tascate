@@ -65,8 +65,12 @@ class ReviewController extends Controller
 
         $review->save();
 
-        return redirect()->route('tascas.show', ['tasca' => $validated['tasca_id']])->with('success',
-            'Publicada review con éxito. ¡Gracias por tu opinión!');
+        return redirect()->route('tascas.show', ['tasca' => $validated['tasca_id']])
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.created'),
+                'detail' => __('messages.toast.review_created'),
+            ]);
     }
 
     /**
@@ -119,7 +123,11 @@ class ReviewController extends Controller
 
         $review->delete();
 
-        return redirect()->route('tascas.show', ['tasca' => $tasca->id])->with('success',
-            'Eliminada review con éxito.');
+        return redirect()->route('tascas.show', ['tasca' => $tasca->id])
+            ->with('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.deleted'),
+            'detail' => __('messages.toast.review_deleted'),
+        ]);
     }
 }

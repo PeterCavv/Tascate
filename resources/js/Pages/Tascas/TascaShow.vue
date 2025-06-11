@@ -12,6 +12,7 @@ import { nextTick } from 'vue';
 import Button from "primevue/button";
 import {useI18n} from "vue-i18n";
 import SelectButton from "primevue/selectbutton";
+import ReviewForm from "@/Components/ReviewForm.vue";
 
 const { t } = useI18n();
 const { formateDateToDDMMYYYY, isToday } = useDateFormatter();
@@ -19,6 +20,8 @@ const { formateDateToDDMMYYYY, isToday } = useDateFormatter();
 let map = null;
 
 const activeSection = ref('map');
+const showReviewDialog = ref(false);
+const activeReview = ref(null);
 
 const sections = [
     { label: 'Mapa', value: 'map' },
@@ -310,7 +313,7 @@ watch(activeSection, (newValue) => {
                             <Button
                                 :label="t('messages.tasca.leave_review')"
                                 v-if="auth.user && auth.is_customer && user_review.length === 0"
-                                @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
+                                @click="() => { activeReview = null; showReviewDialog = true; }"
                                 variant="outlined"
                                 class="px-4 py-1.5 focus:ring-offset-1"
                             />
@@ -323,7 +326,7 @@ watch(activeSection, (newValue) => {
                                         </template>
                                         <template v-if="auth.user && review.customer.user.id === auth.user.id">
                                             <button
-                                                @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
+                                                @click="() => { activeReview = review; showReviewDialog = true; }"
                                                 class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
                                             >
                                                 {{ t('messages.tasca.edit_review') }}
@@ -411,6 +414,12 @@ watch(activeSection, (newValue) => {
             <ReservationForm :tasca="tasca" :isEdit="false" :reservation="null" />
         </div>
     </transition>
+
+    <ReviewForm
+        v-model:visible="showReviewDialog"
+        :tasca="tasca"
+        :review="activeReview"
+    />
 </template>
 
 

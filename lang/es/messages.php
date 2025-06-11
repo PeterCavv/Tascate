@@ -42,6 +42,8 @@ return [
         'employee_updated' => 'Empleado actualizado correctamente.',
         'employee_deleted' => 'Empleado eliminado con éxito',
         'employee_promoted' => 'El empleado :name fue ascendido a Manager.',
+        'review_deleted' => 'La review fue eliminada con éxito.',
+        'review_created' => 'Se ha publicado tu review. ¡Gracias por tu opinión!',
         'error' => 'Error',
         'saved' => 'Guardado',
         'updated' => 'Actualizado',
@@ -141,9 +143,20 @@ return [
             'capacity' => 'Capacidad',
             'opening_time' => 'Apertura',
             'closing_time' => 'Cierre'
+        ],
+        'review_form' => [
+            'create' => 'Crear reseña',
+            'edit' => 'Editar reseña',
+            'name' => 'Nombre',
+            'rating' => 'Valoración',
+            'comment' => 'Tu comentario',
+            'submit' => 'Guardar',
+            'cancel' => 'Cancelar',
+            'delete' => 'Eliminar',
         ]
     ],
     'buttons' => [
         'close' => 'Cerrar',
     ],
+
 ];

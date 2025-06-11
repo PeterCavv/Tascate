@@ -47,4 +47,10 @@ class EmployeePolicy
         return $user->isAdmin() ||
             ($user->isTasca() && $user->tasca->id === $employee->tasca_id) ;
     }
+
+    public function demote(User $user, Employee $employee): bool
+    {
+        return $user->isAdmin() ||
+            ($user->isTasca() && $user->tasca->id === $employee->tasca_id) ;
+    }
 }

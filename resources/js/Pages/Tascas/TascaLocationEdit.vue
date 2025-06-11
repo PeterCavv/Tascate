@@ -3,8 +3,11 @@ import { ref, onMounted } from 'vue';
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {route} from "ziggy-js";
 import { useForm } from '@inertiajs/vue3';
+import {useI18n} from "vue-i18n";
+import {useToast} from "primevue/usetoast";
 
-
+const { t } = useI18n();
+const toast = useToast();
 const mapContainer = ref(null);
 const latitude = ref(null);
 const longitude = ref(null);
@@ -26,7 +29,7 @@ const props = defineProps({
 onMounted(() => {
     if (!window.google) {
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`;
         script.async = true;
         script.defer = true;
         script.onload = initMap;
@@ -115,7 +118,14 @@ function submit() {
             window.location.reload();
         },
         onError: (errors) => {
-            console.error('Error al guardar la ubicación:', errors);
+            Object.keys(errors).forEach((key) => {
+                toast.add({
+                    severity: 'error',
+                    summary: t('messages.toast.error'),
+                    detail: errors[key][0],
+                    life: 3000,
+                });
+            });
         },
     });
 }
@@ -124,7 +134,7 @@ function submit() {
 <template>
     <div class="location-wrapper">
         <div class="search-card">
-            <h2 class="title">📍 Buscar o seleccionar ubicación</h2>
+            <h2 class="title">📍 {{ t('messages.tasca.map.search_location') }}</h2>
             <input
                 id="autocomplete"
                 type="text"
@@ -139,7 +149,7 @@ function submit() {
             <input type="hidden" v-model="latitude" />
             <input type="hidden" v-model="longitude" />
             <button type="submit" class="submit-btn">
-                Guardar ubicación
+                {{ t('messages.tasca.map.set_location') }}
             </button>
         </form>
     </div>

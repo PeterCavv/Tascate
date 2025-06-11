@@ -4,7 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Tascate') }}</title>
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/tascate-32x32px.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/images/tascate-192x192px.png">
+        <link rel="icon" type="image/png" sizes="512x512" href="/images/tascate-512x512px.png">
+        <link rel="apple-touch-icon" href="/images/tascate-192x192px.png">
+        <link rel="manifest" href="/manifest.json">
 
         <!-- Favicon -->
         <link rel="shortcut icon" href="/images/tascate-32x32px.png" type="image/x-icon">

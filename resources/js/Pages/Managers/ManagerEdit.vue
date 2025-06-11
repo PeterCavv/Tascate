@@ -45,7 +45,7 @@ watch(() => props.manager, (newManager) => {
         form.name = newManager.user?.name ?? '';
         form.email = newManager.user?.email ?? '';
         form.tasca_id = newManager.tasca_id ?? null;
-        
+
         if (newManager.tasca_id) {
             selectedTasca.value = props.tascas.find(t => t.id === newManager.tasca_id);
         }
@@ -100,23 +100,17 @@ const submit = () => {
               </div>
 
               <div>
-                <InputLabel for="tasca_id" value="Tasca" />
-                <Select
-                  id="tasca_id"
-                  class="mt-1 block w-full"
-                  v-model="form.tasca_id"
-                  required
-                >
-                  <option value="">Selecciona una tasca</option>
-                  <option
-                    v-for="tasca in tascas"
-                    :key="tasca.id"
-                    :value="tasca.id"
-                  >
-                    {{ tasca.name }}
-                  </option>
-                </Select>
-                <InputError :message="form.errors.tasca_id" class="mt-2" />
+                  <InputLabel for="tasca_id" value="Tasca" />
+                  <Select
+                      id="tasca_id"
+                      class="mt-1 block w-full"
+                      v-model="form.tasca_id"
+                      :options="props.tascas.map(tasca => ({ label: tasca.name, value: tasca.id }))"
+                      :option-label="'label'"
+                      :option-value="'value'"
+                      required
+                  />
+                  <InputError :message="form.errors.tasca_id" class="mt-2" />
               </div>
 
               <div class="flex items-center justify-end mt-4">

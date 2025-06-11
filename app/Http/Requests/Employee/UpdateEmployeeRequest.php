@@ -20,13 +20,10 @@ class UpdateEmployeeRequest extends FormRequest
                 'string',
                 'max:255'
             ],
-            'tasca_id' => [
-                'required',
-                'exists:tascas,id'
-            ],
             'manager_id' => [
-                'exists:managers,id'
-            ]
+                'required',
+                'exists:managers,id',
+            ],
         ];
     }
 

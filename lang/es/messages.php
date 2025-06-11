@@ -153,6 +153,20 @@ return [
             'submit' => 'Guardar',
             'cancel' => 'Cancelar',
             'delete' => 'Eliminar',
+
+        'map' => [
+            'set_location' => 'Establecer ubicación',
+            'search_location' => 'Buscar o seleccionar ubicación',
+        ],
+        'reservation_managment' => [
+            'manage_reservations' => 'Gestionar Reservas',
+            'list_reservations' => 'Lista de Reservas',
+            'client' => 'Cliente',
+            'persons' => 'Personas',
+            'date_time' => 'Fecha y Hora',
+            'observations' => 'Observaciones',
+            'see_observations' => 'Ver Observaciones',
+            'no_observations' => 'No hay observaciones',
         ]
     ],
     'buttons' => [

@@ -28,7 +28,6 @@ const props = defineProps({
     },
     managers: {
         type: Array,
-        default: () => []
     },
 });
 
@@ -45,7 +44,7 @@ watch(() => props.employee, (newEmployee) => {
         form.name = newEmployee.user?.name ?? '';
         form.email = newEmployee.user?.email ?? '';
         form.manager_id = newEmployee.manager_id ?? null;
-        
+
         if (newEmployee.manager_id) {
             selectedManager.value = props.managers.find(m => m.id === newEmployee.manager_id);
         }
@@ -53,9 +52,9 @@ watch(() => props.employee, (newEmployee) => {
 }, { immediate: true });
 
 const submit = () => {
-    form.put(route('employees.update', props.employee.id), {
+    form.post(route('employees.update', props.employee.id), {
         onSuccess: () => {
-            // TO DO
+
         },
     });
 };
@@ -101,32 +100,26 @@ const submit = () => {
 
               <div>
                 <InputLabel for="tasca" value="Tasca" />
-                <TextInput
-                  id="tasca"
-                  type="text"
-                  class="mt-1 block w-full"
-                  :value="employee?.tasca?.name"
-                  disabled
-                />
+                  <TextInput
+                      id="tasca"
+                      type="text"
+                      class="mt-1 block w-full"
+                      v-model="employee.tasca.name"
+                      disabled
+                  />
               </div>
 
               <div>
                 <InputLabel for="manager_id" value="Manager" />
-                <Select
-                  id="manager_id"
-                  class="mt-1 block w-full"
-                  v-model="form.manager_id"
-                  required
-                >
-                  <option value="">Selecciona un manager</option>
-                  <option
-                    v-for="manager in managers"
-                    :key="manager.id"
-                    :value="manager.id"
-                  >
-                    {{ manager.user.name }}
-                  </option>
-                </Select>
+                  <Select
+                      id="manager_id"
+                      class="mt-1 block w-full"
+                      v-model="form.manager_id"
+                      :options="props.managers.map(manager => ({ label: manager.user.name, value: manager.id }))"
+                      :option-label="'label'"
+                      :option-value="'value'"
+                      required
+                  />
                 <InputError :message="form.errors.manager_id" class="mt-2" />
               </div>
 

@@ -9,6 +9,7 @@ import Button from 'primevue/button';
 
 const props = defineProps({
     employees: Array,
+    manager: Object,
     can: Object,
 });
 
@@ -51,6 +52,32 @@ const deleteEmployee = () => {
       </div>
     </template>
 
+      <Card v-if="manager" class="hover:shadow-lg transition-shadow ">
+          <template #header>
+              <div class="flex items-center space-x-4 p-4 bg-lime-200 border border-lime-400 rounded-lg">
+                  <Avatar :image="manager.user.avatar || '/default-avatar.png'" :label="manager.user.name ? manager.user.name.charAt(0) : 'M'" size="large" shape="circle" class="border border-lime-500" />
+                  <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-lime-700 truncate">
+                          {{ manager.user.name }} <span class="text-xs text-lime-600">(Manager)</span>
+                      </p>
+                      <p class="text-sm text-lime-600 truncate">
+                          {{ manager.user.email }}
+                      </p>
+                  </div>
+              </div>
+          </template>
+          <template #footer>
+              <div class="flex justify-end space-x-2">
+                  <Link :href="route('managers.show', manager)" v-if="$page.props.auth.is_tasca || $page.props.auth.is_admin">
+                      <Button icon="pi pi-eye" severity="info" text rounded />
+                  </Link>
+                  <Link :href="route('managers.edit', manager)" v-if="$page.props.auth.is_tasca || $page.props.auth.is_admin">
+                      <Button icon="pi pi-pencil" severity="success" text rounded />
+                  </Link>
+              </div>
+          </template>
+      </Card>
+
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -76,7 +103,7 @@ const deleteEmployee = () => {
                 <Link :href="route('employees.edit', employee)">
                   <Button icon="pi pi-pencil" severity="success" text rounded />
                 </Link>
-                <Button icon="pi pi-trash" severity="danger" text rounded @click="confirmDelete(employee)" />
+                <Button icon="pi pi-trash" severity="danger" text rounded @click="confirmDelete(employee)" v-if="$page.props.auth.is_tasca || $page.props.auth.is_admin" />
               </div>
             </template>
           </Card>

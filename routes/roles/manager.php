@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('managers.update');
     Route::delete('/managers/{manager}', [ManagerController::class, 'destroy'])
         ->name('managers.destroy');
-    Route::post('/managers/{manager}/promote', [ManagerController::class, 'demote'])
+    Route::post('/managers/{manager}/demote', [ManagerController::class, 'demote'])
         ->name('managers.demote');
 });
 

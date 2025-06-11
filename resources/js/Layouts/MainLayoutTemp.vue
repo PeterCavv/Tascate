@@ -156,8 +156,8 @@ watch(
                     <!-- Sidebar Links Tasca -->
                     <div v-else>
                         <Link :href="`/tascas/${$page.props.auth.user.tasca?.id}`" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Mi Tasca</Link>
-                        <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Empleados</Link>
-                        <Link href="/register" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Gestión Stock</Link>
+                        <Link href="/employees" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Empleados</Link>
+                        <Link href="/gestion" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Gestión Stock</Link>
                     </div>
 
                     <Link

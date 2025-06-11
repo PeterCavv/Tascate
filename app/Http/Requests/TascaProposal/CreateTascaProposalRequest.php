@@ -22,6 +22,22 @@ class CreateTascaProposalRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+            'tasca_name' => __('validation.attributes.tasca_name'),
+            'address' => __('validation.attributes.address'),
+            'telephone' => __('validation.attributes.telephone'),
+            'cif' => __('validation.attributes.cif'),
+            'cif_picture_path' => __('validation.attributes.cif_picture_path'),
+            'owner_name' => __('validation.attributes.owner_name'),
+            'owner_email' => __('validation.attributes.owner_email'),
+            'dni' => __('validation.attributes.dni'),
+            'dni_picture_path' => __('validation.attributes.dni_picture_path'),
+            'status' => __('validation.attributes.status'),
+        ];
+    }
+
     public function authorize(): bool
     {
         return true;

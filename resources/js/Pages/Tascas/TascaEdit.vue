@@ -1,9 +1,23 @@
 <script setup>
 import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {computed} from 'vue'
-import {Head, useForm} from '@inertiajs/vue3'
+import {Head, router, useForm} from '@inertiajs/vue3'
 import 'primeicons/primeicons.css'
 import {Link} from '@inertiajs/vue3'
+import FloatLabel from "primevue/floatlabel";
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import {useI18n} from "vue-i18n";
+import Message from "primevue/message";
+import DatePicker from "primevue/datepicker";
+import Checkbox from "primevue/checkbox";
+import {useToast} from "primevue/usetoast";
+import FileUpload from "primevue/fileupload";
+import FormLayout from "@/Layouts/FormLayout.vue";
+import InputNumber from 'primevue/inputnumber';
+
+const {t} = useI18n();
+const toast = useToast();
 
 const {tasca} = defineProps({
     tasca: Object
@@ -28,10 +42,12 @@ const form = useForm({
     picture: null,
 })
 
-
-
 function handleFileUpload(e) {
-    form.picture = e.target.files[0] ?? null;
+    form.picture = e.files[0] ?? null;
+}
+
+function handleFileClear(e) {
+    form.picture = null;
 }
 
 const submitForm = () => {
@@ -44,125 +60,195 @@ const submitForm = () => {
             form.reset();
         },
         onError: (errors) => {
-            console.error(errors);
+            Object.keys(errors).forEach(key => {
+                toast.add({
+                    severity: 'error',
+                    summary: t('messages.toast.error'),
+                    detail: errors[key],
+                    life: 3000,
+                });
+            });
         },
+        preserveState: true,
     });
 };
 </script>
 
 <template>
-    <Head title="Editar Tasca" />
-
-    <form @submit.prevent="submitForm" class="w-full max-w-4xl mx-auto space-y-6 p-6 bg-white rounded shadow">
-        <Link :href="`/tascas/${tasca.id}`" class="text-blue-600 hover:underline">
-            <i class="pi pi-arrow-left mr-2 text-xs"></i>
-            <span>Volver</span>
-        </Link>
-        <h1 class="text-2xl font-bold mb-6">Editar Tasca</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Nombre -->
-            <div class="w-full">
-                <label class="block font-semibold mb-1">Nombre*</label>
-                <input v-model="form.name" type="text" class="w-full border rounded px-3 py-2" required />
-            </div>
-
-            <!-- Dirección -->
-            <div class="w-full">
-                <label class="block font-semibold mb-1">Dirección*</label>
-                <input v-model="form.address" type="text" class="w-full border rounded px-3 py-2" required />
-            </div>
-
-            <div class="w-full flex flex-wrap md:flex-nowrap items-end gap-4">
-                <!-- Teléfono -->
-                <div class="flex flex-col flex-1 min-w-[120px]">
-                    <label class="block font-semibold text-sm mb-1">Teléfono*</label>
-                    <input
-                        v-model="form.telephone"
-                        type="text"
-                        class="w-full border rounded px-3 py-2"
-                        pattern="\d{9}"
-                        maxlength="9"
-                        placeholder="9 dígitos"
-                        required
-                    />
-                </div>
-
-                <!-- Teléfono -->
-                <div class="flex flex-col flex-1 min-w-[120px]">
-                    <label class="block font-semibold text-sm mb-1">Capacidad*</label>
-                    <input
-                        v-model="form.capacity"
-                        type="number"
-                        class="w-full border rounded px-3 py-2"
-                        maxlength="9"
-                        placeholder="9 dígitos"
-                        required
-                    />
-                </div>
-
-                <!-- Hora apertura -->
-                <div class="flex flex-col flex-1 w-full">
-                    <label class="block font-semibold text-sm mb-1">Apertura*</label>
-                    <input
-                        v-model="form.opening_time"
-                        type="time"
-                        class="w-full border rounded px-3 py-2"
-                        required
-                    />
-                </div>
-
-                <!-- Hora cierre -->
-                <div class="flex flex-col flex-1 w-full">
-                    <label class="block font-semibold text-sm mb-1">Cierre*</label>
-                    <input
-                        v-model="form.closing_time"
-                        type="time"
-                        class="w-full border rounded px-3 py-2"
-                        required
-                    />
-                </div>
-
-                <!-- Precio de reserva -->
-                <div class="flex flex-col flex-1 min-w-[120px]">
-                    <label class="block font-semibold text-sm mb-1">Precio</label>
-                    <input
-                        v-model="form.reservation_price"
-                        type="number"
-                        class="w-full border rounded px-3 py-2 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed"
-                        :disabled="!form.reservation"
-                        min="0"
-                        step="0.01"
-                    />
-                </div>
-
-                <!-- ¿Permite reservas? -->
-                <div class="flex items-center space-x-2 whitespace-nowrap">
-                    <input
-                        v-model="form.reservation"
-                        type="checkbox"
-                        id="reservation"
-                        class="w-5 h-5 accent-green-600"
-                    />
-                    <label for="reservation" class="font-medium">¿Permite Reservas?</label>
+    <Head :title="t('messages.tasca.edit_form.title')"></Head>
+    <FormLayout>
+        <!-- Header slot -->
+        <template #header>
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+                        Editar Tasca
+                    </h1>
+                    <p class="text-gray-500 mt-2">
+                        Complete todos los campos requeridos (*)
+                    </p>
                 </div>
             </div>
+        </template>
 
-            <!-- Imagen -->
-            <div class="w-full md:col-span-2">
-                <label class="block font-semibold mb-1">Imagen</label>
-                <input type="file" @change="handleFileUpload" accept="image/*" name="picture">
-                <p class="text-sm text-gray-500 mt-1">Formato: JPG, PNG. Tamaño máximo: 2MB.</p>
-            </div>
-        </div>
-
-        <!-- Botón de envío -->
-        <button
-            type="submit"
-            class="w-full md:w-auto mt-4 py-2 px-6 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition"
+        <!-- Main form content slot -->
+        <form
+            @submit.prevent="submitForm"
+            class="space-y-6"
         >
-            Guardar Cambios
-        </button>
-    </form>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-wrap md:flex-nowrap items-end gap-2 col-span-2">
+                    <div class="w-full">
+                        <FloatLabel variant="on">
+                            <label for="name">Nombre</label>
+                            <InputText id="name" class="w-full" v-model="form.name" :invalid="form.errors.name" />
+                        </FloatLabel>
+                    </div>
+
+                    <div class="w-full">
+                        <FloatLabel variant="on">
+                            <InputText v-model="form.address" class="w-full" :invalid="form.errors.address" />
+                            <label class="block font-semibold mb-1">Dirección</label>
+                        </FloatLabel>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap md:flex-nowrap items-end gap-4 col-span-2">
+                    <div class="flex flex-col flex-1 min-w-[120px]">
+                        <FloatLabel variant="on">
+                            <InputText
+                                id="telephone"
+                                v-model="form.telephone"
+                                v-keyfilter.int
+                                class="w-full"
+                                pattern="[0-9]{9}"
+                                maxlength="9"
+                                aria-required="true"
+                                :invalid="form.errors.telephone"
+                            />
+                            <label for="telephone" class="block font-semibold text-sm mb-1">Teléfono</label>
+                        </FloatLabel>
+                    </div>
+
+                    <div class="flex flex-col flex-1 min-w-[120px]">
+                        <FloatLabel variant="on">
+                            <InputText
+                                v-model="form.capacity"
+                                class="w-full px-3 py-2"
+                                maxlength="9"
+                                :invalid="form.errors.capacity"
+                            />
+                            <label class="block font-semibold text-sm mb-1">Capacidad</label>
+                        </FloatLabel>
+                    </div>
+
+                    <div class="flex flex-col flex-1 min-w-[100px] min-h-[1.5rem]">
+                        <FloatLabel variant="on">
+                            <DatePicker
+                                inputId="opening_time"
+                                v-model="form.opening_time"
+                                showIcon
+                                iconDisplay="input"
+                                timeOnly
+                                :inputClass="form.errors.opening_time ? 'p-invalid w-full' : 'w-full'"
+                            >
+                                <template #inputicon="slotProps">
+                                    <i class="pi pi-clock" @click="slotProps.clickCallback" />
+                                </template>
+                            </DatePicker>
+                            <label for="opening_time">Hora apertura</label>
+                        </FloatLabel>
+                    </div>
+
+                    <div class="flex flex-col min-w-[100px] flex-grow">
+                        <FloatLabel variant="on">
+                            <DatePicker
+                                inputId="closing_time"
+                                v-model="form.closing_time"
+                                showIcon
+                                iconDisplay="input"
+                                timeOnly
+                                fluid
+                                :inputClass="form.errors.closing_time ? 'p-invalid w-full' : 'w-full'"
+                            >
+                                <template #inputicon="slotProps">
+                                    <i class="pi pi-clock" @click="slotProps.clickCallback" />
+                                </template>
+                            </DatePicker>
+                            <label class="block font-semibold text-sm mb-1">Hora cierre</label>
+                        </FloatLabel>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap md:flex-nowrap items-end gap-2 col-span-2">
+                    <div>
+                        <FloatLabel variant="on">
+                            <InputNumber
+                                v-model="form.reservation_price"
+                                inputId="price"
+                                mode="currency"
+                                currency="EUR"
+                                locale="de-DE"
+                                :invalid="form.errors.reservation_price"
+                                class="w-full"
+                                inputClass="w-full"
+                                :disabled="!form.reservation"
+                            />
+                            <label for="price">Precio</label>
+                        </FloatLabel>
+                    </div>
+
+                    <div class="flex items-center space-x-2 whitespace-nowrap">
+                        <Checkbox v-model="form.reservation" inputId="reservation" binary />
+                        <label for="reservation" class="font-medium">¿Permite Reservas?</label>
+                    </div>
+                </div>
+
+                <div class="col-span-2 w-full">
+                    <label for="tasca_picture" class="block font-semibold mb-1">Imagen</label>
+                    <FileUpload
+                        id="tasca_picture"
+                        name="tasca_picture"
+                        accept="image/*"
+                        mode="basic"
+                        :auto="false"
+                        :maxFileSize="2000000"
+                        :maxFiles="1"
+                        :showUploadButton="false"
+                        @select="handleFileUpload"
+                        @clear="handleFileClear"
+                        class="w-full"
+                        aria-labelledby="tasca_picture"
+                    />
+                    <p class="text-sm text-gray-500 text-center mt-1">Formato: JPG, PNG. Tamaño máximo: 2MB.</p>
+                </div>
+
+                <div class="flex flex-wrap md:flex-nowrap items-end gap-2 col-span-2">
+                    <Button
+                        label="Guardar Cambios"
+                        icon="pi pi-save"
+                        type="submit"
+                        class="w-full"
+                    />
+                    <Button
+                        @click="router.visit(`/tascas/${tasca.id}`)"
+                        label="Descartar"
+                        outlined
+                        icon="pi pi-undo"
+                        severity="secondary"
+                        class="w-full"
+                    />
+                </div>
+            </div>
+        </form>
+
+        <template #motivational-phrase>
+            <Fieldset legend="Tascate">
+                <p class="m-0">Cuanto más llamativa, más público atraerás.</p>
+            </Fieldset>
+        </template>
+    </FormLayout>
 </template>
+
+
 

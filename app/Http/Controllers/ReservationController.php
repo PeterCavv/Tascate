@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ReservationCancelEvent;
 use App\Http\Requests\Reservation\StoreReservationRequest;
 use App\Http\Requests\Reservation\UpdateReservationRequest;
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Inertia\ResponseFactory;
+use App\Mail\ReservationCreatedMail;
+use App\Mail\ReservationCancelledMail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationTascaMail;
 
 class ReservationController extends Controller
 {
@@ -38,6 +44,8 @@ class ReservationController extends Controller
     public function show(Reservation $reservation)
     {
 
+        $this->authorize('show', $reservation);
+
         if ($reservation->tasca->picture) {
             $reservation->tasca->picture = asset($reservation->tasca->picture);
         }
@@ -46,6 +54,8 @@ class ReservationController extends Controller
         return inertia('Reservations/ReservationShow', [
             'reservation' => $reservation->load('customer', 'tasca'),
             'reservation_path' => $reservation_path,
+            'reservation_date' => Carbon::parse($reservation->reservation_date)->format('Y-m-d'),
+
         ]);
     }
 
@@ -63,8 +73,28 @@ class ReservationController extends Controller
 
         $reservation = Reservation::create($validated);
 
-        return redirect()->route('reservations.show', $reservation)->with('success',
-            'Reserva creada correctamente. ¡Disfruta de la experiencia!');
+        Mail::to($reservation->customer->user->email)->queue(
+            new ReservationCreatedMail(
+                $reservation->tasca,
+                $reservation->customer,
+                $reservation
+            )
+        );
+
+        Mail::to($reservation->tasca->user->email)->queue(
+            new ReservationTascaMail(
+                $reservation->customer->user,
+                $reservation,
+                $reservation->tasca
+            )
+        );
+      
+        return redirect()->route('reservations.show', $reservation)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.created'),
+                'detail' => __('messages.toast.reservation_created'),
+            ]);
     }
 
     /**
@@ -79,11 +109,14 @@ class ReservationController extends Controller
 
         $this->authorize('delete', $reservation);
 
-        $reservation->delete();
+        event(new ReservationCancelEvent($reservation, $reservation->customer, $reservation->tasca));
 
         return redirect()->route('reservations.index',
-        )->with('success',
-            'Reserva cancelada correctamente. :(');
+        )->with('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.deleted'),
+            'detail' => __('messages.toast.reservation_deleted'),
+        ]);
     }
 
     /**

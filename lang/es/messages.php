@@ -155,7 +155,8 @@ return [
             'no_observations' => 'No hay observaciones',
         ]
     ],
-    'buttons' => [
-        'close' => 'Cerrar',
+        'buttons' => [
+            'close' => 'Cerrar',
+        ]
     ],
 ];

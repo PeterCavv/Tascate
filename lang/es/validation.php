@@ -169,6 +169,13 @@ return [
         'dni' => 'NIF',
         'dni_picture_path' => 'DNI del representante legal',
         'status' => 'Estado',
-        'password' => 'Contraseña'
+        'password' => 'Contraseña',
+        'reservation' => 'Reserva',
+        'reservation_price' => 'recio de la reserva',
+        'menu' => 'menú',
+        'opening_time' => 'hora de apertura',
+        'closing_time' => 'hora de cierre',
+        'capacity' => 'capacidad',
+        'picture' => 'imagen',
     ]
 ];

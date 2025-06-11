@@ -42,6 +42,8 @@ return [
         'employee_updated' => 'Empleado actualizado correctamente.',
         'employee_deleted' => 'Empleado eliminado con éxito',
         'employee_promoted' => 'El empleado :name fue ascendido a Manager.',
+        'review_deleted' => 'La review fue eliminada con éxito.',
+        'review_created' => 'Se ha publicado tu review. ¡Gracias por tu opinión!',
         'error' => 'Error',
         'saved' => 'Guardado',
         'updated' => 'Actualizado',
@@ -131,6 +133,8 @@ return [
         'edited' => 'Editado',
         'published_today' => 'Publicado hoy',
         'no_reviews' => 'No hay reseñas disponibles.',
+        'add_map' => 'Añadir ubicación tasca',
+        'no_map' => 'No hay mapa disponible.',
         'edit_form' => [
             'title' => 'Editar Tasca',
             'name' => 'Nombre*',
@@ -140,6 +144,16 @@ return [
             'opening_time' => 'Apertura',
             'closing_time' => 'Cierre'
         ],
+        'review_form' => [
+            'create' => 'Crear reseña',
+            'edit' => 'Editar reseña',
+            'name' => 'Nombre',
+            'rating' => 'Valoración',
+            'comment' => 'Tu comentario',
+            'submit' => 'Guardar',
+            'cancel' => 'Cancelar',
+            'delete' => 'Eliminar',
+
         'map' => [
             'set_location' => 'Establecer ubicación',
             'search_location' => 'Buscar o seleccionar ubicación',
@@ -158,4 +172,5 @@ return [
     'buttons' => [
         'close' => 'Cerrar',
     ],
+
 ];

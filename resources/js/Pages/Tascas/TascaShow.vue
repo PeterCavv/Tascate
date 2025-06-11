@@ -11,14 +11,22 @@ import { Link } from "@inertiajs/vue3";
 import { nextTick } from 'vue';
 import Button from "primevue/button";
 import {useI18n} from "vue-i18n";
+import SelectButton from "primevue/selectbutton";
+import ReviewForm from "@/Components/ReviewForm.vue";
 
 const { t } = useI18n();
+const { formateDateToDDMMYYYY, isToday } = useDateFormatter();
 
 let map = null;
 
-const activeSection = ref("map"); // "map" o "reviews"
+const activeSection = ref('map');
+const showReviewDialog = ref(false);
+const activeReview = ref(null);
 
-
+const sections = [
+    { label: 'Mapa', value: 'map' },
+    { label: 'Reseñas', value: 'reviews' },
+]
 
 const { auth } = usePage().props;
 
@@ -28,7 +36,6 @@ const { tasca } = defineProps({
     user_review: Object,
 });
 
-const { formateDateToDDMMYYYY, isToday } = useDateFormatter();
 const { getRoundedRating } = useRatingCalculator();
 
 const openReservation = ref(false);
@@ -85,62 +92,61 @@ function initMap() {
     const summerStyle = [
         {
             elementType: "geometry",
-            stylers: [{ color: "#e4fdd9" }], // fondo verde lima claro
+            stylers: [{ color: "#e4fdd9" }]
         },
         {
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#6b9b2e" }], // texto verde vibrante
-        },
-        {
-            elementType: "labels.text.stroke",
-            stylers: [{ color: "#ffffff" }], // borde blanco
-        },
-        {
-            featureType: "administrative",
+            featureType: "water",
             elementType: "geometry",
-            stylers: [{ color: "#c5f277" }], // lime intenso
-        },
-        {
-            featureType: "poi",
-            elementType: "geometry",
-            stylers: [{ color: "#faffb4" }], // amarillo suave
+            stylers: [{ color: "#aef1dd" }]
         },
         {
             featureType: "poi.park",
             elementType: "geometry",
-            stylers: [{ color: "#b7f77d" }], // verde hoja
+            stylers: [{ color: "#b7f77d" }]
         },
         {
             featureType: "road",
             elementType: "geometry",
-            stylers: [{ color: "#fce764" }], // amarillo pastel
+            stylers: [{ color: "#fce764" }]
         },
         {
             featureType: "road",
-            elementType: "labels.text.fill",
-            stylers: [{ color: "#a0a000" }], // texto amarillo oscuro
+            elementType: "geometry.stroke",
+            stylers: [
+                { color: "#ffffff" },
+                { weight: 0.6 }
+            ]
         },
         {
-            featureType: "transit.line",
+            elementType: "labels",
+            stylers: [{ visibility: "off" }]
+        },
+        {
+            featureType: "administrative",
             elementType: "geometry",
-            stylers: [{ color: "#ffe46b" }],
+            stylers: [{ color: "#c5f277" }]
+        },
+        {
+            featureType: "administrative",
+            elementType: "geometry.stroke",
+            stylers: [
+                { color: "#ffffff" },
+                { weight: 0.8 }
+            ]
         },
         {
             featureType: "water",
-            elementType: "geometry",
-            stylers: [{ color: "#aef1dd" }], // agua turquesa clara
-        },
-        {
-            featureType: "water",
             elementType: "labels.text.fill",
-            stylers: [{ color: "#53c190" }],
-        },
+            stylers: [{ color: "#53c190" }]
+        }
     ];
 
     map = new window.google.maps.Map(mapContainer.value, {
         center: { lat, lng },
         zoom: 14,
         styles: summerStyle,
+        streetViewControl: false,
+        clickableIcons: false,
     });
 
     new window.google.maps.Marker({
@@ -154,6 +160,7 @@ function initMap() {
     });
 }
 
+
 watch(activeSection, (newValue) => {
     if (newValue === 'map') {
         nextTick(() => {
@@ -166,8 +173,6 @@ watch(activeSection, (newValue) => {
         });
     }
 });
-
-
 </script>
 
 <template>
@@ -185,8 +190,8 @@ watch(activeSection, (newValue) => {
                     v-if="auth.user && auth.is_tasca && auth.user.id === tasca.user.id"
                     @click="router.visit(route('tascas.edit', { tasca: tasca.id }))"
                     :title="t('messages.tasca.edit')"
-                    class="pi pi-pen-to-square absolute top-4 right-4 text-white text-xl hover:text-green-400
-                    cursor-pointer transition"></i>
+                    class="pi pi-pen-to-square absolute top-4 right-4 text-white text-xl hover:text-green-400 cursor-pointer transition"
+                ></i>
 
                 <h2 class="text-3xl font-bold">{{ tasca.name }}</h2>
                 <p class="text-sm">{{ tasca.address }}</p>
@@ -198,7 +203,9 @@ watch(activeSection, (newValue) => {
                             :severity="tasca.reservation ? 'success' : 'error'"
                             size="small"
                         >
-                            {{ tasca.reservation ? t('messages.tasca.reservation_allowed') : t('messages.tasca.reservation_not_allowed') }}
+                            {{ tasca.reservation
+                            ? t('messages.tasca.reservation_allowed')
+                            : t('messages.tasca.reservation_not_allowed') }}
                         </Message>
                         <Message
                             v-if="isOpenMoreThan8Hours(tasca)"
@@ -217,17 +224,23 @@ watch(activeSection, (newValue) => {
                             {{ t('messages.tasca.top_rated') }}
                         </Message>
                     </div>
+
                     <Link
                         v-if="auth.user && auth.is_tasca && auth.user.id === tasca.user.id"
                         :href="`/${tasca.id}/map-set`"
-                        class="px-4 py-1.5 rounded-full bg-blue-600 text-white text-sm font-semibold shadow-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
                     >
-                        {{ auth.user ? "Añadir ubicación tasca" : "Inicia sesión para acceder al mapa" }}
+                        <Button
+                            :label="t('messages.tasca.add_map')"
+                            severity="info"
+                            class="px-4 py-1.5 rounded-full bg-blue-600 text-white text-sm font-semibold shadow-md hover:bg-blue-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
+                        />
                     </Link>
 
                     <div v-if="tasca.reservation && (!auth.user || !auth.is_tasca)">
                         <Button
-                            :label="auth.user ? t('messages.tasca.make_reservation') : t('messages.tasca.login_to_reserve')"
+                            :label="auth.user
+                ? t('messages.tasca.make_reservation')
+                : t('messages.tasca.login_to_reserve')"
                             @click="auth.user ? openReservation = true : router.visit('/login')"
                             class="px-4 py-1.5 rounded-full focus:ring-offset-1"
                         />
@@ -240,25 +253,24 @@ watch(activeSection, (newValue) => {
     <div class="relative max-w-full mx-4">
         <div class="hidden sm:block absolute top-0 right-0 w-40">
             <div class="p-4 text-center">
-                <div class="text-2xl font-bold text-gray-800">{{getRoundedRating(tasca)}}</div>
+                <div class="text-2xl font-bold text-gray-800">{{ getRoundedRating(tasca) }}</div>
                 <div class="flex justify-center mt-1">
                     <template v-if="tasca.reviews.length > 0" v-for="i in 5" :key="i">
                         <span v-if="i <= getRoundedRating(tasca)" class="text-yellow-400 text-base">★</span>
                         <span v-else class="text-gray-300 text-base">☆</span>
                     </template>
                     <template v-else>
-                        <span class="text-sm text-gray-400 ml-2">
-                            {{ t('messages.tasca.no_rating') }}
-                        </span>
+            <span class="text-sm text-gray-400 ml-2">
+              {{ t('messages.tasca.no_rating') }}
+            </span>
                     </template>
                 </div>
                 <div class="text-sm text-gray-600 mt-1">
-                    {{ tasca.reviews.length + t('messages.tasca.reviews')}}
+                    {{ tasca.reviews.length + t('messages.tasca.reviews') }}
                 </div>
                 <Button
                     v-if="!auth.is_tasca"
-                    @click.stop
-                    @click="toggleFavorite(tasca)"
+                    @click.stop="toggleFavorite(tasca)"
                     variant="text"
                     class="mt-1"
                     rounded
@@ -267,152 +279,127 @@ watch(activeSection, (newValue) => {
             </div>
         </div>
 
-        <div class="pr-0 sm:pr-44">
-            <div class="py-1">
-                <h3 class="text-lg font-semibold text-gray-700 mb-2">
-                    {{ t('messages.tasca.schedule') }}
-                </h3>
-                <span class="font-medium">{{ tasca.opening_time }} - </span>
-                <span class="font-medium">{{ tasca.closing_time }}</span>
+        <div class="px-4">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+                {{ t('messages.tasca.schedule') }}
+            </h3>
+            <span class="font-medium">{{ tasca.opening_time }} - </span>
+            <span class="font-medium">{{ tasca.closing_time }}</span>
+
+            <div class="flex justify-center my-6">
+                <SelectButton
+                    v-model="activeSection"
+                    :options="sections"
+                    optionLabel="label"
+                    optionValue="value"
+                    class="w-auto"
+                    :allowEmpty="false"
+                />
             </div>
+        </div>
 
-            <div class="flex justify-center gap-4 my-6">
-                <button
-                    @click="activeSection = 'map'"
-                    :class="[
-      'px-4 py-2 rounded-full font-semibold transition duration-300',
-      activeSection === 'map'
-        ? 'bg-green-600 text-white shadow'
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-    ]"
-                >
-                    Mapa
-                </button>
+        <div :class="['transition-all', activeSection === 'reviews' ? 'pr-0 sm:pr-44' : 'pr-0']">
+            <div class="relative min-h-[200px]">
+                <transition name="slide-horizontal" mode="out-in">
+                    <div :key="activeSection">
+                        <div
+                            v-if="activeSection === 'map' && tasca.latitude && tasca.longitude"
+                            ref="mapContainer"
+                            class="rounded-xl border-2 border-[#a0c77e] overflow-hidden w-full h-[400px]"
+                        ></div>
 
-                <button
-                    @click="activeSection = 'reviews'"
-                    :class="[
-      'px-4 py-2 rounded-full font-semibold transition duration-300',
-      activeSection === 'reviews'
-        ? 'bg-green-600 text-white shadow'
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-    ]"
-                >
-                    Reseñas
-                </button>
-            </div>
-
-            <transition name="slide-horizontal" mode="out-in">
-                <div :key="activeSection">
-                    <div v-if="activeSection === 'map' && tasca.latitude && tasca.longitude">
-                        <div ref="mapContainer" class="map-container"></div>
-                    </div>
-
-                    <div v-else-if="activeSection === 'reviews'">
-                        <h1 class="text-xl font-bold mb-2">Reseñas</h1>
-                        <Button
-                            :label="t('messages.tasca.leave_review')"
-                            v-if="auth.user && auth.is_customer && user_review.length === 0"
-                            @click="router.visit(route('reviews.create', { tasca: tasca.id }))"
-                            variant="outlined"
-                            class="px-4 py-1.5 focus:ring-offset-1"
-                        />
-                         <div v-if="tasca.reviews.length > 0">
-                            <ul class="divide-y divide-gray-200">
-                                <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
-                                    <template v-for="i in 5" :key="i">
-                                        <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
-                                        <span v-else class="text-gray-300 text-xl">☆</span>
-                                    </template>
-                                    <template v-if="auth.user && review.customer.user.id === auth.user.id">
-                                        <button
-                                            @click="router.visit(route('reviews.edit', { tasca: tasca, review: review.id }))"
-                                            class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
-                                        >
-                                            {{ t('messages.tasca.edit_review') }}
-                                            <i class="pi pi-pencil"></i>
-                                        </button>
-                                    </template>
-                                    <template v-if="auth.user && auth.user.id === tasca.user.id">
-                                        <i class="pi pi-trash text-red-500 cursor-pointer hover:text-red-700 ml-3"
-                                           @click="router.delete(route('reviews.destroy', { tasca: tasca, review: review.id }))"
-                                           :title="t('messages.tasca.delete_review')"></i>
-                                    </template>
-                                    <p class="text-sm text-gray-800">
-                                        "{{ review.body }}"
-                                        <span
-                                            v-if="review.created_at !== review.updated_at"
-                                            class="italic text-gray-500 text-xs"
-                                        >
-                                            {{ t('messages.tasca.edited') }}
-                                        </span>
-                                    </p>
-                                    <div class="mt-1 flex items-center flex-wrap gap-2">
-                                        <p
-                                            @click="router.visit(`/users/${review.customer.user.id}`)"
-                                            class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer">
-                                            – {{ review.customer.user.name }}
+                        <div v-else-if="activeSection === 'reviews'">
+                            <h1 class="text-xl font-bold mb-2">{{ t('messages.tasca.reviews_section') }}</h1>
+                            <Button
+                                :label="t('messages.tasca.leave_review')"
+                                v-if="auth.user && auth.is_customer && user_review.length === 0"
+                                @click="() => { activeReview = null; showReviewDialog = true; }"
+                                variant="outlined"
+                                class="px-4 py-1.5 focus:ring-offset-1"
+                            />
+                            <div v-if="tasca.reviews.length > 0">
+                                <ul class="divide-y divide-gray-200">
+                                    <li v-for="review in tasca.reviews" :key="review.id" class="py-2">
+                                        <template v-for="i in 5" :key="i">
+                                            <span v-if="i <= review.rating" class="text-yellow-400 text-xl">★</span>
+                                            <span v-else class="text-gray-300 text-xl">☆</span>
+                                        </template>
+                                        <template v-if="auth.user && review.customer.user.id === auth.user.id">
+                                            <button
+                                                @click="() => { activeReview = review; showReviewDialog = true; }"
+                                                class="ml-3 text-sm text-blue-500 hover:text-blue-700 "
+                                            >
+                                                {{ t('messages.tasca.edit_review') }}
+                                                <i class="pi pi-pencil"></i>
+                                            </button>
+                                        </template>
+                                        <template v-if="auth.user && auth.user.id === tasca.user.id">
+                                            <i class="pi pi-trash text-red-500 cursor-pointer hover:text-red-700 ml-3"
+                                               @click="router.delete(route('reviews.destroy', { tasca: tasca, review: review.id }))"
+                                               :title="t('messages.tasca.delete_review')"></i>
+                                        </template>
+                                        <p class="text-sm text-gray-800">
+                                            "{{ review.body }}"
+                                            <span
+                                                v-if="review.created_at !== review.updated_at"
+                                                class="italic text-gray-500 text-xs"
+                                            >
+                                                {{ t('messages.tasca.edited') }}
+                                            </span>
                                         </p>
-                                        <p
-                                            v-if="isToday(review.created_at)"
-                                            class="text-xs text-gray-500 mt-1"
-                                        >
-                                            {{ t('messages.tasca.published_today') }}
-                                        </p>
-                                        <p
-                                            v-else
-                                            class="text-xs text-gray-500 mt-1"
-                                        >
-                                            {{ formateDateToDDMMYYYY(review.created_at) }}
-                                        </p>
-                                    </div>
-                                </li>
-                            </ul>
+                                        <div class="mt-1 flex items-center flex-wrap gap-2">
+                                            <p
+                                                @click="router.visit(`/users/${review.customer.user.id}`)"
+                                                class="text-xs text-gray-500 underline hover:text-gray-800 mt-1 cursor-pointer"
+                                            >
+                                                – {{ review.customer.user.name }}
+                                            </p>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                {{ isToday(review.created_at) ? t('messages.tasca.published_today') : formateDateToDDMMYYYY(review.created_at) }}
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div v-else>
+                                <p class="pt-3 text-gray-500">
+                                    {{ t('messages.tasca.no_reviews') }}
+                                </p>
+                            </div>
                         </div>
+
                         <div v-else>
-                            <p class="pt-3 text-gray-500">
-                                {{ t('messages.tasca.no_reviews') }}
+                            <p class="text-gray-500">
+                                {{ t('messages.tasca.no_map')}}
                             </p>
                         </div>
                     </div>
+                </transition>
+            </div>
 
-                    <div v-else>
-                        <div v-if="tasca.latitude && tasca.longitude">
-                            <div ref="mapContainer" class="h-96 w-full border-2 border-black rounded-2xl shadow-lg"></div>
-                        </div>
-                        <div v-else>
-                            <p class="text-gray-500">No hay mapa disponible para esta tasca.</p>
-                        </div>
+            <!-- PHONE ONLY -->
+            <div class="block sm:hidden mb-4 w-full">
+                <div
+                    class="bg-white border border-gray-200 rounded-xl p-4 shadow-md text-center w-4/5 mx-auto"
+                >
+                    <div class="text-2xl font-bold text-gray-800">{{ getRoundedRating(tasca) }}</div>
+                    <div class="flex justify-center mt-1">
+                        <template v-for="i in 5" :key="i">
+                            <span v-if="i <= getRoundedRating(tasca)" class="text-yellow-400 text-lg">★</span>
+                            <span v-else class="text-gray-300 text-lg">☆</span>
+                        </template>
                     </div>
+                    <span class="text-sm text-gray-600 mt-1">
+            {{ tasca.reviews.length + t('messages.tasca.reviews') }}
+          </span>
                 </div>
-            </transition>
-
-                <!-- PHONE ONLY -->
-                <div class="block sm:hidden mb-4 w-full">
-                    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-md text-center w-4/5 mx-auto">
-                        <div class="text-2xl font-bold text-gray-800">4.3</div>
-                        <div class="flex justify-center mt-1">
-                            <template v-for="i in 5" :key="i">
-                                <span v-if="i <= 4" class="text-yellow-400 text-lg">★</span>
-                                <span v-else class="text-gray-300 text-lg">☆</span>
-                            </template>
-                        </div>
-                        <span class="text-sm text-gray-600 mt-1">
-                            {{ tasca.reviews.length + t('messages.tasca.reviews')}}
-                        </span>
-                    </div>
-                </div>
-
+            </div>
         </div>
     </div>
 
     <transition name="fade">
-        <div
-            v-if="openReservation"
-            class="fixed inset-0 bg-black bg-opacity-40 z-40"
-        />
+        <div v-if="openReservation" class="fixed inset-0 bg-black bg-opacity-40 z-40" />
     </transition>
-
     <transition name="slide">
         <div
             v-if="openReservation"
@@ -427,7 +414,14 @@ watch(activeSection, (newValue) => {
             <ReservationForm :tasca="tasca" :isEdit="false" :reservation="null" />
         </div>
     </transition>
+
+    <ReviewForm
+        v-model:visible="showReviewDialog"
+        :tasca="tasca"
+        :review="activeReview"
+    />
 </template>
+
 
 <style>
 .fade-enter-active,

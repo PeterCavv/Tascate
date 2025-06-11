@@ -7,6 +7,7 @@ import Column from 'primevue/column';
 import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
+import {useDateFormatter} from "@/Composables/useDateFormatter.js";
 
 defineOptions({
     layout: MainLayoutTemp,
@@ -23,6 +24,10 @@ function openDialog(observation) {
     selectedObservation.value = observation || 'Sin observaciones.';
     showDialog.value = true;
 }
+
+const { formateDateToDDMMYYYY } = useDateFormatter();
+
+
 </script>
 
 <template>
@@ -50,7 +55,7 @@ function openDialog(observation) {
 
             <Column header="Fecha y Hora">
                 <template #body="slotProps">
-                    {{ slotProps.data.reservation_date }} - {{ slotProps.data.reservation_time }}
+                    {{ formateDateToDDMMYYYY(slotProps.data.reservation_date) }} - {{ slotProps.data.reservation_time }}
                 </template>
             </Column>
 

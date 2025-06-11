@@ -131,6 +131,8 @@ return [
         'edited' => 'Editado',
         'published_today' => 'Publicado hoy',
         'no_reviews' => 'No hay reseñas disponibles.',
+        'add_map' => 'Añadir ubicación tasca',
+        'no_map' => 'No hay mapa disponible.',
         'edit_form' => [
             'title' => 'Editar Tasca',
             'name' => 'Nombre*',

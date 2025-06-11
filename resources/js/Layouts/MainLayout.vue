@@ -152,8 +152,11 @@ watch(
                 <div v-if="!$page.props.auth?.is_tasca" class="space-y-2">
                     <Link
                         href="/tascas"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/tascas') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas')
+                        }"
                     >
                         <i class="pi pi-list text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Tascas</span>
@@ -162,8 +165,11 @@ watch(
                     <Link
                         v-if="$page.props.auth.user && !$page.props.auth.is_employee && !$page.props.auth.is_manager"
                         href="/tascas/favorites"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/tascas/favorites') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas/favorites'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas/favorites')
+                        }"
                     >
                         <i class="pi pi-star text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Tascas Guardadas</span>
@@ -172,8 +178,11 @@ watch(
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.is_admin"
                         href="/users"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/users') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/users'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/users')
+                        }"
                     >
                         <i class="pi pi-users text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Usuarios</span>
@@ -181,8 +190,11 @@ watch(
 
                     <Link
                         href="/posts"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/posts') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/posts'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/posts')
+                        }"
                     >
                         <i class="pi pi-comments text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Posts</span>
@@ -191,8 +203,11 @@ watch(
                     <Link
                         v-if="$page.props.auth.user"
                         href="/liked-posts"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/liked-posts') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/liked-posts'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/liked-posts')
+                        }"
                     >
                         <i class="pi pi-heart text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Posts Favoritos</span>
@@ -201,8 +216,11 @@ watch(
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.is_admin"
                         href="/tascas-proposals"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/tascas-proposals') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas-proposals'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas-proposals')
+                        }"
                     >
                         <i class="pi pi-send text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Peticiones</span>
@@ -211,8 +229,11 @@ watch(
                     <Link
                         v-if="($page.props.auth.user && $page.props.auth.is_admin) || ($page.props.auth.user && $page.props.auth.is_tasca) || ($page.props.auth.user && $page.props.auth.is_manager)"
                         href="/employees"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/employees') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/employees'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/employees')
+                        }"
                     >
                         <i class="pi pi-id-card text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Empleados</span>
@@ -221,8 +242,11 @@ watch(
                     <Link
                         v-if="($page.props.auth.user && $page.props.auth.is_admin) || ($page.props.auth.user && $page.props.auth.is_tasca)"
                         href="/managers"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/managers') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/managers'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/managers')
+                        }"
                     >
                         <i class="pi pi-user-plus text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Managers</span>
@@ -231,8 +255,11 @@ watch(
                     <Link
                         v-if="$page.props.auth.user && $page.props.auth.is_customer"
                         href="/reservations"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/reservations') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/reservations'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/reservations')
+                        }"
                     >
                         <i class="pi pi-calendar text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Reservas</span>
@@ -240,8 +267,11 @@ watch(
 
                     <Link
                         href="/about"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/about') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/about'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/about')
+                        }"
                     >
                         <i class="pi pi-info-circle text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">About Us</span>
@@ -250,8 +280,11 @@ watch(
                     <Link
                         v-if="!$page.props.auth.user"
                         href="/login"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/login') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/login'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/login')
+                        }"
                     >
                         <i class="pi pi-sign-in text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Login</span>
@@ -260,8 +293,11 @@ watch(
                     <Link
                         v-if="!$page.props.auth.user"
                         href="/register"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/register') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/register')
+                        }"
                     >
                         <i class="pi pi-user-plus text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Registro</span>
@@ -272,8 +308,11 @@ watch(
                 <div v-else class="space-y-2">
                     <Link
                         :href="`/tascas/${$page.props.auth.user.tasca?.id}`"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith(`/tascas/${$page.props.auth.user.tasca?.id}`) }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith(`/tascas/${$page.props.auth.user.tasca?.id}`),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith(`/tascas/${$page.props.auth.user.tasca?.id}`)
+                        }"
                     >
                         <i class="pi pi-home text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Mi Tasca</span>
@@ -281,8 +320,11 @@ watch(
 
                     <Link
                         href="/register"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/register') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/register')
+                        }"
                     >
                         <i class="pi pi-users text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Empleados</span>
@@ -290,8 +332,11 @@ watch(
 
                     <Link
                         href="/register"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md"
-                        :class="{ 'bg-green-100 text-green-700': $page.url.startsWith('/register') }"
+                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :class="{ 
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/register')
+                        }"
                     >
                         <i class="pi pi-box text-lg"></i>
                         <span v-if="!isSidebarCollapsed" class="ml-3">Stock</span>
@@ -303,7 +348,7 @@ watch(
                     href="/logout"
                     method="post"
                     as="button"
-                    class="flex items-center px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-300 ease-bounce hover:scale-[1.02] hover:shadow-md w-full"
+                    class="flex items-center px-4 py-3 rounded-xl text-red-600 bg-transparent hover:bg-red-50 hover:text-red-700 transition-all duration-300 ease-bounce hover:scale-[1.02] w-full"
                 >
                     <i class="pi pi-sign-out text-lg"></i>
                     <span v-if="!isSidebarCollapsed" class="ml-3">Logout</span>

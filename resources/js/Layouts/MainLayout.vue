@@ -6,7 +6,7 @@ import { usePage } from '@inertiajs/vue3';
 import Toast from "primevue/toast";
 import {useToast} from "primevue/usetoast";
 import {useI18n} from "vue-i18n";
-import AppBreadcrumb from "@/Components/BreadCrumb.vue";
+// import AppBreadcrumb from "@/Components/BreadCrumb.vue";
 
 const page = usePage()
 const toast = useToast()
@@ -79,69 +79,69 @@ watch(isSidebarCollapsed, (newValue) => {
 })
 
 // Breadcrumb items based on current route
-const breadcrumbItems = computed(() => {
-    const path = page.url;
-    const segments = path.split('/').filter(Boolean);
-
-    const items = [];
-    let currentPath = '';
-
-    // Helper function to get model name from segment
-    const getModelName = (segment) => {
-        const modelMap = {
-            'employees': 'Employee',
-            'managers': 'Manager',
-            'tascas': 'Tasca',
-            'users': 'User',
-            'posts': 'Post',
-            'reservations': 'Reservation'
-        };
-        return modelMap[segment] || segment;
-    };
-
-    // Helper function to get display name from props
-    const getDisplayName = (segment, index) => {
-        const props = page.props;
-
-        // Check if we have the specific item in props
-        if (props[segment] && props[segment].name) {
-            return props[segment].name;
-        }
-
-        // Check if we have a collection of items
-        if (props[segment + 's'] && Array.isArray(props[segment + 's'])) {
-            const item = props[segment + 's'].find(item => item.id === parseInt(segments[index + 1]));
-            if (item && item.name) {
-                return item.name;
-            }
-        }
-
-        // If no name found, return the model name
-        return getModelName(segment);
-    };
-
-    segments.forEach((segment, index) => {
-        currentPath += `/${segment}`;
-
-        // If this is an ID segment (numeric) and we have a previous segment
-        if (!isNaN(segment) && index > 0) {
-            const previousSegment = segments[index - 1];
-            const displayName = getDisplayName(previousSegment, index - 1);
-            items.push({
-                label: displayName,
-                route: currentPath
-            });
-        } else {
-            // For non-ID segments, capitalize and format
-            items.push({
-                label: segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
-                route: currentPath
-            });
-        }
-    });
-
-    return items;
-});
+// const breadcrumbItems = computed(() => {
+//     const path = page.url;
+//     const segments = path.split('/').filter(Boolean);
+//
+//     const items = [];
+//     let currentPath = '';
+//
+//     // Helper function to get model name from segment
+//     const getModelName = (segment) => {
+//         const modelMap = {
+//             'employees': 'Employee',
+//             'managers': 'Manager',
+//             'tascas': 'Tasca',
+//             'users': 'User',
+//             'posts': 'Post',
+//             'reservations': 'Reservation'
+//         };
+//         return modelMap[segment] || segment;
+//     };
+//
+//     // Helper function to get display name from props
+//     const getDisplayName = (segment, index) => {
+//         const props = page.props;
+//
+//         // Check if we have the specific item in props
+//         if (props[segment] && props[segment].name) {
+//             return props[segment].name;
+//         }
+//
+//         // Check if we have a collection of items
+//         if (props[segment + 's'] && Array.isArray(props[segment + 's'])) {
+//             const item = props[segment + 's'].find(item => item.id === parseInt(segments[index + 1]));
+//             if (item && item.name) {
+//                 return item.name;
+//             }
+//         }
+//
+//         // If no name found, return the model name
+//         return getModelName(segment);
+//     };
+//
+//     segments.forEach((segment, index) => {
+//         currentPath += `/${segment}`;
+//
+//         // If this is an ID segment (numeric) and we have a previous segment
+//         if (!isNaN(segment) && index > 0) {
+//             const previousSegment = segments[index - 1];
+//             const displayName = getDisplayName(previousSegment, index - 1);
+//             items.push({
+//                 label: displayName,
+//                 route: currentPath
+//             });
+//         } else {
+//             // For non-ID segments, capitalize and format
+//             items.push({
+//                 label: segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+//                 route: currentPath
+//             });
+//         }
+//     });
+//
+//     return items;
+// });
 </script>
 
 <template>
@@ -485,15 +485,15 @@ const breadcrumbItems = computed(() => {
         <!-- Main Content -->
         <div class="flex-1 flex flex-col w-0 overflow-hidden">
             <!-- Breadcrumb and User Profile -->
-            <div
-                class="flex items-center justify-between px-6 py-4 transition-all duration-500 ease-out transform"
-                :class="{
-                // comentado temporalmente hasta que decida si se queda mejor con o sin el margen
-    // 'ml-20 scale-100': isSidebarCollapsed,
-    // 'ml-20 scale-[1.01]': !isSidebarCollapsed
-  }"
-            >
-                <AppBreadcrumb :items="breadcrumbItems" class="!bg-transparent" />
+<!--            <div-->
+<!--                class="flex items-center justify-between px-6 py-4 transition-all duration-500 ease-out transform"-->
+<!--                :class="{-->
+<!--                // comentado temporalmente hasta que decida si se queda mejor con o sin el margen-->
+<!--    // 'ml-20 scale-100': isSidebarCollapsed,-->
+<!--    // 'ml-20 scale-[1.01]': !isSidebarCollapsed-->
+<!--  }"-->
+<!--            >-->
+<!--                <AppBreadcrumb :items="breadcrumbItems" class="!bg-transparent" />-->
 
                 <!-- User Profile Avatar -->
 <!--                <div v-if="$page.props.auth.user" class="flex items-center space-x-2">-->
@@ -508,7 +508,7 @@ const breadcrumbItems = computed(() => {
 <!--                        </div>-->
 <!--                    </Link>-->
 <!--                </div>-->
-            </div>
+<!--            </div>-->
 
             <!-- Scrollable Content -->
             <main class="flex-1 overflow-y-auto p-8 custom-scrollbar">

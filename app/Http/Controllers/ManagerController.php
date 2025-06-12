@@ -18,7 +18,6 @@ class ManagerController extends Controller
 {
     use AuthorizesRequests;
 
-
     public function index()
     {
         $this->authorize('viewAny', Manager::class);
@@ -96,7 +95,11 @@ class ManagerController extends Controller
 
         return redirect()
             ->route('managers.show', $manager)
-            ->with('success', 'Manager actualizado exitosamente.');
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => __('messages.toast.manager_updated'),
+            ]);
     }
 
     public function destroy(Manager $manager)
@@ -120,7 +123,11 @@ class ManagerController extends Controller
 
         return redirect()
             ->route('managers.index')
-            ->with('success', 'Manager eliminado exitosamente.');
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.deleted'),
+                'detail' => __('messages.toast.manager_deleted'),
+            ]);
     }
 
     public function demote(Manager $manager)
@@ -140,6 +147,10 @@ class ManagerController extends Controller
         $manager->delete();
             return redirect()
                 ->route('employees.show', $employee)
-                ->with('success', 'Manager degradado a empleado exitosamente.');
+                ->with('toast', [
+                    'severity' => 'success',
+                    'summary' => __('messages.toast.demoted'),
+                    'detail' => __('messages.toast.manager_demoted', ['name' => $manager->user->name]),
+                ]);
     }
 }

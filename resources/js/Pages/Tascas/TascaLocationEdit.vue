@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {route} from "ziggy-js";
 import { useForm } from '@inertiajs/vue3';
 import {useI18n} from "vue-i18n";
 import {useToast} from "primevue/usetoast";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import Button from "primevue/button";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -41,7 +42,7 @@ onMounted(() => {
 
 defineOptions({
     name: 'MapPage',
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 function initMap() {
@@ -148,9 +149,11 @@ function submit() {
         <form @submit.prevent="submit" class="form-wrapper">
             <input type="hidden" v-model="latitude" />
             <input type="hidden" v-model="longitude" />
-            <button type="submit" class="submit-btn">
-                {{ t('messages.tasca.map.set_location') }}
-            </button>
+            <Button
+                icon="pi pi-map-marker"
+                :label="t('messages.tasca.map.set_location')"
+                type="submit"
+            />
         </form>
     </div>
 </template>

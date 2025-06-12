@@ -248,7 +248,19 @@ const breadcrumbItems = computed(() => {
                         }"
                     >
                         <i class="pi pi-heart text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Posts Favoritos</span>
+
+                        <span
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >
+                            Posts Favoritos
+                        </span>
+
                     </Link>
 
                     <Link
@@ -261,7 +273,19 @@ const breadcrumbItems = computed(() => {
                         }"
                     >
                         <i class="pi pi-send text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Peticiones de Tascas</span>
+
+                        <span
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >
+                            Peticiones de Tascas
+                        </span>
+
                     </Link>
 
                     <Link
@@ -274,7 +298,18 @@ const breadcrumbItems = computed(() => {
                         }"
                     >
                         <i class="pi pi-hammer text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Empleados</span>
+
+                        <span
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >Empleados
+                        </span>
+
                     </Link>
 
                     <Link

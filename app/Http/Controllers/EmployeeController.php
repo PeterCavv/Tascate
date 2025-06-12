@@ -208,7 +208,11 @@ class EmployeeController extends Controller
         if ($manager->count() > 0) {
             return redirect()
                 ->route('employees.index')
-                ->with('success', 'No se puede promover al empleado porque ya existe un manager para esta tasca.');
+                ->with('toast', [
+                    'severity' => 'warn',
+                    'summary' => __('messages.toast.error'),
+                    'detail' => __('messages.toast.error_promoting'),
+                ]);
         }
 
         $this->authorize('promote', $employee);
@@ -225,8 +229,11 @@ class EmployeeController extends Controller
         $employee->delete();
             return redirect()
                 ->route('managers.show', $manager)
-
-                ->with('success', 'Empleado promovido a manager exitosamente.');
+                ->with('toast', [
+                    'severity' => 'success',
+                    'summary' => __('messages.toast.promoted'),
+                    'detail' => __('messages.toast.employee_promoted', ['name' => $employee->user->name]),
+                ]);
     }
     public function demote(Manager $manager)
     {

@@ -15,7 +15,9 @@ use App\Http\Controllers\WelcomePageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostCommentController;
 
-Route::get('/', WelcomePageController::class)->name('welcome');
+Route::get('/', function () {
+    return app(TascaController::class)->index();
+})->name('welcome');
 
 
 Route::get('/dashboard', function () {

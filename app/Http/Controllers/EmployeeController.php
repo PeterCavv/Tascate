@@ -59,7 +59,7 @@ class EmployeeController extends Controller
 
         return Inertia::render('Employees/Employees', [
             'manager' => $manager ?? null,
-            'employees' => $employees,
+            'employees' => $employees->load('tasca', 'user', 'manager'),
         ]);
     }
 

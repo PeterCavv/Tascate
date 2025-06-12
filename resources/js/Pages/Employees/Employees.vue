@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
 import Card from 'primevue/card';
 import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
 import {useI18n} from "vue-i18n";
+import InputIcon from "primevue/inputicon";
+import IconField from "primevue/iconfield";
 
 const {t} = useI18n();
 
@@ -43,6 +45,31 @@ const deleteEmployee = () => {
         onSuccess: () => closeDeleteModal(),
     });
 };
+
+const tascas = computed(() => {
+    return [
+        ...new Map(
+            props.employees.map(e => [e.tasca.id, e.tasca])
+        ).values()
+    ];
+});
+
+console.log(tascas)
+
+const searchByName = ref('');
+const searchByTascaName = ref('');
+
+const filteredEmployees = computed(() => {
+    return props.employees.filter(employee => {
+        const name = employee.user?.name ?? '';
+        const nameMatches = name.toLowerCase().includes(searchByName.value.toLowerCase());
+
+        const tascaFilter = searchByTascaName.value;
+        const tascaMatches = !tascaFilter || employee.tasca.id === tascaFilter.id;
+
+        return nameMatches && tascaMatches;
+    });
+});
 </script>
 
 <template>
@@ -52,6 +79,27 @@ const deleteEmployee = () => {
         <section aria-labelledby="proposals-heading">
             <h1 id="proposals-heading" class="text-3xl font-bold text-gray-800">{{ t('messages.employees.title')}}</h1>
             <p class="text-gray-600 mt-1">{{ t('messages.employees.desc') }}</p>
+        </section>
+
+        <section class="flex items-center gap-3" aria-labelledby="search-filter">
+            <IconField>
+                <InputIcon class="pi pi-search" />
+                <InputText
+                    v-model="searchByName"
+                    placeholder="Busca por nombre"
+                    class="w-full max-w-[800px]"
+                />
+            </IconField>
+            <Select
+                v-if="$page.props.auth.is_admin"
+                v-model="searchByTascaName"
+                filter
+                showClear
+                :options="tascas"
+                optionLabel="name"
+                placeholder="Busca por tasca"
+                class="w-full md:w-56"
+            />
         </section>
 
         <Card v-if="manager" class="hover:shadow-lg transition-shadow ">
@@ -81,7 +129,7 @@ const deleteEmployee = () => {
         </Card>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card v-for="employee in employees" :key="employee.id" class="hover:shadow-lg transition-shadow">
+          <Card v-for="employee in filteredEmployees" :key="employee.id" class="hover:shadow-lg transition-shadow">
             <template #header>
               <div class="flex items-center space-x-4 p-4">
                   <Avatar :image="employee.user.avatar || '/default-avatar.png'" :label="employee.user.name ? employee.user.name.charAt(0) : 'T'" size="large" shape="circle" />
@@ -91,6 +139,9 @@ const deleteEmployee = () => {
                   </p>
                   <p class="text-sm text-gray-500 truncate">
                     {{ employee.user.email }}
+                  </p>
+                  <p class="text-sm text-gray-500 truncate">
+                      {{ employee.tasca.name }}
                   </p>
                 </div>
               </div>

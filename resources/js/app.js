@@ -32,7 +32,8 @@ import InputNumber from 'primevue/inputnumber';
 import Fieldset from 'primevue/fieldset';
 import KeyFilter from 'primevue/keyfilter';
 import SplitButton from 'primevue/splitbutton';
-import Calendar from 'primevue/calendar'
+import Calendar from 'primevue/calendar';
+import Breadcrumb from 'primevue/breadcrumb';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -93,6 +94,8 @@ createInertiaApp({
         app.component('InputNumber', InputNumber);
         app.component('Fieldset', Fieldset);
         app.component('SplitButton', SplitButton);
+        app.component('Calendar', Calendar);
+        app.component('Breadcrumb', Breadcrumb);
 
         app.directive('keyfilter', KeyFilter);
 

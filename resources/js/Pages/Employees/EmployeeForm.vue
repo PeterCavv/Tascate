@@ -117,15 +117,17 @@ const submit = () => {
 
                 <div class="field">
                     <FloatLabel>
-                        <Dropdown
+                        <Select
                             id="tasca_id"
                             v-model="form.tasca_id"
                             :options="tascas"
                             optionLabel="name"
                             optionValue="id"
-                            class="w-full"
+                            filter
+                            class="w-full "
                             :invalid="form.errors.tasca_id"
                         />
+
                         <label for="tasca_id">{{ t('messages.employee_form.tasca') }}*</label>
                     </FloatLabel>
                     <Message severity="error"

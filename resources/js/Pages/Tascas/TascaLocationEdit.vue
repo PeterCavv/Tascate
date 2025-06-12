@@ -5,6 +5,8 @@ import {route} from "ziggy-js";
 import { useForm } from '@inertiajs/vue3';
 import {useI18n} from "vue-i18n";
 import {useToast} from "primevue/usetoast";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import Button from "primevue/button";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -50,11 +52,11 @@ function initMap() {
     const mapStyles = [
         {
             featureType: "poi",
-            stylers: [{ visibility: "off" }], // Hide points of interest
+            stylers: [{ visibility: "off" }],
         },
         {
             featureType: "poi.business",
-            stylers: [{ visibility: "off" }], // Hide businesses
+            stylers: [{ visibility: "off" }],
         },
     ];
 
@@ -148,9 +150,11 @@ function submit() {
         <form @submit.prevent="submit" class="form-wrapper">
             <input type="hidden" v-model="latitude" />
             <input type="hidden" v-model="longitude" />
-            <button type="submit" class="submit-btn">
-                {{ t('messages.tasca.map.set_location') }}
-            </button>
+            <Button
+                icon="pi pi-map-marker"
+                :label="t('messages.tasca.map.set_location')"
+                type="submit"
+            />
         </form>
     </div>
 </template>

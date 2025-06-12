@@ -13,6 +13,7 @@ class UserController extends Controller
 
     public function index()
     {
+
         $users = User::with('roles')->get();
 
         if (auth()->check()) {
@@ -78,9 +79,11 @@ class UserController extends Controller
     {
         $this->authorize('delete', $user);
 
+        auth()->logout();
+
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
+        return redirect()->route('tascas.index')->with('success', 'Usuario eliminado exitosamente.');
     }
 
     public function getReviews(User $user)

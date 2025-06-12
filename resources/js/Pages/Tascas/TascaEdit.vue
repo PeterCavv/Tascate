@@ -1,5 +1,5 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {computed} from 'vue'
 import {Head, router, useForm} from '@inertiajs/vue3'
 import 'primeicons/primeicons.css'
@@ -24,7 +24,7 @@ const {tasca} = defineProps({
 })
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 })
 
 const openingTimeFormatted = computed(() => tasca.opening_time?.slice(0, 5))

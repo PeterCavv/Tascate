@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {route} from "ziggy-js";
 import { useForm } from '@inertiajs/vue3';
 import {useI18n} from "vue-i18n";

@@ -1,11 +1,11 @@
 <script setup>
 
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import { useForm } from "@inertiajs/vue3";
 import { Link } from "@inertiajs/vue3";
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const { post } = defineProps({

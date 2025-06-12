@@ -2,7 +2,6 @@
 import { Link, router } from '@inertiajs/vue3'
 import {ref, onMounted, onUnmounted, watch, computed} from 'vue'
 import Loading from "@/Components/Loading.vue";
-import { usePage } from '@inertiajs/vue3';
 import Toast from "primevue/toast";
 import {useToast} from "primevue/usetoast";
 import {useI18n} from "vue-i18n";
@@ -11,6 +10,16 @@ import {useI18n} from "vue-i18n";
 const page = usePage()
 const toast = useToast()
 const {t} = useI18n();
+
+// Computed properties for auth state
+const isAdmin = computed(() => page.props.auth?.is_admin)
+const isTasca = computed(() => page.props.auth?.is_tasca)
+const isManager = computed(() => page.props.auth?.is_manager)
+const isEmployee = computed(() => page.props.auth?.is_employee)
+const isCustomer = computed(() => page.props.auth?.is_customer)
+const isAuthenticated = computed(() => !!page.props.auth?.user)
+const currentUser = computed(() => page.props.auth?.user)
+const currentUrl = computed(() => page.url)
 
 const sidebarOpen = ref(false);
 const visible = ref(false);
@@ -148,15 +157,26 @@ watch(isSidebarCollapsed, (newValue) => {
     <transition name="fade">
         <Loading v-if="isLoading"/>
     </transition>
-
-    <div class="flex h-screen overflow-hidden bg-gray-50">
+  <div class="flex h-screen overflow-hidden bg-gray-50">
+<!--    <div class="flex h-screen overflow-hidden" :class="{-->
+<!--        'bg-gray-50': !isAuthenticated || isCustomer,-->
+<!--        'bg-green-50': isAdmin,-->
+<!--        'bg-red-50': isTasca,-->
+<!--        'bg-yellow-50': isManager,-->
+<!--        'bg-blue-50': isEmployee-->
+<!--    }">-->
         <!-- Sidebar -->
         <aside
             :class="[
                 'fixed inset-y-0 left-0 z-30 flex flex-col transition-all duration-500 ease-bounce',
                 isSidebarCollapsed ? 'w-20' : 'w-64',
-                'bg-white/90 backdrop-blur-md shadow-elegant',
-                'md:translate-x-0 md:static md:inset-0'
+                'backdrop-blur-md shadow-elegant',
+                'md:translate-x-0 md:static md:inset-0',
+                !isAuthenticated || isCustomer ? 'bg-white/50' : '',
+                isAdmin ? 'bg-green-100/50' : '',
+                isTasca ? 'bg-blue-100/50' : '',
+                isManager ? 'bg-yellow-100/50' : '',
+                isEmployee ? 'bg-yellow-100/50' : ''
             ]"
         >
             <!-- Logo and Toggle -->
@@ -187,64 +207,155 @@ watch(isSidebarCollapsed, (newValue) => {
             <!-- Navigation -->
             <nav class="flex-1 space-y-2 p-4 overflow-y-auto custom-scrollbar">
                 <!-- Common User Links -->
-                <div v-if="!$page.props.auth?.is_tasca" class="space-y-2">
+                <div v-if="!isTasca" class="space-y-2">
                     <Link
+                        v-if="$page.props.auth.user"
                         href="/tascas"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/tascas'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/tascas'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/tascas'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/tascas'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-list text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Tascas</span>
+
+                        <span
+                            v-show="!isSidebarCollapsed"
+                            class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                            :class="{
+                              'opacity-100 translate-x-0': !isSidebarCollapsed,
+                              'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                              'jelly': !isSidebarCollapsed
+                            }"
+                          >Tascas</span>
+
                     </Link>
 
                     <Link
-                        v-if="$page.props.auth.user && !$page.props.auth.is_employee && !$page.props.auth.is_manager"
+                        v-if="isAuthenticated && !isEmployee && !isManager"
                         href="/tascas/favorites"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas/favorites'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas/favorites')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/tascas/favorites'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/tascas/favorites'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/tascas/favorites'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/tascas/favorites'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-bookmark text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Tascas Guardadas</span>
+
+                        <span
+                        v-show="!isSidebarCollapsed"
+                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                        :class="{
+                          'opacity-100 translate-x-0': !isSidebarCollapsed,
+                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                          'jelly': !isSidebarCollapsed
+                        }"
+                      >Tascas Guardadas</span>
+
                     </Link>
 
                     <Link
-                        v-if="$page.props.auth.user && $page.props.auth.is_admin"
+                        v-if="isAuthenticated && isAdmin"
                         href="/users"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/users'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/users')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/users'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/users'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/users'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/users'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-users text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Usuarios</span>
+
+                        <span
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >Usuarios</span>
+
                     </Link>
 
                     <Link
                         href="/posts"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/posts'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/posts')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/posts'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/posts'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/posts'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/posts'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-comments text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Posts</span>
+
+                        <span
+                        v-show="!isSidebarCollapsed"
+                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                        :class="{
+                          'opacity-100 translate-x-0': !isSidebarCollapsed,
+                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                          'jelly': !isSidebarCollapsed
+                        }"
+                      >Posts</span>
+
                     </Link>
 
                     <Link
-                        v-if="$page.props.auth.user"
+                        v-if="isAuthenticated"
                         href="/liked-posts"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/liked-posts'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/liked-posts')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/liked-posts'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/liked-posts'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/liked-posts'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/liked-posts'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-heart text-lg"></i>
@@ -257,6 +368,7 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                             'jelly': !isSidebarCollapsed
                           }"
+
                         >
                             Posts Favoritos
                         </span>
@@ -264,17 +376,28 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
-                        v-if="$page.props.auth.user && $page.props.auth.is_admin"
+                        v-if="isAuthenticated && isAdmin"
                         href="/tascas-proposals"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/tascas-proposals'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/tascas-proposals')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/tascas-proposals'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/tascas-proposals'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/tascas-proposals'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/tascas-proposals'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-send text-lg"></i>
 
                         <span
+
                           v-show="!isSidebarCollapsed"
                           class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
                           :class="{
@@ -289,12 +412,22 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
-                        v-if="($page.props.auth.user && $page.props.auth.is_admin) || ($page.props.auth.user && $page.props.auth.is_tasca) || ($page.props.auth.user && $page.props.auth.is_manager)"
+                        v-if="(isAuthenticated && isAdmin) || (isAuthenticated && isTasca) || (isAuthenticated && isManager)"
                         href="/employees"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/employees'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/employees')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/employees'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/employees'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/employees'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/employees'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-hammer text-lg"></i>
@@ -307,125 +440,297 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                             'jelly': !isSidebarCollapsed
                           }"
-                        >Empleados
-                        </span>
+
+                        >
+                        Empleados
+                      </span>
 
                     </Link>
 
                     <Link
-                        v-if="($page.props.auth.user && $page.props.auth.is_admin) || ($page.props.auth.user && $page.props.auth.is_tasca)"
+                        v-if="(isAuthenticated && isAdmin) || (isAuthenticated && isTasca)"
                         href="/managers"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/managers'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/managers')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/managers'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/managers'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/managers'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/managers'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-bolt text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Managers</span>
+
+                        <span
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >Managers</span>
+
                     </Link>
 
                     <Link
-                        v-if="$page.props.auth.user && $page.props.auth.is_customer"
+                        v-if="isAuthenticated && isCustomer"
                         href="/reservations"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/reservations'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/reservations')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/reservations'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/reservations'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/reservations'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/reservations'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-calendar text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Reservas</span>
+
+                        <span
+                        v-show="!isSidebarCollapsed"
+                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                        :class="{
+                          'opacity-100 translate-x-0': !isSidebarCollapsed,
+                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                          'jelly': !isSidebarCollapsed
+                        }"
+                      >Reservas</span>
+
                     </Link>
 
                     <Link
                         v-if="$page.props.auth.user"
                         :href="`/users/${$page.props.auth.user.id}`"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith(`/users/${$page.props.auth.user.id}`),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith(`/users/${$page.props.auth.user.id}`)
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === (`/users/${$page.props.auth.user.id}`),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === (`/users/${$page.props.auth.user.id}`),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === (`/users/${$page.props.auth.user.id}`),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === (`/users/${$page.props.auth.user.id}`),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
-                        <i class="pi pi-user text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Perfil</span>
+                        <i class="pi pi-info-circle text-lg"></i>
+                        <span
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >Perfil</span>
+
                     </Link>
 
                     <Link
-                        v-if="!$page.props.auth.user"
+                        v-if="!isAuthenticated"
                         href="/login"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/login'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/login')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/login'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/login'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/login'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/login'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-sign-in text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Login</span>
+
+                        <span
+                        v-show="!isSidebarCollapsed"
+                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                        :class="{
+                          'opacity-100 translate-x-0': !isSidebarCollapsed,
+                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                          'jelly': !isSidebarCollapsed
+                        }"
+                      >Login</span>
+
                     </Link>
 
                     <Link
-                        v-if="!$page.props.auth.user"
-                        href="/register"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        v-if="!isAuthenticated"
+                        href="/employees"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/register')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/employees'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/employees'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/employees'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/employees'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-user-plus text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Registro</span>
+
+                        <span
+                        v-show="!isSidebarCollapsed"
+                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                        :class="{
+                          'opacity-100 translate-x-0': !isSidebarCollapsed,
+                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                          'jelly': !isSidebarCollapsed
+                        }"
+                      >Registro</span>
+
                     </Link>
                 </div>
 
                 <!-- Tasca Links -->
                 <div v-else class="space-y-2">
                     <Link
-                        :href="`/tascas/${$page.props.auth.user.tasca?.id}`"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+                        :href="`/tascas/${currentUser?.tasca?.id}`"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith(`/tascas/${$page.props.auth.user.tasca?.id}`),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith(`/tascas/${$page.props.auth.user.tasca?.id}`)
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === (`/tascas/${currentUser?.tasca?.id}`),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === (`/tascas/${currentUser?.tasca?.id}`),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === (`/tascas/${currentUser?.tasca?.id}`),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === (`/tascas/${currentUser?.tasca?.id}`),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-home text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Mi Tasca</span>
+
+                        <span
+                        v-show="!isSidebarCollapsed"
+                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                        :class="{
+                          'opacity-100 translate-x-0': !isSidebarCollapsed,
+                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                          'jelly': !isSidebarCollapsed
+                        }"
+                      >Mi Tasca</span>
+
                     </Link>
 
                     <Link
                         href="/employees"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/employees'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/employees')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/employees'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/employees'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/employees'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/employees'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-users text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Empleados</span>
+                        <span
+                        v-show="!isSidebarCollapsed"
+                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                        :class="{
+                          'opacity-100 translate-x-0': !isSidebarCollapsed,
+                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                          'jelly': !isSidebarCollapsed
+                        }"
+                      >Empleados</span>
+
                     </Link>
 
                     <Link
                         href="/gestion"
-                        class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
+
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/gestion'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/gestion')
+                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/gestion'),
+                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/gestion'),
+                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/gestion'),
+                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/gestion'),
+                            'text-green-600': isAdmin,
+                            'text-blue-600': isTasca,
+                            'text-yellow-700': isManager || isEmployee,
+                            'text-gray-600': !isAuthenticated || isCustomer,
+                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
+                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
+                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
+                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
                         <i class="pi pi-box text-lg"></i>
-                        <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Stock</span>
+                        <span
+                    v-show="!isSidebarCollapsed"
+                    class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                    :class="{
+                      'opacity-100 translate-x-0': !isSidebarCollapsed,
+                      'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                      'jelly': !isSidebarCollapsed
+                    }"
+                  >Stock</span>
+
                     </Link>
                 </div>
 
                 <Link
-                    v-if="$page.props.auth.user"
+                    v-if="isAuthenticated"
                     href="/logout"
                     method="post"
                     as="button"
-                    class="flex items-center px-4 py-3 rounded-xl text-red-600 bg-transparent hover:bg-red-50 hover:text-red-700 transition-all duration-300 ease-bounce hover:scale-[1.02] w-full"
+                    class="flex items-center px-4 py-3 rounded-xl bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02] w-full text-red-600 hover:bg-red-200 hover:text-red-700"
                 >
                     <i class="pi pi-sign-out text-lg"></i>
-                    <span v-show="!isSidebarCollapsed" class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text" :class="{'opacity-100 translate-x-0': !isSidebarCollapsed, 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed, 'jelly': !isSidebarCollapsed}">Logout</span>
+
+                    <span
+                    v-show="!isSidebarCollapsed"
+                    class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                    :class="{
+                      'opacity-100 translate-x-0': !isSidebarCollapsed,
+                      'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                      'jelly': !isSidebarCollapsed
+                    }"
+                  >Logout</span>
+
                 </Link>
             </nav>
 

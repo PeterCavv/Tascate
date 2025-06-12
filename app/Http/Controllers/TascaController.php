@@ -16,29 +16,34 @@ class TascaController extends Controller
 
     public function index()
     {
-        $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
-        ->map(function ($tasca) {
-            if(auth()->check()) {
-                $user = auth()->user();
+        try {
+            $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
+                ->map(function ($tasca) {
+                    if(auth()->check()) {
+                        $user = auth()->user();
 
-                if ($user->hasRole('admin')) {
-                    $tasca->is_favorite = true;
-                } else {
-                    if($user->hasRole(Role::MANAGER->value) || $user->hasRole(Role::EMPLOYEE->value)) {
-                        $tasca->is_favorite = false;
+                        if ($user->hasRole('admin')) {
+                            $tasca->is_favorite = true;
+                        } else {
+                            if($user->hasRole(Role::MANAGER->value) || $user->hasRole(Role::EMPLOYEE->value)) {
+                                $tasca->is_favorite = false;
+                            } else {
+                                $tasca->is_favorite = $user->customer ? $user->customer->favoriteTascas->contains($tasca->id) : false;
+                            }
+                        }
                     } else {
-                        $tasca->is_favorite = $user->customer->favoriteTascas->contains($tasca->id);
+                        $tasca->is_favorite = false;
                     }
-                }
-            } else {
-                $tasca->is_favorite = false; // Default for unauthenticated users
-            }
-            return $tasca;
-        });
+                    return $tasca;
+                });
 
-        return Inertia::render('Tascas/TascasIndex', [
-            'tascas' => $tascas,
-        ]);
+            return Inertia::render('Tascas/TascasIndex', [
+                'tascas' => $tascas,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error in TascaController@index: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred while loading tascas.');
+        }
     }
 
     public function show(Tasca $tasca)

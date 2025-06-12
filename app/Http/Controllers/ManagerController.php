@@ -41,7 +41,7 @@ class ManagerController extends Controller
         }
 
         return Inertia::render('Managers/Managers', [
-            'managers' => $managers,
+            'managers' => $managers->load('tasca'),
         ]);
     }
 

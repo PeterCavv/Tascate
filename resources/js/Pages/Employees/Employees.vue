@@ -54,8 +54,6 @@ const tascas = computed(() => {
     ];
 });
 
-console.log(tascas)
-
 const searchByName = ref('');
 const searchByTascaName = ref('');
 

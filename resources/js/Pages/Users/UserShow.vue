@@ -1,8 +1,31 @@
 <script setup>
 import { Head, Link, router } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
-import { defineProps } from "vue";
+import {defineProps, ref} from "vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
+import ProfileLayout from "@/Layouts/ProfileLayout.vue";
+import {useToast} from "primevue/usetoast";
+
+const toast = useToast();
+const showDeleteModal = ref(false);
+
+const employeeMenu = ref([
+    {
+        label: 'Eliminar',
+        icon: 'pi pi-eraser',
+        command: () => {
+            if (!props.user?.id) {
+                toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
+                return;
+            }
+            router.delete(route('users.destroy', props.user.id), {
+                onError: () => {
+                    toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
+                }
+            });
+        }
+    },
+]);
 
 defineOptions({
     layout: MainLayout,
@@ -23,6 +46,8 @@ const props = defineProps({
     },
 });
 
+console.log(props.user.name);
+
 const deleteUser = () => {
     if (confirm("¿Seguro que quieres eliminar este usuario?")) {
         router.delete(route("users.destroy", props.user.id), {
@@ -35,10 +60,38 @@ const deleteUser = () => {
         });
     }
 };
+
+function edit_user() {
+    if (!props.user?.id) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
+        return;
+    }
+    router.visit(route('users.edit', props.user.id), {
+        onError: () => {
+            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
+        }
+    });
+}
 </script>
 
 <template>
     <Head title="Mi Perfil" />
+    <ProfileLayout :user="props.user">
+        <template #nombre>
+            {{ props.user.name }}
+        </template>
+        <template #correo>
+            {{ props.user.email }}
+        </template>
+        <template #actions>
+            <SplitButton
+                label="Editar"
+                :model="employeeMenu"
+                @click="edit_user"
+            />
+        </template>
+
+    </ProfileLayout>
 
     <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
         <div class="flex items-center space-x-4">

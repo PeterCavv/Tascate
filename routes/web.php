@@ -43,7 +43,6 @@ Route::middleware('auth')->group(function () {
 
 //User Routes
 
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('auth');
 Route::post('/users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('auth');

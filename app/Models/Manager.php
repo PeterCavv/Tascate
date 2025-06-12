@@ -32,6 +32,13 @@ class Manager extends Model
         return $this->belongsTo(Tasca::class);
     }
 
+    public function scopeOneManagerByTasca($query, $tasca_id)
+    {
+        return $query->allManagers()
+            ->where('tasca_id', $tasca_id)
+            ->with('user:id,name,email,avatar');
+    }
+
     public function scopeOneManager($query, $manager_id)
     {
         return $query->where('id', $manager_id)

@@ -1,16 +1,19 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import "primeicons/primeicons.css";
-import {router} from "@inertiajs/vue3";
+import {Head, router} from "@inertiajs/vue3";
 import {useDateFormatter} from "@/Composables/useDateFormatter.js";
-import {Head} from "@inertiajs/vue3";
 import Tag from 'primevue/tag';
+import IconField from "primevue/iconfield";
+import InputIcon from "primevue/inputicon";
+import {computed, ref} from "vue";
+import ToggleSwitch from "primevue/toggleswitch";
 
 defineOptions({
     layout: MainLayout,
 });
 
-defineProps({
+const props = defineProps({
     tascasProposals: Object
 });
 
@@ -27,6 +30,22 @@ const traduceStatus = (status) => {
     }
 };
 
+const search = ref('');
+const pendingOnly = ref(false);
+
+const filteredProposals = computed(() => {
+    return props.tascasProposals.filter(proposal => {
+        const nameMatches = proposal.tasca_name?.toLowerCase().includes(search.value.toLowerCase());
+
+        if (pendingOnly.value) {
+            const statusMatches = proposal.status?.toLowerCase().includes('pending');
+            return nameMatches && statusMatches;
+        }
+
+        return nameMatches;
+    });
+});
+
 const {formateDateToDDMMYYYY} = useDateFormatter();
 </script>
 
@@ -40,10 +59,23 @@ const {formateDateToDDMMYYYY} = useDateFormatter();
             <p class="text-gray-600 mt-1">Listado de todas las propuestas enviadas por los usuarios para crear una tasca.</p>
         </section>
 
+        <section class="flex items-center gap-2" aria-labelledby="search-filter">
+            <IconField>
+                <InputIcon class="pi pi-search" />
+                <InputText
+                    v-model="search"
+                    placeholder="Busca una propuesta"
+                    class="w-full max-w-[800px]"
+                />
+            </IconField>
+            <ToggleSwitch inputId="checkbox" v-model="pendingOnly" binary/>
+            <label for="checkbox" class="ml-1">Mostrar solo pendientes.</label>
+        </section>
+
         <section aria-labelledby="datatable-heading">
             <h2 id="datatable-heading" class="sr-only">Tabla de propuestas de tasca</h2>
             <DataTable
-                :value="tascasProposals"
+                :value="filteredProposals"
                 :paginator="true"
                 :rows="7"
                 :size="'large'"

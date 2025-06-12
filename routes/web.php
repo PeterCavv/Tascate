@@ -3,17 +3,11 @@
 use App\Enums\Role;
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TascaController;
-use App\Http\Controllers\TascaProposalController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\WelcomePageController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\PostCommentController;
+
 
 Route::get('/', function () {
     return app(TascaController::class)->index();

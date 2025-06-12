@@ -51,11 +51,11 @@ function initMap() {
     const mapStyles = [
         {
             featureType: "poi",
-            stylers: [{ visibility: "off" }], // Hide points of interest
+            stylers: [{ visibility: "off" }],
         },
         {
             featureType: "poi.business",
-            stylers: [{ visibility: "off" }], // Hide businesses
+            stylers: [{ visibility: "off" }],
         },
     ];
 

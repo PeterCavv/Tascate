@@ -1,12 +1,12 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
-import {ref, onMounted, onUnmounted, watch} from 'vue'
+import {ref, onMounted, onUnmounted, watch, computed} from 'vue'
 import Loading from "@/Components/Loading.vue";
 import { usePage } from '@inertiajs/vue3';
 import Toast from "primevue/toast";
 import {useToast} from "primevue/usetoast";
 import {useI18n} from "vue-i18n";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import AppBreadcrumb from "@/Components/BreadCrumb.vue";
 
 const page = usePage()
 const toast = useToast()
@@ -77,6 +77,25 @@ watch(isSidebarCollapsed, (newValue) => {
         }, 50)
     }
 })
+
+// Breadcrumb items based on current route
+const breadcrumbItems = computed(() => {
+    const path = page.url;
+    const segments = path.split('/').filter(Boolean);
+
+    const items = [];
+    let currentPath = '';
+
+    segments.forEach((segment, index) => {
+        currentPath += `/${segment}`;
+        items.push({
+            label: segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+            route: currentPath
+        });
+    });
+
+    return items;
+});
 </script>
 
 <template>
@@ -463,13 +482,27 @@ watch(isSidebarCollapsed, (newValue) => {
                     class="flex items-center text-xs text-gray-500 hover:text-gray-700 transition-all duration-300 ease-bounce hover:scale-[1.02]"
                 >
                     <i class="pi pi-info-circle"></i>
-                    <span v-if="!isSidebarCollapsed" class="ml-2">Accesibilidad</span>
+                    <span
+                        class="ml-2 inline-block"
+                        :class="{
+                            'opacity-100 translate-x-0 transition-all duration-1000 ease-soft': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed
+                        }"
+                    >
+                        Accesibilidad
+                    </span>
                 </Link>
 
                 <div v-if="$page.props.auth.impersonating" class="mt-2 text-xs text-yellow-600">
                     <div class="flex items-center">
                         <i class="pi pi-user"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-2">
+                        <span
+                            class="ml-2 inline-block"
+                            :class="{
+                                'opacity-100 translate-x-0 transition-all duration-1000 ease-soft': !isSidebarCollapsed,
+                                'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed
+                            }"
+                        >
                             {{ $page.props.auth.user.name }}
                         </span>
                     </div>
@@ -481,7 +514,15 @@ watch(isSidebarCollapsed, (newValue) => {
                         preserveState
                     >
                         <i class="pi pi-undo"></i>
-                        <span v-if="!isSidebarCollapsed" class="ml-2">Volver</span>
+                        <span
+                            class="ml-2 inline-block"
+                            :class="{
+                                'opacity-100 translate-x-0 transition-all duration-1000 ease-soft': !isSidebarCollapsed,
+                                'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed
+                            }"
+                        >
+                            Volver
+                        </span>
                     </Link>
                 </div>
             </div>
@@ -489,27 +530,30 @@ watch(isSidebarCollapsed, (newValue) => {
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col w-0 overflow-hidden">
-            <!-- Top bar -->
-            <header class="bg-white/90 backdrop-blur-md shadow-elegant px-6 py-4 flex items-center justify-between md:hidden">
-                <button
-                    @click="sidebarOpen = !sidebarOpen"
-                    class="text-gray-600 hover:text-gray-800 focus:outline-none hover:scale-105 transition-transform duration-300 ease-bounce"
-                >
-                    <i class="pi pi-bars text-xl"></i>
-                </button>
-                <span class="font-semibold text-gray-800">Tascate</span>
-            </header>
+            <!-- Breadcrumb and User Profile -->
+            <div
+                class="flex items-center justify-between px-6 py-4 transition-all duration-500 ease-out transform"
+                :class="{
+                // comentado temporalmente hasta que decida si se queda mejor con o sin el margen
+    // 'ml-20 scale-100': isSidebarCollapsed,
+    // 'ml-20 scale-[1.01]': !isSidebarCollapsed
+  }"
+            >
+                <AppBreadcrumb :items="breadcrumbItems" class="!bg-transparent" />
 
-            <!-- User Profile Avatar -->
-            <div v-if="$page.props.auth.user" class="absolute top-7 right-10 flex items-center space-x-2">
-                <Link
-                    :href="`/users/${$page.props.auth.user.id}`"
-                    class="flex items-center space-x-2 hover:scale-105 transition-transform duration-300 ease-bounce"
-                >
-                    <div class="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-semibold text-lg shadow-elegant">
-                        {{ $page.props.auth.user.name ? $page.props.auth.user.name.charAt(0).toUpperCase() : 'U' }}
-                    </div>
-                </Link>
+                <!-- User Profile Avatar -->
+                <div v-if="$page.props.auth.user" class="flex items-center space-x-2">
+                    <Link
+                        :href="`/users/${$page.props.auth.user.id}`"
+                        class="flex items-center space-x-2 hover:scale-105 transition-transform duration-300 ease-bounce"
+                    >
+                        <div
+                            class="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-semibold text-lg shadow-elegant"
+                        >
+                            {{ $page.props.auth.user.name ? $page.props.auth.user.name.charAt(0).toUpperCase() : 'U' }}
+                        </div>
+                    </Link>
+                </div>
             </div>
 
             <!-- Scrollable Content -->
@@ -524,6 +568,7 @@ watch(isSidebarCollapsed, (newValue) => {
             </main>
         </div>
     </div>
+    <Toast />
 </template>
 
 <style scoped>

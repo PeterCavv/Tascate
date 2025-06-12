@@ -1,13 +1,23 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import InputError from '@/Components/InputError.vue';
+import FormLayout from "@/Layouts/FormLayout.vue";
+import Message from 'primevue/message'
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import Button from 'primevue/button';
+import InputText from "primevue/inputtext";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import Select from 'primevue/select';
 import { watch, ref } from 'vue';
+import FloatLabel from "primevue/floatlabel";
+import {useI18n} from "vue-i18n";
+import {useToast} from "primevue/usetoast";
+
+defineOptions({
+    layout: MainLayout
+})
+
+const {t} = useI18n();
+const toast = useToast();
 
 const props = defineProps({
     employee: {
@@ -53,8 +63,15 @@ watch(() => props.employee, (newEmployee) => {
 
 const submit = () => {
     form.post(route('employees.update', props.employee.id), {
-        onSuccess: () => {
-
+        onError: (errors) => {
+            Object.keys(errors).forEach(key => {
+                toast.add({
+                    severity: 'error',
+                    summary: t('messages.toast.error'),
+                    detail: errors[key],
+                    life: 3000,
+                });
+            });
         },
     });
 };
@@ -63,64 +80,89 @@ const submit = () => {
 <template>
   <Head title="Editar Empleado" />
 
-  <MainLayoutTemp>
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Editar Empleado</h2>
-    </template>
+  <FormLayout>
+      <div class="w-full max-w-md mx-auto">
+          <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">Editar Empleado</h2>
+          </div>
 
-    <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-          <div class="p-6 text-gray-900">
             <form @submit.prevent="submit" class="space-y-6">
               <div>
-                <InputLabel for="name" value="Nombre" />
-                <TextInput
-                  id="name"
-                  type="text"
-                  class="mt-1 block w-full"
-                  v-model="form.name"
-                  required
-                  autofocus
-                />
-                <InputError :message="form.errors.name" class="mt-2" />
+                  <FloatLabel variant="on">
+                      <InputText
+                          id="name"
+                          type="text"
+                          class="mt-1 block w-full"
+                          v-model="form.name"
+                          :invalid="form.errors.name"
+                      />
+                      <label for="name">{{ t('messages.employee_form.name') }}*</label>
+                  </FloatLabel>
+                  <Message
+                      v-if="form.errors.name"
+                      severity="error"
+                      size="small"
+                      variant="simple"
+                  >
+                      {{ form.errors.name }}
+                  </Message>
               </div>
 
               <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                  id="email"
-                  type="email"
-                  class="mt-1 block w-full"
-                  v-model="form.email"
-                  required
-                />
-                <InputError :message="form.errors.email" class="mt-2" />
+                  <FloatLabel variant="on">
+                      <label for="email">{{ t('messages.employee_form.email') }}*</label>
+                      <InputText
+                          id="email"
+                          type="email"
+                          class="mt-1 block w-full"
+                          v-model="form.email"
+                          :invalid="form.errors.email"
+                      />
+                  </FloatLabel>
+                  <Message
+                      v-if="form.errors.email"
+                      severity="error"
+                      size="small"
+                      variant="simple"
+                  >
+                      {{ form.errors.email }}
+                  </Message>
               </div>
 
               <div>
-                <InputLabel for="tasca" value="Tasca" />
-                  <TextInput
-                      id="tasca"
-                      type="text"
-                      class="mt-1 block w-full"
-                      v-model="employee.tasca.name"
-                      disabled
-                  />
+                  <FloatLabel variant="on">
+                      <InputText
+                          id="tasca"
+                          type="text"
+                          class="mt-1 block w-full"
+                          v-model="employee.tasca.name"
+                          disabled
+                      />
+                      <label for="tasca">{{ t('messages.employee_form.tasca') }}*</label>
+                  </FloatLabel>
               </div>
 
               <div>
-                <InputLabel for="manager_id" value="Manager" />
-                  <Select
-                      id="manager_id"
-                      class="mt-1 block w-full"
-                      v-model="form.manager_id"
-                      :options="props.managers.map(manager => ({ label: manager.user.name, value: manager.id }))"
-                      :option-label="'label'"
-                      :option-value="'value'"
-                      required
-                  />
-                <InputError :message="form.errors.manager_id" class="mt-2" />
+                  <FloatLabel variant="on">
+                      <Select
+                          id="manager_id"
+                          class="mt-1 block w-full"
+                          v-model="form.manager_id"
+                          :options="props.managers.map(manager => ({ label: manager.user.name, value: manager.id }))"
+                          :option-label="'label'"
+                          :option-value="'value'"
+                          required
+                      />
+                      <label for="manager_id">{{ t('messages.employee_form.manager')}}</label>
+                  </FloatLabel>
+                  <Message
+                      v-if="form.errors.manager_id"
+                      severity="error"
+                      size="small"
+                      variant="simple"
+                  >
+                      {{ form.errors.manager_id }}
+                  </Message>
               </div>
 
               <div class="flex items-center justify-end mt-4">
@@ -128,19 +170,18 @@ const submit = () => {
                   :href="route('employees.show', employee.id)"
                   class="text-gray-600 hover:text-gray-900 mr-4"
                 >
-                  Cancelar
+                    {{ t('messages.employee_form.cancel') }}
                 </Link>
-                <PrimaryButton
-                  :class="{ 'opacity-25': form.processing }"
-                  :disabled="form.processing"
-                >
-                  Guardar Cambios
-                </PrimaryButton>
+                <Button
+                    :label="t('messages.employee_form.update_employee')"
+                    icon="pi pi-save"
+                    type="submit"
+                    :loading="form.processing"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                />
               </div>
             </form>
           </div>
-        </div>
-      </div>
-    </div>
-  </MainLayoutTemp>
+  </FormLayout>
 </template>

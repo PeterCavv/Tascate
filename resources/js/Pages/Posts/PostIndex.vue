@@ -1,14 +1,12 @@
 <script setup>
-
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {router} from "@inertiajs/vue3";
 import { defineProps } from 'vue';
 import {Link} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
-
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 defineProps({
@@ -34,14 +32,19 @@ function toggleFavorite(post) {
 </script>
 
 <template>
-    <h1 class="text-2xl font-bold">Lista de Posts</h1>
+    <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+        <section aria-labelledby="proposals-heading">
+            <h1 id="proposals-heading" class="text-3xl font-bold text-gray-800">Lista de Posts</h1>
+        </section>
+
     <div class="mt-10">
         <Link
             v-if="$page.props.auth.user"
             href="/posts/create-post"
-            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-            Crear Post
+            <Button
+                icon="pi pi-pen-to-square"
+                label="Crear post"/>
         </Link>
     </div>
 
@@ -75,7 +78,7 @@ function toggleFavorite(post) {
             </Link>
         </div>
     </div>
-
+    </div>
 </template>
 
 <style scoped>

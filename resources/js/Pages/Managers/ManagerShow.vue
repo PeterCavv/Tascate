@@ -1,9 +1,13 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import ProfileLayout from "@/Layouts/ProfileLayout.vue";
 import { useToast } from 'primevue/usetoast';
+
+defineOptions({
+    layout: MainLayout
+})
 
 const props = defineProps({
     manager: Object,
@@ -96,7 +100,6 @@ function edit_manager() {
 <template>
   <Head :title="manager.user.name" />
 
-  <MainLayoutTemp>
       <ProfileLayout :user="manager.user">
           <template #nombre>
               {{ manager.user.name }}
@@ -138,5 +141,4 @@ function edit_manager() {
               </div>
           </Dialog>
       </ProfileLayout>
-  </MainLayoutTemp>
 </template>

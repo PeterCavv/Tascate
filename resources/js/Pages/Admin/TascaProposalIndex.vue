@@ -1,5 +1,5 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import "primeicons/primeicons.css";
 import {router} from "@inertiajs/vue3";
 import {useDateFormatter} from "@/Composables/useDateFormatter.js";
@@ -7,7 +7,7 @@ import {Head} from "@inertiajs/vue3";
 import Tag from 'primevue/tag';
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 defineProps({

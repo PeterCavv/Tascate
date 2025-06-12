@@ -1,7 +1,7 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import { Head } from "@inertiajs/vue3";
 import { useDateFormatter } from "@/Composables/useDateFormatter.js";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 defineProps({
     reviews: Object,
@@ -11,7 +11,7 @@ defineProps({
 const { formateDateToDDMMYYYY } = useDateFormatter();
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 </script>
 

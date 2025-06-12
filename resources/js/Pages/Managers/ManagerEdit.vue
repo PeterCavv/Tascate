@@ -1,13 +1,16 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import Select from 'primevue/select';
 import { watch, ref } from 'vue';
+
+defineOptions({
+    layout: MainLayout
+})
 
 const props = defineProps({
     manager: {
@@ -64,10 +67,7 @@ const submit = () => {
 <template>
   <Head title="Editar Manager" />
 
-  <MainLayoutTemp>
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Editar Manager</h2>
-    </template>
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">Editar Manager</h2>
 
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -132,5 +132,4 @@ const submit = () => {
         </div>
       </div>
     </div>
-  </MainLayoutTemp>
 </template>

@@ -1,7 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
+
+defineOptions({
+    layout: MainLayout
+})
 
 const props = defineProps({
     managers: Array,
@@ -35,20 +42,14 @@ const deleteManager = () => {
 </script>
 
 <template>
-  <Head title="Managers" />
+  <Head :title="t('messages.managers.title')" />
 
-  <MainLayoutTemp>
-    <template #header>
-      <div class="flex justify-between items-center">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Managers</h2>
-<!--        <Link :href="route('managers.create')">-->
-<!--          <Button label="Crear Manager" icon="pi pi-plus" severity="primary" />-->
-<!--        </Link>-->
-      </div>
-    </template>
+    <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+        <section aria-labelledby="proposals-heading">
+            <h1 id="proposals-heading" class="text-3xl font-bold text-gray-800">{{ t('messages.managers.title') }}</h1>
+            <p class="text-gray-600 mt-1">{{ t('messages.managers.desc') }}</p>
+        </section>
 
-    <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Card v-for="manager in managers" :key="manager.id" class="hover:shadow-lg transition-shadow">
             <template #header>
@@ -78,7 +79,6 @@ const deleteManager = () => {
           </Card>
         </div>
       </div>
-    </div>
 
     <!-- Delete Confirmation Dialog -->
     <Dialog v-model:visible="showDeleteModal" modal header="Confirmar eliminación" :style="{ width: '450px' }">
@@ -98,5 +98,4 @@ const deleteManager = () => {
         </div>
       </div>
     </Dialog>
-  </MainLayoutTemp>
 </template>

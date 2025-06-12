@@ -1,12 +1,12 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {router} from '@inertiajs/vue3';
 import {useI18n} from "vue-i18n";
 
 const { t } = useI18n();
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 </script>

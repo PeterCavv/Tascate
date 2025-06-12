@@ -93,7 +93,6 @@
 </template>
 
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {Head, router} from "@inertiajs/vue3";
 import ReservationForm from "@/Components/ReservationForm.vue";
 import { useDateFormatter } from "@/Composables/useDateFormatter.js";
@@ -102,6 +101,7 @@ import Button from "primevue/button";
 import {useI18n} from "vue-i18n";
 import 'primeicons/primeicons.css'
 import Calendar from "@/Components/Calendar.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 const {t} = useI18n();
 
@@ -115,7 +115,7 @@ const { formateDateToDDMMYYYY } = useDateFormatter();
 const openReservation = ref(false);
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 function cancelReservation(){

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import ProfileLayout from "@/Layouts/ProfileLayout.vue";
 import { useToast } from 'primevue/usetoast';
 
@@ -9,6 +9,10 @@ const props = defineProps({
     employee: Object,
     can: Object,
 });
+
+defineOptions({
+    layout: MainLayout
+})
 
 const toast = useToast();
 const showDeleteModal = ref(false);

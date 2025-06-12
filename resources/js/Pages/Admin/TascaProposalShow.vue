@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {Link, useForm} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
 import {ref} from "vue";
@@ -109,7 +109,7 @@ const form = useForm({
 });
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const statusOptions = [

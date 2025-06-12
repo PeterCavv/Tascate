@@ -1,10 +1,8 @@
 <script setup>
-
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {Link, router} from "@inertiajs/vue3";
 import {useForm} from "@inertiajs/vue3";
 import 'primeicons/primeicons.css';
-import {ZiggyVue} from "ziggy-js";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 const form = useForm();
 
@@ -24,10 +22,8 @@ function createResponse(comment) {
     comment.showResponseForm = !comment.showResponseForm ;
 }
 
-
-
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const { post } = defineProps({

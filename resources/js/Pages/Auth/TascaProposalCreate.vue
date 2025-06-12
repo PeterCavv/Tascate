@@ -288,7 +288,7 @@
 </template>
 
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {useForm} from "@inertiajs/vue3";
 import {ref} from "vue";
 import PoliticaPrivacidadModal from "@/Components/PoliticaPrivacidadModal.vue";
@@ -305,7 +305,7 @@ const toast = useToast();
 const { t } = useI18n();
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const form = useForm({

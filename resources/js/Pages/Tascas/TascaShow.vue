@@ -1,5 +1,5 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import ReservationForm from "@/Components/ReservationForm.vue";
 import { useDateFormatter } from "@/Composables/useDateFormatter.js";
 import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
@@ -41,7 +41,7 @@ const { getRoundedRating } = useRatingCalculator();
 const openReservation = ref(false);
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const isOpenMoreThan8Hours = (tasca) => {

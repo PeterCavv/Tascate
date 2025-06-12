@@ -1,11 +1,11 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import { route } from "ziggy-js";
 import { defineProps } from "vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const props = defineProps({

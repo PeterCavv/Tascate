@@ -1,10 +1,19 @@
 <script setup>
-import {useForm} from "@inertiajs/vue3";
-import {ref} from "vue";
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import {router, useForm} from "@inertiajs/vue3";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import Message from "primevue/message";
+import FileUpload from "primevue/fileupload";
+import Textarea from "primevue/textarea";
+import {useToast} from "primevue/usetoast";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
+const toast = useToast();
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const form = useForm({
@@ -24,16 +33,21 @@ const submitForm = () => {
     form.post(route('posts.store'), {
         forceFormData: true,
         onSuccess: () => {
-            alert('Post creado exitosamente.');
             form.reset();
         },
         onError: (errors) => {
-            console.error(errors);
+            Object.keys(errors).forEach(key => {
+                toast.add({
+                    severity: 'error',
+                    summary: t('messages.toast.error'),
+                    detail: errors[key],
+                    life: 3000,
+                });
+            });
         },
+        preserveState: true,
     });
 };
-
-form.post
 </script>
 
 <template>
@@ -41,44 +55,77 @@ form.post
         <h1 class="text-2xl font-bold mb-4">Crear Post</h1>
         <form @submit.prevent="submitForm">
             <div class="mb-4">
-                <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
-                <input
-                    type="text"
-                    id="title"
-                    v-model="form.title"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    required
-                />
-                <p v-if="form.errors.title" class="mt-1 text-sm text-red-600">{{ form.errors.title }}</p>
+                <FloatLabel variant="on">
+                    <InputText
+                        type="text"
+                        id="title"
+                        v-model="form.title"
+                        class="w-full"
+                        :invalid="form.errors.title"
+                    />
+                    <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
+                </FloatLabel>
+                <Message
+                    v-if="form.errors.title"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ form.errors.title }}
+                </Message>
             </div>
             <div class="mb-4">
-                <label for="content" class="block text-sm font-medium text-gray-700">Contenido</label>
-                <textarea
-                    id="content"
-                    v-model="form.content"
-                    rows="4"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    required
-                ></textarea>
-                <p v-if="form.errors.content" class="mt-1 text-sm text-red-600">{{ form.errors.content }}</p>
+                <FloatLabel variant="on">
+                    <Textarea
+                        id="content"
+                        v-model="form.content"
+                        rows="4"
+                        class="mt-1 block w-full"
+                        :invalid="form.errors.content"
+                    />
+                    <label for="content" class="block text-sm font-medium text-gray-700">Contenido</label>
+                </FloatLabel>
+                <Message
+                    v-if="form.errors.content"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ form.errors.content }}
+                </Message>
             </div>
             <div class="mb-4">
                 <label for="pictures" class="block text-sm font-medium text-gray-700">Imágenes</label>
-                <input
+                <FileUpload
                     type="file"
                     id="pictures"
                     multiple
                     @change="handleFileUpload"
                     class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
                 />
-                <p v-if="form.errors.pictures" class="mt-1 text-sm text-red-600">{{ form.errors.pictures }}</p>
+                <Message
+                    v-if="form.errors.pictures"
+                    severity="error"
+                    size="small"
+                    variant="simple"
+                >
+                    {{ form.errors.pictures }}
+                </Message>
             </div>
-            <button
-                type="submit"
-                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-                Guardar
-            </button>
+
+            <div class="flex items-center justify-end space-x-4">
+                <Button
+                    label="Cancelar"
+                    severity="secondary"
+                    variant="text"
+                    @click="router.visit('/posts')"
+                />
+                <Button
+                    label="Publicar"
+                    icon="pi pi-upload"
+                    type="submit"
+                />
+            </div>
         </form>
     </div>
 </template>

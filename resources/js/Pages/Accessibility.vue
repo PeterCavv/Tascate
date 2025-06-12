@@ -1,10 +1,10 @@
 <script setup>
 import { Head } from '@inertiajs/vue3'
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import Tag from 'primevue/tag';
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 </script>
 <template>

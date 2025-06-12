@@ -1,7 +1,7 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import {Head, router, useForm} from "@inertiajs/vue3";
 import {usePage} from "@inertiajs/vue3";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 const { auth } = usePage().props
 
@@ -11,7 +11,7 @@ const { tasca, review } = defineProps({
 });
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const form = useForm({

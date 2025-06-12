@@ -1,5 +1,5 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {Head, router} from '@inertiajs/vue3';
 import {computed, ref} from "vue";
 import InputText from 'primevue/inputtext'
@@ -10,7 +10,7 @@ import InputIcon from 'primevue/inputicon';
 import 'primeicons/primeicons.css';
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const props = defineProps({

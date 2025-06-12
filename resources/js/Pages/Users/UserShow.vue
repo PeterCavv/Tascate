@@ -1,11 +1,11 @@
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import { defineProps } from "vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const props = defineProps({

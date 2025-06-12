@@ -52,7 +52,12 @@ class PostController extends Controller
                 ]);
             }
         }
-        return redirect()->route('posts.index')->with('success', 'Post creado exitosamente.');
+        return redirect()->route('posts.index')
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.created'),
+                'detail' => __('messages.toast.post_created'),
+            ]);
     }
 
     public function show (Post $post)
@@ -96,7 +101,12 @@ class PostController extends Controller
             'content' => $validated['content'],
         ]);
 
-        return redirect()->route('posts.show', $post)->with('success', 'Post actualizado exitosamente.');
+        return redirect()->route('posts.show', $post)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => __('messages.toast.post_updated'),
+            ]);;
     }
 
     public function destroy(Post $post)
@@ -106,8 +116,12 @@ class PostController extends Controller
 
         $post->delete();
 
-        return redirect()->route('posts.index')->with('success', 'Post eliminado exitosamente.');
-
+        return redirect()->route('posts.index')
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.deleted'),
+                'detail' => __('messages.toast.post_deleted'),
+            ]);
     }
 
     public function toggleLike(Post $post)

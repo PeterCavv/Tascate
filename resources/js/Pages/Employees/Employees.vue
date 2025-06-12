@@ -5,7 +5,13 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import Card from 'primevue/card';
 import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n();
+
+defineOptions({
+    layout: MainLayout
+})
 
 const props = defineProps({
     employees: Array,
@@ -42,17 +48,13 @@ const deleteEmployee = () => {
 <template>
   <Head title="Empleados" />
 
-  <MainLayout>
-    <template #header>
-      <div class="flex justify-between items-center">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Empleados</h2>
-        <Link :href="route('employees.create')">
-          <Button label="Crear Empleado" icon="pi pi-plus" severity="primary" />
-        </Link>
-      </div>
-    </template>
+    <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+        <section aria-labelledby="proposals-heading">
+            <h1 id="proposals-heading" class="text-3xl font-bold text-gray-800">{{ t('messages.employees.title')}}</h1>
+            <p class="text-gray-600 mt-1">{{ t('messages.employees.desc') }}</p>
+        </section>
 
-      <Card v-if="manager" class="hover:shadow-lg transition-shadow ">
+        <Card v-if="manager" class="hover:shadow-lg transition-shadow ">
           <template #header>
               <div class="flex items-center space-x-4 p-4 bg-lime-200 border border-lime-400 rounded-lg">
                   <Avatar :image="manager.user.avatar || '/default-avatar.png'" :label="manager.user.name ? manager.user.name.charAt(0) : 'M'" size="large" shape="circle" class="border border-lime-500" />
@@ -76,10 +78,8 @@ const deleteEmployee = () => {
                   </Link>
               </div>
           </template>
-      </Card>
+        </Card>
 
-    <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Card v-for="employee in employees" :key="employee.id" class="hover:shadow-lg transition-shadow">
             <template #header>
@@ -115,7 +115,6 @@ const deleteEmployee = () => {
             </Link>
         </div>
       </div>
-    </div>
 
     <!-- Delete Confirmation Dialog -->
     <Dialog v-model:visible="showDeleteModal" modal header="Confirmar eliminación" :style="{ width: '450px' }">
@@ -135,5 +134,4 @@ const deleteEmployee = () => {
         </div>
       </div>
     </Dialog>
-  </MainLayout>
 </template>

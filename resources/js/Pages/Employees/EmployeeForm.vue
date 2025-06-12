@@ -1,19 +1,18 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import { ref, watch } from 'vue';
 import FormLayout from "@/Layouts/FormLayout.vue";
 import InputText from 'primevue/inputtext';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
 import FloatLabel from 'primevue/floatlabel';
-import Toast from "primevue/toast";
 import {useToast} from "primevue/usetoast";
 import {useI18n} from "vue-i18n";
 import Message from "primevue/message";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const props = defineProps({

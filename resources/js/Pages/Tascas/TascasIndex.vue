@@ -1,6 +1,6 @@
 <script setup>
 import {Head, router} from '@inertiajs/vue3'
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
 import {useI18n} from "vue-i18n";
 
@@ -13,7 +13,7 @@ const { t } = useI18n();
 const { getRoundedRating } = useRatingCalculator();
 
 defineOptions({
-        layout: MainLayoutTemp,
+        layout: MainLayout,
 });
 
 function toggleFavorite(tasca) {
@@ -29,10 +29,11 @@ function toggleFavorite(tasca) {
 <template>
     <Head title="Tascas" />
 
-    <div>
-        <h1 class="text-2xl font-bold mb-6">
-            {{ t('messages.tascas.list')}}
-        </h1>
+    <div class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+        <section aria-labelledby="proposals-heading">
+            <h1 id="proposals-heading" class="text-3xl font-bold text-gray-800">{{ t('messages.tascas.list')}}</h1>
+            <p class="text-gray-600 mt-1">{{ t('messages.tascas.desc') }}</p>
+        </section>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
             <div

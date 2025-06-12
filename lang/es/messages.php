@@ -21,6 +21,7 @@ return [
     ],
     'tascas' => [
         'list' => 'Lista de Tascas',
+        'desc' => 'Navega entre las tascas. ¡Descubre nuevos sabores y expande horizontes!',
         'no_tascas' => 'No hay Tascas disponibles. ¡Mantente atento a las actualizaciones!',
         'no_ratings' => 'Sin calificar',
         'bookmark' => 'Guardar como favorito',
@@ -38,6 +39,9 @@ return [
         'tasca_created' => 'Se ha aprobado la propuesta. ¡La Tasca ha sido creada!',
         'tasca_proposal_updated' => 'La propuesta se ha actualizado correctamente.',
         'tasca_proposal_cloned' => 'La tasca fue clonada con éxito.',
+        'post_created' => 'Post publicado correctamente',
+        'post_updated' => 'Post actualizado correctamente',
+        'post_deleted' => 'Post eliminado con éxito',
         'employee_created' => 'El empleado se ha creado con éxito.',
         'employee_updated' => 'Empleado actualizado correctamente.',
         'employee_deleted' => 'Empleado eliminado con éxito',
@@ -93,6 +97,7 @@ return [
         'manager_assigned_auto' => 'Manager asignado automáticamente.',
         'cancel' => 'Cancelar',
         'create_employee' => 'Crear Empleado',
+        'update_employee' => 'Guardar',
     ],
     'reservation' => [
         'title_create' => 'Reservar en ',
@@ -173,5 +178,13 @@ return [
             'close' => 'Cerrar',
         ]
     ],
+    'managers' => [
+        'title' => 'Managers',
+        'desc' => 'Listado de todos los managers de las tascas. Aquí los puedes crear, editar o eliminar.'
+    ],
+    'employees' => [
+        'title' => 'Empleados',
+        'desc' => 'Listado de todos los empleados de las tascas. Aquí los puedes crear, editar o eliminar.'
+    ]
 
 ];

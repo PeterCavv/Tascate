@@ -86,12 +86,58 @@ const breadcrumbItems = computed(() => {
     const items = [];
     let currentPath = '';
 
+    // Helper function to get model name from segment
+    const getModelName = (segment) => {
+        const modelMap = {
+            'employees': 'Employee',
+            'managers': 'Manager',
+            'tascas': 'Tasca',
+            'users': 'User',
+            'posts': 'Post',
+            'reservations': 'Reservation'
+        };
+        return modelMap[segment] || segment;
+    };
+
+    // Helper function to get display name from props
+    const getDisplayName = (segment, index) => {
+        const props = page.props;
+        
+        // Check if we have the specific item in props
+        if (props[segment] && props[segment].name) {
+            return props[segment].name;
+        }
+        
+        // Check if we have a collection of items
+        if (props[segment + 's'] && Array.isArray(props[segment + 's'])) {
+            const item = props[segment + 's'].find(item => item.id === parseInt(segments[index + 1]));
+            if (item && item.name) {
+                return item.name;
+            }
+        }
+
+        // If no name found, return the model name
+        return getModelName(segment);
+    };
+
     segments.forEach((segment, index) => {
         currentPath += `/${segment}`;
-        items.push({
-            label: segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
-            route: currentPath
-        });
+        
+        // If this is an ID segment (numeric) and we have a previous segment
+        if (!isNaN(segment) && index > 0) {
+            const previousSegment = segments[index - 1];
+            const displayName = getDisplayName(previousSegment, index - 1);
+            items.push({
+                label: displayName,
+                route: currentPath
+            });
+        } else {
+            // For non-ID segments, capitalize and format
+            items.push({
+                label: segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+                route: currentPath
+            });
+        }
     });
 
     return items;

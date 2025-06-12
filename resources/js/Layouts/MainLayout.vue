@@ -102,12 +102,12 @@ const breadcrumbItems = computed(() => {
     // Helper function to get display name from props
     const getDisplayName = (segment, index) => {
         const props = page.props;
-        
+
         // Check if we have the specific item in props
         if (props[segment] && props[segment].name) {
             return props[segment].name;
         }
-        
+
         // Check if we have a collection of items
         if (props[segment + 's'] && Array.isArray(props[segment + 's'])) {
             const item = props[segment + 's'].find(item => item.id === parseInt(segments[index + 1]));
@@ -122,7 +122,7 @@ const breadcrumbItems = computed(() => {
 
     segments.forEach((segment, index) => {
         currentPath += `/${segment}`;
-        
+
         // If this is an ID segment (numeric) and we have a previous segment
         if (!isNaN(segment) && index > 0) {
             const previousSegment = segments[index - 1];
@@ -376,14 +376,14 @@ const breadcrumbItems = computed(() => {
                     </Link>
 
                     <Link
-                        href="/about"
+                        :href="`/users/${$page.props.auth.user.id}`"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
-                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/about'),
-                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith('/about')
+                            'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith(`/users/${$page.props.auth.user.id}`),
+                            'hover:bg-gray-200/50 hover:text-gray-900': !$page.url.startsWith(`/users/${$page.props.auth.user.id}`)
                         }"
                     >
-                        <i class="pi pi-info-circle text-lg"></i>
+                        <i class="pi pi-user text-lg"></i>
                         <span
   v-show="!isSidebarCollapsed"
   class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
@@ -392,7 +392,7 @@ const breadcrumbItems = computed(() => {
     'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
     'jelly': !isSidebarCollapsed
   }"
->About Us</span>
+>Perfil</span>
                     </Link>
 
                     <Link
@@ -588,18 +588,18 @@ const breadcrumbItems = computed(() => {
                 <AppBreadcrumb :items="breadcrumbItems" class="!bg-transparent" />
 
                 <!-- User Profile Avatar -->
-                <div v-if="$page.props.auth.user" class="flex items-center space-x-2">
-                    <Link
-                        :href="`/users/${$page.props.auth.user.id}`"
-                        class="flex items-center space-x-2 hover:scale-105 transition-transform duration-300 ease-bounce"
-                    >
-                        <div
-                            class="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-semibold text-lg shadow-elegant"
-                        >
-                            {{ $page.props.auth.user.name ? $page.props.auth.user.name.charAt(0).toUpperCase() : 'U' }}
-                        </div>
-                    </Link>
-                </div>
+<!--                <div v-if="$page.props.auth.user" class="flex items-center space-x-2">-->
+<!--                    <Link-->
+<!--                        :href="`/users/${$page.props.auth.user.id}`"-->
+<!--                        class="flex items-center space-x-2 hover:scale-105 transition-transform duration-300 ease-bounce"-->
+<!--                    >-->
+<!--                        <div-->
+<!--                            class="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-semibold text-lg shadow-elegant"-->
+<!--                        >-->
+<!--                            {{ $page.props.auth.user.name ? $page.props.auth.user.name.charAt(0).toUpperCase() : 'U' }}-->
+<!--                        </div>-->
+<!--                    </Link>-->
+<!--                </div>-->
             </div>
 
             <!-- Scrollable Content -->

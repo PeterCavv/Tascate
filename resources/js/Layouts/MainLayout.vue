@@ -339,6 +339,7 @@ const breadcrumbItems = computed(() => {
                     </Link>
 
                     <Link
+                        v-if="$page.props.auth.user"
                         :href="`/users/${$page.props.auth.user.id}`"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{

@@ -216,14 +216,16 @@ watch(isSidebarCollapsed, (newValue) => {
                     >
                         <i class="pi pi-heart text-lg"></i>
                         <span
-  v-show="!isSidebarCollapsed"
-  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-  :class="{
-    'opacity-100 translate-x-0': !isSidebarCollapsed,
-    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-    'jelly': !isSidebarCollapsed
-  }"
->Posts Favoritos</span>
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >
+                            Posts Favoritos
+                        </span>
                     </Link>
 
                     <Link
@@ -237,14 +239,16 @@ watch(isSidebarCollapsed, (newValue) => {
                     >
                         <i class="pi pi-send text-lg"></i>
                         <span
-  v-show="!isSidebarCollapsed"
-  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-  :class="{
-    'opacity-100 translate-x-0': !isSidebarCollapsed,
-    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-    'jelly': !isSidebarCollapsed
-  }"
->Peticiones de Tascas</span>
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >
+                            Peticiones de Tascas
+                        </span>
                     </Link>
 
                     <Link
@@ -258,14 +262,15 @@ watch(isSidebarCollapsed, (newValue) => {
                     >
                         <i class="pi pi-hammer text-lg"></i>
                         <span
-  v-show="!isSidebarCollapsed"
-  class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-  :class="{
-    'opacity-100 translate-x-0': !isSidebarCollapsed,
-    'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-    'jelly': !isSidebarCollapsed
-  }"
->Empleados</span>
+                          v-show="!isSidebarCollapsed"
+                          class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                          :class="{
+                            'opacity-100 translate-x-0': !isSidebarCollapsed,
+                            'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                            'jelly': !isSidebarCollapsed
+                          }"
+                        >Empleados
+                        </span>
                     </Link>
 
                     <Link
@@ -396,7 +401,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
-                        href="/register"
+                        href="/employees"
                         class="flex items-center px-4 py-3 rounded-xl text-gray-600 bg-transparent transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
                             'bg-green-100/70 text-green-800 hover:bg-green-200': $page.url.startsWith('/register'),

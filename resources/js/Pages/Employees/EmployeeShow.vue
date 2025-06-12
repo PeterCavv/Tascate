@@ -100,7 +100,6 @@ function edit_employee() {
 <template>
   <Head :title="employee.user.name" />
 
-  <MainLayout>
       <ProfileLayout :user="employee.user">
           <template #nombre>
               {{ employee.user.name }}
@@ -146,5 +145,4 @@ function edit_employee() {
               </div>
           </Dialog>
       </ProfileLayout>
-  </MainLayout>
 </template>

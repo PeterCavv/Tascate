@@ -46,6 +46,10 @@ return [
         'employee_updated' => 'Empleado actualizado correctamente.',
         'employee_deleted' => 'Empleado eliminado con éxito',
         'employee_promoted' => 'El empleado :name fue ascendido a Manager.',
+        'manager_updated' => 'El manager ha sido actualizado correctamente.',
+        'manager_deleted' => 'El manager ha sido eliminado correctamente.',
+        'manager_demoted' => 'El manager :name ha sido degradado a empleado.',
+        'error_promoting' => 'Ya existe un manager para la tasca',
         'review_deleted' => 'La review fue eliminada con éxito.',
         'review_created' => 'Se ha publicado tu review. ¡Gracias por tu opinión!',
         'error' => 'Error',
@@ -56,6 +60,7 @@ return [
         'success' => 'Éxito',
         'cloned' => 'Clonado',
         'promoted' => 'Ascendido',
+        'demoted' => 'Degradado',
         'welcome' => 'Bienvenido a Tascate',
         'welcome_details' => '¡Hola de nuevo, :name!',
         'succes_details' => 'Tarea realizada correctamente'
@@ -158,7 +163,7 @@ return [
             'submit' => 'Guardar',
             'cancel' => 'Cancelar',
             'delete' => 'Eliminar',
-
+        ],
         'map' => [
             'set_location' => 'Establecer ubicación',
             'search_location' => 'Buscar o seleccionar ubicación',
@@ -172,10 +177,6 @@ return [
             'observations' => 'Observaciones',
             'see_observations' => 'Ver Observaciones',
             'no_observations' => 'No hay observaciones',
-        ]
-    ],
-        'buttons' => [
-            'close' => 'Cerrar',
         ]
     ],
     'managers' => [

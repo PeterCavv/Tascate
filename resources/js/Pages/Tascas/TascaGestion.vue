@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Tag from 'primevue/tag';
@@ -13,7 +13,7 @@ import {useI18n} from "vue-i18n";
 const { t } = useI18n();
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 const props = defineProps({

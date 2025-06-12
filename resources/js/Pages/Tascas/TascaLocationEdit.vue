@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {route} from "ziggy-js";
 import { useForm } from '@inertiajs/vue3';
 import {useI18n} from "vue-i18n";
@@ -41,7 +41,7 @@ onMounted(() => {
 
 defineOptions({
     name: 'MapPage',
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 function initMap() {

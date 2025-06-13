@@ -111,7 +111,7 @@
 </template>
 
 <script setup>
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import {useForm, usePage} from '@inertiajs/vue3';
 import {computed} from "vue";
 import {useI18n} from "vue-i18n";
@@ -146,7 +146,7 @@ const closingTimeFormatted = computed(() => tasca.closing_time?.slice(0, 5))
 const today = new Date().toISOString().split('T')[0]
 
 defineOptions({
-    layout: MainLayoutTemp,
+    layout: MainLayout,
 });
 
 /**

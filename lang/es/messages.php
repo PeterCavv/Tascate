@@ -7,6 +7,17 @@ return [
     'user_data' => [
         'name' => 'Nombre',
         'email' => 'Correo electrónico',
+        'edit' => 'Editar Usuario',
+        'avatar' => 'Avatar',
+    ],
+    'input' => [
+        'choose_file' => 'Selecionar archivo',
+        'limit_data' => 'El tamaño máximo permitido es 1MB',
+        'type_data' => 'Solo se permiten imágenes',
+        'undo' => 'Deshacer',
+        'undo_aria_label' => 'Deshacer cambios',
+        'update' => 'Actualizar',
+        'update_aria_label' => 'Guardar cambios'
     ],
     'auth' => [
         'password' => 'Contraseña',
@@ -49,6 +60,7 @@ return [
         'manager_updated' => 'El manager ha sido actualizado correctamente.',
         'manager_deleted' => 'El manager ha sido eliminado correctamente.',
         'manager_demoted' => 'El manager :name ha sido degradado a empleado.',
+        'user_updated' => 'Perfil actualizado correctamente.',
         'error_promoting' => 'Ya existe un manager para la tasca',
         'review_deleted' => 'La review fue eliminada con éxito.',
         'review_created' => 'Se ha publicado tu review. ¡Gracias por tu opinión!',
@@ -185,7 +197,8 @@ return [
     ],
     'employees' => [
         'title' => 'Empleados',
-        'desc' => 'Listado de todos los empleados de las tascas. Aquí los puedes crear, editar o eliminar.'
+        'desc' => 'Listado de todos los empleados de las tascas. Aquí los puedes crear, editar o eliminar.',
+        'no_employees' => 'No hay empleados disponibles para visualizar.'
     ]
 
 ];

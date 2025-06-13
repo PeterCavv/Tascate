@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import { Head } from '@inertiajs/vue3';
-import MainLayoutTemp from "@/Layouts/MainLayoutTemp.vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';

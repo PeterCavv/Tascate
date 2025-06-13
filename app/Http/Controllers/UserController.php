@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
 use Inertia\Inertia;
+use Redirect;
 
 class UserController extends Controller
 {
@@ -62,17 +63,23 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
+        $validated = $request->validated();
+
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $path;
         }
-        $validated = $request->validated();
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
-        $user->save();
+        $user->update();
 
-        return redirect()->route('users.show', $user)->with('success', 'Usuario actualizado exitosamente.');
+        return Redirect::route('users.show', $user)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => __('messages.toast.user_updated'),
+            ]);
     }
 
     public function destroy(User $user)

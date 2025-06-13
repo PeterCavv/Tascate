@@ -92,7 +92,7 @@ watch(
                         </Link>
                     </div>
 
-                    <!-- Sidebar Links Common User -->
+                    <!-- Sidebar Links Tasca -->
                     <div v-if="!$page.props.auth?.is_tasca">
                         <Link href="/tascas" class="block px-4 py-2 rounded hover:bg-gray-700 transition">Tascas</Link>
                         <Link

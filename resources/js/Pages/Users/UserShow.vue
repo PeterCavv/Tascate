@@ -5,9 +5,13 @@ import {defineProps, ref} from "vue";
 import MainLayout from "@/Layouts/MainLayout.vue";
 import ProfileLayout from "@/Layouts/ProfileLayout.vue";
 import {useToast} from "primevue/usetoast";
+import EditUserDialog from "@/Components/EditUserForm.vue";
 
 const toast = useToast();
-const showDeleteModal = ref(false);
+
+// const showDeleteModal = ref(false);
+
+const showEditDialog = ref(false);
 
 const employeeMenu = ref([
     {
@@ -46,8 +50,6 @@ const props = defineProps({
     },
 });
 
-console.log(props.user.name);
-
 const deleteUser = () => {
     if (confirm("¿Seguro que quieres eliminar este usuario?")) {
         router.delete(route("users.destroy", props.user.id), {
@@ -61,17 +63,18 @@ const deleteUser = () => {
     }
 };
 
-function edit_user() {
-    if (!props.user?.id) {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
-        return;
-    }
-    router.visit(route('users.edit', props.user.id), {
-        onError: () => {
-            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
-        }
-    });
-}
+// function edit_user() {
+//     console.log(props.user.id)
+//     if (!props.user?.id) {
+//         toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
+//         return;
+//     }
+//     router.visit(route('users.edit', props.user.id), {
+//         onError: () => {
+//             toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo acceder a la edición', life: 3000 });
+//         }
+//     });
+// }
 </script>
 
 <template>
@@ -87,7 +90,7 @@ function edit_user() {
             <SplitButton
                 label="Editar"
                 :model="employeeMenu"
-                @click="edit_user"
+                @click="() => showEditDialog = true"
             />
         </template>
 
@@ -138,4 +141,10 @@ function edit_user() {
             </Link>
         </div>
     </div>
+
+    <EditUserDialog
+        :user="user"
+        v-model:visible="showEditDialog"
+        @updated="newUser => user = newUser"
+    />
 </template>

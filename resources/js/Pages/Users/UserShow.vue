@@ -86,6 +86,9 @@ const deleteUser = () => {
         <template #correo>
             {{ props.user.email }}
         </template>
+        <template v-if="props.user.avatar.startsWith('http://tascate.test/storage/avatars')" #profile-image>
+            <img :src="props.user.avatar" alt="Avatar" class="w-32 h-32 rounded-full object-cover" />
+        </template>
         <template #actions>
             <SplitButton
                 label="Editar"
@@ -114,7 +117,6 @@ const deleteUser = () => {
             <div v-if="authUserId === user.id || $page.props.auth.is_admin">
                 <Link
                     class="px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600 transition"
-                    :href="route('users.edit', user.id)"
                 >
                     Editar
                 </Link>

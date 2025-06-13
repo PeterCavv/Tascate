@@ -3,9 +3,12 @@ use App\Http\Controllers\TascaProposalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminAccessMiddleware;
+use App\Http\Controllers\ManagerController;
 
 
 Route::middleware( AdminAccessMiddleware::class)->group(function () {
+    Route::get('/managers', [ManagerController::class, 'index'])
+        ->name('managers.index');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/register/tascas-proposals', [TascaProposalController::class, 'registerForm'])->name('tascas-proposals.create');
     Route::post('/register/tascas-proposals', [TascaProposalController::class, 'store'])->name('tascas-proposals.store');

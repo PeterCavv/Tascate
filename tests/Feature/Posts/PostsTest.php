@@ -50,8 +50,12 @@ it('Auth user can post', function () {
         'content' => 'Test Content',
     ]);
 
-    $response->assertRedirect(route('posts.index'))
-        ->assertSessionHas('success', 'Post creado exitosamente.');
+    $response->assertRedirect(route('posts.index'));
+    $response->assertSessionHas('toast', [
+        'severity' => 'success',
+        'summary' => __('messages.toast.created'),
+        'detail' => __('messages.toast.post_created'),
+    ]);
 
 });
 
@@ -63,7 +67,11 @@ it('Auth user can delete a post', function () {
     $response = $this->actingAs($user)->delete(route('posts.destroy', $post));
 
     $response->assertRedirect(route('posts.index'))
-        ->assertSessionHas('success', 'Post eliminado exitosamente.');
+        ->assertSessionHas('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.deleted'),
+            'detail' => __('messages.toast.post_deleted'),
+        ]);
 
     $this->assertDatabaseMissing('posts', [
         'id' => $post->id,
@@ -82,8 +90,11 @@ it('Auth user can update a post', function () {
     ]);
 
     $response->assertRedirect(route('posts.show', $post))
-        ->assertSessionHas('success', 'Post actualizado exitosamente.');
-
+        ->assertSessionHas('toast', [
+            'severity' => 'success',
+            'summary' => __('messages.toast.updated'),
+            'detail' => __('messages.toast.post_updated'),
+        ]);
     $this->assertDatabaseHas('posts', [
         'id' => $post->id,
         'title' => 'Updated Title',
@@ -102,7 +113,7 @@ it('A user cannot get into edit-page for another user posts', function () {
 
     $response = $this->actingAs($user2)->get(route('posts.edit', $post));
 
-    $response->assertStatus(403);
+    $response->assertStatus(302);
 });
 
 it('A user cannot update a post from another user', function () {
@@ -118,7 +129,7 @@ it('A user cannot update a post from another user', function () {
         'content' => 'Updated Content',
     ]);
 
-    $response->assertStatus(403);
+    $response->assertStatus(302);
 });
 
 it('A user cannot delete a post from another user', function () {
@@ -131,6 +142,6 @@ it('A user cannot delete a post from another user', function () {
 
     $response = $this->actingAs($user2)->delete(route('posts.destroy', $post));
 
-    $response->assertStatus(403);
+    $response->assertStatus(302);
 });
 

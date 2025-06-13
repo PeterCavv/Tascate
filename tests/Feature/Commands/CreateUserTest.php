@@ -79,9 +79,9 @@ it('validates required fields', function () {
         ->expectsQuestion('What is the user password?', '')
         ->expectsChoice('What role should the user have?', UseRole::EMPLOYEE->value, $this->roles)
         ->assertExitCode(1)
-        ->expectsOutput('The name field is required.')
-        ->expectsOutput('The email field is required.')
-        ->expectsOutput('The password field is required.');
+        ->expectsOutput(__('validation.filled', ['attribute' => __('validation.attributes.name')]))
+        ->expectsOutput(__('validation.filled', ['attribute' => __('validation.attributes.email')]))
+        ->expectsOutput(__('validation.filled', ['attribute' => __('validation.attributes.password')]));
 });
 
 it('validates email format', function () {
@@ -92,7 +92,7 @@ it('validates email format', function () {
         ->expectsQuestion('What is the user password?', 'password123')
         ->expectsChoice('What role should the user have?', UseRole::EMPLOYEE->value, $this->roles)
         ->assertExitCode(1)
-        ->expectsOutput('The email field must be a valid email address.');
+        ->expectsOutput(__('validation.email', ['attribute' => __('validation.attributes.email')]));
 });
 
 it('validates password length', function () {
@@ -103,7 +103,10 @@ it('validates password length', function () {
         ->expectsQuestion('What is the user password?', 'short')
         ->expectsChoice('What role should the user have?', UseRole::EMPLOYEE->value, $this->roles)
         ->assertExitCode(1)
-        ->expectsOutput('The password field must be at least 8 characters.');
+        ->expectsOutput(__('validation.min.string', [
+            'attribute' => __('validation.attributes.password'),
+            'min' => 8,
+        ]));
 });
 
 it('validates role exists', function () {

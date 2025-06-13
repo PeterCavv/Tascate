@@ -163,6 +163,13 @@ function saveComment(comment) {
                     :src="`/storage/${picture.picture_path}`"
                     alt="Post Picture"
                     class="rounded-lg shadow-md"
+                    @error="$event.target.src = '/images/post-default.jpg'"
+                />
+                <img
+                    v-if="post.pictures.length === 0"
+                    src="/images/post-default.jpg"
+                    alt="Imagen por defecto"
+                    class="rounded-lg shadow-md"
                 />
             </div>
         </div>

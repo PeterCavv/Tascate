@@ -591,7 +591,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     <Link
                         v-tooltip="isSidebarCollapsed ? 'Empleados' : null"
                         v-if="!isAuthenticated"
-                        href="/employees"
+                        href="/register"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
                             'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/employees'),

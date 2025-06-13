@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\TascaAdminOnlyManagerMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ManagerController;
 use App\Http\Middleware\ManagerAccessMiddleware;
@@ -22,5 +23,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('managers.destroy')->middleware(['auth', ManagerModifyMiddleware::class]);
     Route::post('/managers/{manager}/demote', [ManagerController::class, 'demote'])
         ->name('managers.demote')->middleware(['auth', ManagerModifyMiddleware::class]);
+
+    Route::post('/managers/{manager}/toggle-permission', [ManagerController::class, 'togglePermission'])
+        ->name('managers.toggle-permission')->middleware(['auth', TascaAdminOnlyManagerMiddleware::class]);
 });
 

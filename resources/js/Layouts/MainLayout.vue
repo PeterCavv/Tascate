@@ -52,7 +52,6 @@ function showModal() {
 }
 
 const toastControl = (toastMessage) => {
-    console.log(toastMessage);
     if (toastMessage) {
         toast.add({
             severity: toastMessage.severity ?? 'success',
@@ -66,7 +65,6 @@ const toastControl = (toastMessage) => {
 watch(
     () => page.props.toast,
     (toastMessage) => {
-        console.log(toastMessage);
         toastControl(toastMessage);
     },
     { immediate: true }

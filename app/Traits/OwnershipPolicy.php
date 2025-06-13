@@ -11,7 +11,7 @@ trait OwnershipPolicy
         if ($model instanceof User) {
             return $user->id === $model->id || $user->isAdmin();
         }
-        
+
         if (isset($model->user_id)) {
             return $user->id === $model->user_id || $user->isAdmin();
         }

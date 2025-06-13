@@ -75,7 +75,9 @@ return [
         'demoted' => 'Degradado',
         'welcome' => 'Bienvenido a Tascate',
         'welcome_details' => '¡Hola de nuevo, :name!',
-        'succes_details' => 'Tarea realizada correctamente'
+        'succes_details' => 'Tarea realizada correctamente',
+        'manager_permission_otorged' => 'Permiso otorgado',
+        'manager_permission_revoked' => 'Permiso revocado'
     ],
     'tasca_proposal' => [
         'title' => 'Propuesta de registro de Tasca',

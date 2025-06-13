@@ -63,7 +63,9 @@ return [
         'demoted' => 'Demoted',
         'welcome' => 'Welcome to Tascate',
         'welcome_details' => 'Hello again, :name!',
-        'succes_details' => 'Task completed successfully'
+        'succes_details' => 'Task completed successfully',
+        'manager_permission_otorged' => 'Permission granted',
+        'manager_permission_revoked' => 'Permission revoked'
     ],
     'tasca_proposal' => [
         'title' => 'Tasca registration proposal',

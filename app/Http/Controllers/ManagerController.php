@@ -153,4 +153,18 @@ class ManagerController extends Controller
                     'detail' => __('messages.toast.manager_demoted', ['name' => $manager->user->name]),
                 ]);
     }
+
+    public function togglePermission(Request $request, Manager $manager)
+    {
+        $manager->delete_permission = !$manager->delete_permission;
+        $manager->save();
+
+        return redirect()
+            ->route('employees.index')
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.updated'),
+                'detail' => $manager->delete_permission ? __('messages.toast.manager_permission_otorged', ['name' => $manager->user->name]) : __('messages.toast.manager_permission_revoked', ['name' => $manager->user->name]),
+            ]);
+    }
 }

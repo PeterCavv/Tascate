@@ -8,6 +8,8 @@ import Button from 'primevue/button';
 import {useI18n} from "vue-i18n";
 import InputIcon from "primevue/inputicon";
 import IconField from "primevue/iconfield";
+import ToggleSwitch from 'primevue/toggleswitch';
+
 
 const {t} = useI18n();
 
@@ -20,6 +22,8 @@ const props = defineProps({
     manager: Object,
     can: Object,
 });
+
+const check = !!props.manager.delete_permission;
 
 const showDeleteModal = ref(false);
 const employeeToDelete = ref(null);
@@ -68,6 +72,19 @@ const filteredEmployees = computed(() => {
         return nameMatches && tascaMatches;
     });
 });
+
+const updateDeletePermission = () => {
+    if (props.manager) {
+        form.post(route('managers.toggle-permission', props.manager), {
+            onSuccess: () => {
+                console.log(`Delete permission updated: ${props.manager.delete_permission}`);
+            },
+            onError: () => {
+                return t('messages.employees.error');
+            }
+        });
+    }
+};
 </script>
 
 <template>
@@ -100,21 +117,23 @@ const filteredEmployees = computed(() => {
             />
         </section>
 
-        <Card v-if="manager" class="hover:shadow-lg transition-shadow ">
-          <template #header>
-              <div class="flex items-center space-x-4 p-4 bg-lime-200 border border-lime-400 rounded-lg">
-                  <Avatar :image="manager.user.avatar || '/default-avatar.png'" :label="manager.user.name ? manager.user.name.charAt(0) : 'M'" size="large" shape="circle" class="border border-lime-500" />
+        <Card v-if="manager" class="hover:shadow-lg transition-shadow bg-green-200 border border-green-400 rounded-lg">
+          <template #content>
+              <div class="flex items-center space-x-4">
+                  <Avatar :image="manager.user.avatar || '/default-avatar.png'" :label="manager.user.name ? manager.user.name.charAt(0) : 'M'" size="large" shape="circle" class="border border-green-500" />
                   <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-lime-700 truncate">
-                          {{ manager.user.name }} <span class="text-xs text-lime-600">(Manager)</span>
+                      <p class="text-sm font-medium text-green-700 truncate">
+                          {{ manager.user.name }} <span class="text-xs text-green-600">(Manager)</span>
                       </p>
-                      <p class="text-sm text-lime-600 truncate">
+                      <p class="text-sm text-green-600 truncate">
                           {{ manager.user.email }}
                       </p>
+                          <div class="flex mt-2">
+                                <span class="text-sm text-green-600 mr-2">Permitir eliminacion de empleados</span>
+                              <ToggleSwitch v-model="check" @change="updateDeletePermission" v-if="$page.props.auth.is_tasca || $page.props.auth.is_admin"  />
+                          </div>
                   </div>
               </div>
-          </template>
-          <template #footer>
               <div class="flex justify-end space-x-2">
                   <Link :href="route('managers.show', manager)" v-if="$page.props.auth.is_tasca || $page.props.auth.is_admin">
                       <Button icon="pi pi-eye" severity="info" text rounded />

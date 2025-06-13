@@ -68,9 +68,9 @@ it('validates required fields', function () {
         ->expectsQuestion('What is the admin email?', '')
         ->expectsQuestion('What is the admin password?', '')
         ->assertExitCode(1)
-        ->expectsOutput('The name field is required.')
-        ->expectsOutput('The email field is required.')
-        ->expectsOutput('The password field is required.');
+        ->expectsOutput(__('validation.filled', ['attribute' => __('validation.attributes.name')]))
+        ->expectsOutput(__('validation.filled', ['attribute' => __('validation.attributes.email')]))
+        ->expectsOutput(__('validation.filled', ['attribute' => __('validation.attributes.password')]));
 });
 
 it('validates email format', function () {
@@ -80,7 +80,7 @@ it('validates email format', function () {
         ->expectsQuestion('What is the admin email?', 'invalid-email')
         ->expectsQuestion('What is the admin password?', 'password123')
         ->assertExitCode(1)
-        ->expectsOutput('The email field must be a valid email address.');
+        ->expectsOutput(__('validation.email', ['attribute' => __('validation.attributes.email')]));
 });
 
 it('validates password length', function () {
@@ -90,7 +90,10 @@ it('validates password length', function () {
         ->expectsQuestion('What is the admin email?', 'admin@tascate.com')
         ->expectsQuestion('What is the admin password?', 'short')
         ->assertExitCode(1)
-        ->expectsOutput('The password field must be at least 8 characters.');
+        ->expectsOutput(__('validation.min.string', [
+            'attribute' => __('validation.attributes.password'),
+            'min' => 8,
+        ]));
 });
 
 it('prevents duplicate admin creation without confirmation', function () {

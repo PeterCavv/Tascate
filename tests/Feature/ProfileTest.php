@@ -140,4 +140,4 @@ test('User avatar gets deleted when the user is deleted', function () {
         ->delete(route('users.destroy', $user));
 
     Storage::disk('public')->assertMissing($user->avatar);
-})->skip('Esta fallando de forma intermitente, revisar');
+});

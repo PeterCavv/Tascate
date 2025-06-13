@@ -62,6 +62,7 @@ const deleteUser = () => {
 };
 
 function edit_user() {
+    console.log(props.user.id)
     if (!props.user?.id) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'ID de usuario no disponible', life: 3000 });
         return;

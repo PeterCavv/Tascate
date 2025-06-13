@@ -7,6 +7,7 @@ import { createApp, h } from 'vue';
 import setupI18n from './i18n'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import ToastLayout from "@/Layouts/ToastLayout.vue";
+import Tooltip from 'primevue/tooltip';
 
 
 // PrimeVue imports
@@ -98,6 +99,7 @@ createInertiaApp({
         app.component('Breadcrumb', Breadcrumb);
 
         app.directive('keyfilter', KeyFilter);
+        app.directive('tooltip', Tooltip);
 
 
         app.mount(el);

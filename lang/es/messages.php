@@ -197,7 +197,8 @@ return [
     ],
     'employees' => [
         'title' => 'Empleados',
-        'desc' => 'Listado de todos los empleados de las tascas. Aquí los puedes crear, editar o eliminar.'
+        'desc' => 'Listado de todos los empleados de las tascas. Aquí los puedes crear, editar o eliminar.',
+        'no_employees' => 'No hay empleados disponibles para visualizar.'
     ]
 
 ];

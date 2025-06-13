@@ -156,6 +156,7 @@ const filteredEmployees = computed(() => {
               </div>
             </template>
           </Card>
+
             <Link
                 :href="route('employees.create')"
                 class="fixed bottom-10 right-12 z-50"
@@ -163,6 +164,9 @@ const filteredEmployees = computed(() => {
                 <Button label="Nuevo Empleado" icon="pi pi-user" />
             </Link>
         </div>
+      </div>
+      <div v-if="employees.length === 0" class="col-span-1 sm:col-span-2 lg:col-span-2 text-center">
+          <p>{{ t('messages.employees.no_employees') }}</p>
       </div>
 
     <!-- Delete Confirmation Dialog -->

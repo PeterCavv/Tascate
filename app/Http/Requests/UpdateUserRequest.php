@@ -24,7 +24,7 @@ class UpdateUserRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                'unique:users,email,' . $this->user()->id,
+                'unique:users,email,' . $this->user->id,
             ],
             'avatar' => ['nullable', 'file', 'image', 'max:2048'],
         ];

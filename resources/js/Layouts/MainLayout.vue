@@ -5,6 +5,7 @@ import Loading from "@/Components/Loading.vue";
 import Toast from "primevue/toast";
 import {useToast} from "primevue/usetoast";
 import {useI18n} from "vue-i18n";
+import {usePage} from "@inertiajs/vue3";
 // import AppBreadcrumb from "@/Components/BreadCrumb.vue";
 
 const page = usePage()
@@ -51,7 +52,6 @@ function showModal() {
 }
 
 const toastControl = (toastMessage) => {
-    console.log(toastMessage);
     if (toastMessage) {
         toast.add({
             severity: toastMessage.severity ?? 'success',
@@ -65,7 +65,6 @@ const toastControl = (toastMessage) => {
 watch(
     () => page.props.toast,
     (toastMessage) => {
-        console.log(toastMessage);
         toastControl(toastMessage);
     },
     { immediate: true }
@@ -209,7 +208,7 @@ watch(isSidebarCollapsed, (newValue) => {
                 <!-- Common User Links -->
                 <div v-if="!isTasca" class="space-y-2">
                     <Link
-                        v-if="$page.props.auth.user"
+                        v-tooltip="isSidebarCollapsed ? 'Tascas' : null"
                         href="/tascas"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
@@ -242,6 +241,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Tascas Guardadas' : null"
                         v-if="isAuthenticated && !isEmployee && !isManager"
                         href="/tascas/favorites"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -275,6 +275,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Usuarios' : null"
                         v-if="isAuthenticated && isAdmin"
                         href="/users"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -308,6 +309,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Posts' : null"
                         href="/posts"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
@@ -340,6 +342,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Posts Favoritos' : null"
                         v-if="isAuthenticated"
                         href="/liked-posts"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -376,6 +379,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Propuestas de Tascas' : null"
                         v-if="isAuthenticated && isAdmin"
                         href="/tascas-proposals"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -412,6 +416,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Empleados' : null"
                         v-if="(isAuthenticated && isAdmin) || (isAuthenticated && isTasca) || (isAuthenticated && isManager)"
                         href="/employees"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -448,6 +453,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Managers' : null"
                         v-if="(isAuthenticated && isAdmin) || (isAuthenticated && isTasca)"
                         href="/managers"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -481,6 +487,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Reservas' : null"
                         v-if="isAuthenticated && isCustomer"
                         href="/reservations"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -514,6 +521,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Perfil' : null"
                         v-if="$page.props.auth.user"
                         :href="`/users/${$page.props.auth.user.id}`"
 
@@ -533,7 +541,7 @@ watch(isSidebarCollapsed, (newValue) => {
                             'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
-                        <i class="pi pi-info-circle text-lg"></i>
+                        <i class="pi pi-user text-lg"></i>
                         <span
                           v-show="!isSidebarCollapsed"
                           class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
@@ -547,6 +555,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Login' : null"
                         v-if="!isAuthenticated"
                         href="/login"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -580,6 +589,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Empleados' : null"
                         v-if="!isAuthenticated"
                         href="/employees"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -616,6 +626,7 @@ watch(isSidebarCollapsed, (newValue) => {
                 <!-- Tasca Links -->
                 <div v-else class="space-y-2">
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Mi Tasca' : null"
                         :href="`/tascas/${currentUser?.tasca?.id}`"
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
                         :class="{
@@ -648,6 +659,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'Empleados' : null"
                         href="/employees"
 
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -680,6 +692,7 @@ watch(isSidebarCollapsed, (newValue) => {
                     </Link>
 
                     <Link
+                        v-tooltip="isSidebarCollapsed ? 'stock' : null"
                         href="/gestion"
 
                         class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
@@ -713,6 +726,7 @@ watch(isSidebarCollapsed, (newValue) => {
                 </div>
 
                 <Link
+                    v-tooltip="isSidebarCollapsed ? 'Logout' : null"
                     v-if="isAuthenticated"
                     href="/logout"
                     method="post"

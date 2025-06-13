@@ -23,14 +23,12 @@ const form = useForm({
 });
 
 const handleFileUpload = (event) => {
-    const files = event.target.files;
-    if (files.length > 0) {
-        form.pictures = Array.from(files);
-    }
+    form.pictures = event.files ?? [];
 };
 
 const submitForm = () => {
     form.post(route('posts.store'), {
+        preserveScroll: true,
         forceFormData: true,
         onSuccess: () => {
             form.reset();
@@ -44,6 +42,17 @@ const submitForm = () => {
                     life: 3000,
                 });
             });
+        },
+        transform: (data) => {
+            const formData = new FormData();
+            formData.append('title', data.title);
+            formData.append('content', data.content);
+
+            data.pictures.forEach((file, i) => {
+                formData.append('pictures[]', file); // <- clave
+            });
+
+            return formData;
         },
         preserveState: true,
     });
@@ -99,9 +108,13 @@ const submitForm = () => {
                 <FileUpload
                     type="file"
                     id="pictures"
-                    multiple
-                    @change="handleFileUpload"
-                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                    accept="image/*"
+                    :auto="false"
+                    :maxFileSize="2000000"
+                    :showUploadButton="false"
+                    @select="handleFileUpload"
+                    class="w-full"
+                    aria-labelledby="post_pictures"
                 />
                 <Message
                     v-if="form.errors.pictures"

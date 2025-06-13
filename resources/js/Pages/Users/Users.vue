@@ -8,6 +8,9 @@ import Button from 'primevue/button'
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import 'primeicons/primeicons.css';
+import EditUserDialog from "@/Components/EditUserForm.vue";
+
+const showEditDialog = ref(false);
 
 defineOptions({
     layout: MainLayout,
@@ -136,7 +139,7 @@ const filteredUsers = computed(() => {
                             icon="pi pi-pencil"
                             severity="info"
                             class="w-full"
-                            @click="router.visit(route('users.edit', { user: selectedUser.id }))"
+                            @click="showEditDialog = true"
                             :disabled="!selectedUser"
                         />
                         <Button
@@ -152,5 +155,10 @@ const filteredUsers = computed(() => {
             </div>
         </div>
     </div>
+
+    <EditUserDialog
+        :user="selectedUser"
+        v-model:visible="showEditDialog"
+    />
 </template>
 

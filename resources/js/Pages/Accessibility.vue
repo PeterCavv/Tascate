@@ -23,7 +23,7 @@ defineOptions({
                 Declaración de accesibilidad
             </h1>
             <p class="text-gray-600 text-base">
-                En <strong class="font-semibold text-indigo-600">Tascate</strong> nos comprometemos a ofrecer una experiencia
+                En <strong class="font-semibold text-green-600">Tascate</strong> nos comprometemos a ofrecer una experiencia
                 digital inclusiva y accesible para todas las personas, incluidas aquellas con discapacidad.
             </p>
 
@@ -32,18 +32,20 @@ defineOptions({
                     <h2 id="status-heading" class="text-2xl font-semibold text-gray-800">Estado de accesibilidad</h2>
                     <p>
                         Este sitio web ha sido desarrollado siguiendo las pautas de accesibilidad
-                        <strong class="text-indigo-700">WCAG 2.1 nivel AA</strong>.
+                        <strong class="text-green-600">WCAG 2.1 nivel AA</strong>.
                     </p>
                     <p>
                         Actualmente se encuentra en un estado de:
-                        <Tag severity="warn">En proceso de mejora</Tag>
+                        <Tag severity="info">Accesibilidad en desarrollo</Tag>
+                    </p>
+                    <p class="text-sm text-gray-600">
+                        El sitio cumple con aproximadamente el 80% de los criterios aplicables. Estamos comprometidos con su mejora continua.
                     </p>
                 </section>
 
                 <section aria-labelledby="measures-heading" class="space-y-3">
                     <h2 id="measures-heading" class="text-2xl font-semibold text-gray-800">Medidas adoptadas</h2>
                     <ul class="list-disc pl-6 space-y-1 text-gray-700">
-                        <li>Compatibilidad con lectores de pantalla.</li>
                         <li>Navegación mediante teclado.</li>
                         <li>Colores con contraste adecuado.</li>
                         <li>Alternativas textuales en imágenes y controles.</li>
@@ -54,8 +56,8 @@ defineOptions({
                 <section aria-labelledby="limitations-heading" class="space-y-3">
                     <h2 id="limitations-heading" class="text-2xl font-semibold text-gray-800">Limitaciones conocidas</h2>
                     <ul class="list-disc pl-6 text-sm text-gray-600">
+                        <li>No compatible con lectores de pantalla en toda la web.</li>
                         <li>Elementos interactivos sin etiquetas en algunas vistas.</li>
-                        <li>Algunos documentos PDF aún no están etiquetados correctamente.</li>
                     </ul>
                     <p class="text-sm text-gray-600 mt-1">Estamos trabajando activamente para solucionarlas.</p>
                 </section>
@@ -75,7 +77,7 @@ defineOptions({
                 </section>
 
                 <footer class="text-sm text-gray-500 border-t pt-4 mt-6">
-                    Última revisión: <time datetime="2025-05-19">19 de mayo de 2025</time>
+                    Última revisión: <time datetime="2025-05-19">13 de Junio de 2025</time>
                 </footer>
             </main>
         </div>

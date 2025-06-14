@@ -25,7 +25,7 @@ class ImpersonationController extends Controller
 
         Auth::login($user);
 
-        if($user->isCustomer()){
+        if($user->isCustomer() || $user->isManager() || $user->isEmployee()){
             return redirect()->route('tascas.index');
         } else {
             return redirect()->route('tascas.show', ['tasca' => $user->tasca->id]);

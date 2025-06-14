@@ -23,7 +23,8 @@ const props = defineProps({
     can: Object,
 });
 
-const check = !!props.manager.delete_permission;
+const check = computed(() => !!props.manager?.delete_permission);
+
 
 const showDeleteModal = ref(false);
 const employeeToDelete = ref(null);
@@ -75,9 +76,12 @@ const filteredEmployees = computed(() => {
 
 const updateDeletePermission = () => {
     if (props.manager) {
-        form.post(route('managers.toggle-permission', props.manager), {
+        form.post(route('managers.toggle-permission', {
+            ...props.manager,
+            delete_permission: check.value
+        }), {
             onSuccess: () => {
-                console.log(`Delete permission updated: ${props.manager.delete_permission}`);
+                console.log(`Delete permission updated: ${check.value}`);
             },
             onError: () => {
                 return t('messages.employees.error');

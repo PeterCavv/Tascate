@@ -39,7 +39,7 @@
                     <InputText
                         id="address"
                         v-model="form.address"
-                        v-keyfilter="/[a-zA-Z0-9 ,.]/"
+                        v-keyfilter="/[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ,.]/"
                         class="w-full"
                         maxlength="200"
                         aria-required="true"
@@ -141,7 +141,7 @@
                         <InputText
                             id="owner_name"
                             v-model="form.owner_name"
-                            v-keyfilter="/[a-zA-Z ]/"
+                            v-keyfilter="/[a-zA-ZáéíóúÁÉÍÓÚñÑ ]/"
                             class="w-full"
                             maxlength="50"
                             aria-required="true"

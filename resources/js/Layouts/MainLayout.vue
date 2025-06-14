@@ -240,39 +240,39 @@ watch(isSidebarCollapsed, (newValue) => {
 
                     </Link>
 
-                    <Link
-                        v-tooltip="isSidebarCollapsed ? 'Tascas Guardadas' : null"
-                        v-if="isAuthenticated && !isEmployee && !isManager"
-                        href="/tascas/favorites"
-                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"
-                        :class="{
-                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/tascas/favorites'),
-                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/tascas/favorites'),
-                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/tascas/favorites'),
-                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/tascas/favorites'),
-                            'text-green-600': isAdmin,
-                            'text-blue-600': isTasca,
-                            'text-yellow-700': isManager || isEmployee,
-                            'text-gray-600': !isAuthenticated || isCustomer,
-                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,
-                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,
-                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,
-                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
-                        }"
-                    >
-                        <i class="pi pi-bookmark text-lg"></i>
+<!--                    <Link-->
+<!--                        v-tooltip="isSidebarCollapsed ? 'Tascas Guardadas' : null"-->
+<!--                        v-if="isAuthenticated && !isEmployee && !isManager"-->
+<!--                        href="/tascas/favorites"-->
+<!--                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-300 ease-bounce hover:scale-[1.02]"-->
+<!--                        :class="{-->
+<!--                            'bg-green-300/70 text-green-900': isAdmin && currentUrl === ('/tascas/favorites'),-->
+<!--                            'bg-blue-300/70 text-blue-900': isTasca && currentUrl === ('/tascas/favorites'),-->
+<!--                            'bg-yellow-300/70 text-yellow-900': (isManager || isEmployee) && currentUrl === ('/tascas/favorites'),-->
+<!--                            'bg-gray-300/70 text-gray-900': (!isAuthenticated || isCustomer) && currentUrl === ('/tascas/favorites'),-->
+<!--                            'text-green-600': isAdmin,-->
+<!--                            'text-blue-600': isTasca,-->
+<!--                            'text-yellow-700': isManager || isEmployee,-->
+<!--                            'text-gray-600': !isAuthenticated || isCustomer,-->
+<!--                            'hover:bg-green-200/50 hover:text-green-900': isAdmin,-->
+<!--                            'hover:bg-blue-200/50 hover:text-blue-900': isTasca,-->
+<!--                            'hover:bg-yellow-200/50 hover:text-yellow-900': isManager || isEmployee,-->
+<!--                            'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer-->
+<!--                        }"-->
+<!--                    >-->
+<!--                        <i class="pi pi-bookmark text-lg"></i>-->
 
-                        <span
-                        v-show="!isSidebarCollapsed"
-                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-                        :class="{
-                          'opacity-100 translate-x-0': !isSidebarCollapsed,
-                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-                          'jelly': !isSidebarCollapsed
-                        }"
-                      >Tascas Guardadas</span>
+<!--                        <span-->
+<!--                        v-show="!isSidebarCollapsed"-->
+<!--                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"-->
+<!--                        :class="{-->
+<!--                          'opacity-100 translate-x-0': !isSidebarCollapsed,-->
+<!--                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,-->
+<!--                          'jelly': !isSidebarCollapsed-->
+<!--                        }"-->
+<!--                      >Tascas Guardadas</span>-->
 
-                    </Link>
+<!--                    </Link>-->
 
                     <Link
                         v-tooltip="isSidebarCollapsed ? 'Usuarios' : null"

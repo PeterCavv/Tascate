@@ -6,9 +6,11 @@ use App\Enums\Role;
 use App\Http\Requests\Tasca\UpdateTascaRequest;
 use App\Models\Reservation;
 use App\Models\Tasca;
+use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Log;
 
 class TascaController extends Controller
 {
@@ -17,31 +19,28 @@ class TascaController extends Controller
     public function index()
     {
         try {
-            $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
-                ->map(function ($tasca) {
-                    if(auth()->check()) {
-                        $user = auth()->user();
+            $user = auth()->user();
 
-                        if ($user->hasRole('admin')) {
-                            $tasca->is_favorite = true;
-                        } else {
-                            if($user->hasRole(Role::MANAGER->value) || $user->hasRole(Role::EMPLOYEE->value)) {
-                                $tasca->is_favorite = false;
-                            } else {
-                                $tasca->is_favorite = $user->customer ? $user->customer->favoriteTascas->contains($tasca->id) : false;
-                            }
-                        }
-                    } else {
-                        $tasca->is_favorite = false;
+            $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
+                ->map(function ($tasca) use ($user) {
+                    $tasca->is_favorite = false;
+
+                    if ($user && $user->hasRole(Role::CUSTOMER->value)) {
+                        $tasca->is_favorite = $user->customer?->favoriteTascas->contains($tasca->id) ?? false;
                     }
+
                     return $tasca;
-                });
+                })
+                ->values();
 
             return Inertia::render('Tascas/TascasIndex', [
                 'tascas' => $tascas,
+                'userFavoriteIds' => $user && $user->customer
+                    ? $user->customer->favoriteTascas->pluck('id')
+                    : [],
             ]);
-        } catch (\Exception $e) {
-            \Log::error('Error in TascaController@index: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error in TascaController@index: ' . $e->getMessage());
             return back()->with('error', 'An error occurred while loading tascas.');
         }
     }
@@ -117,7 +116,7 @@ class TascaController extends Controller
 
         $user = auth()->user();
 
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole(Role::ADMIN->value)) {
             return Inertia::render('Tascas/TascasIndex', [
                 'tascas' => collect(),
             ]);

@@ -1,9 +1,8 @@
 <script setup>
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, useForm, Head } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import FormLayout from "@/Layouts/FormLayout.vue";
 import InputText from 'primevue/inputtext';
-import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
 import FloatLabel from 'primevue/floatlabel';
 import {useToast} from "primevue/usetoast";
@@ -72,6 +71,7 @@ const submit = () => {
 </script>
 
 <template>
+    <Head :title="t('messages.employee_form.employee_create')"/>
     <FormLayout>
         <div class="w-full max-w-md mx-auto">
             <div class="text-center mb-6">

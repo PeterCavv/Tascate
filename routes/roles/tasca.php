@@ -10,7 +10,7 @@ use App\Http\Middleware\TascaAccessMiddleware;
 // Tascas Routes
 
 Route::get('/tascas', [TascaController::class, 'index'])->name('tascas.index');
-Route::get('/tascas/favorites', [TascaController::class, 'favoriteIndex'])->name('tascas.favorites')->middleware('auth');
+//Route::get('/tascas/favorites', [TascaController::class, 'favoriteIndex'])->name('tascas.favorites')->middleware('auth');
 Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.show');
 Route::get('/tascas/{tasca}/edit', [TascaController::class, 'edit'])->name('tascas.edit')->middleware(['auth', TascaAccessMiddleware::class]);
 Route::post('/tascas/{tasca}', [TascaController::class, 'update'])->name('tascas.update')->middleware(['auth', TascaAccessMiddleware::class]);

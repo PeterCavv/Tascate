@@ -53,6 +53,13 @@ function toggleFavorite(post) {
                     :src="`/storage/${post.pictures[0].picture_path}`"
                     alt="Post Image"
                     class="w-full h-48 object-cover"
+                    @error="$event.target.src = '/images/post-default.jpg'"
+                />
+                <img
+                    v-else
+                    src="/images/post-default.jpg"
+                    alt="Imagen por defecto"
+                    class="w-full h-48 object-cover"
                 />
                 <div class="p-4">
                     <h2 class="text-lg font-semibold text-gray-800 truncate">

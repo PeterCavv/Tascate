@@ -3,6 +3,10 @@ import {Head, router} from '@inertiajs/vue3'
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
 import {useI18n} from "vue-i18n";
+import {computed, ref} from "vue";
+import IconField from "primevue/iconfield";
+import InputIcon from "primevue/inputicon";
+import ToggleSwitch from "primevue/toggleswitch";
 
 const {tascas} = defineProps({
     tascas: Array,
@@ -23,7 +27,19 @@ function toggleFavorite(tasca) {
   });
 }
 
+const search = ref('')
+const favoriteOnly = ref(false)
 
+// Filtro por favoritos y nombre
+const filteredTascas = computed(() => {
+    const base = favoriteOnly.value
+        ? tascas.filter(t => t.is_favorite)
+        : tascas
+
+    return base.filter(t =>
+        t.name?.toLowerCase().includes(search.value.toLowerCase())
+    )
+})
 </script>
 
 <template>
@@ -35,10 +51,26 @@ function toggleFavorite(tasca) {
             <p class="text-gray-600 mt-1">{{ t('messages.tascas.desc') }}</p>
         </section>
 
+        <section class="flex items-center gap-2" aria-labelledby="search-filter">
+
+                <IconField>
+                    <InputIcon class="pi pi-search" />
+                    <InputText
+                        v-model="search"
+                        placeholder="Busca una propuesta"
+                        class="w-full max-w-[800px]"
+                    />
+                </IconField>
+                <template v-if="$page.props?.auth?.is_customer">
+                    <ToggleSwitch inputId="checkbox" v-model="favoriteOnly" binary/>
+                    <label for="checkbox" class="ml-1">Mostrar solo tascas guardadas..</label>
+                </template>
+        </section>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
             <div
                 v-if="tascas.length > 0"
-                v-for="tasca in tascas"
+                v-for="tasca in filteredTascas"
                 :key="tasca.id"
                 :title="t('messages.tascas.show_details')"
                 @click="router.visit(`/tascas/${tasca.id}`, { preserveState: true, preserveScroll: true })"

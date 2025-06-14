@@ -4,6 +4,7 @@ use App\Enums\Role;
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TascaController;
+use App\Http\Controllers\TascaProposalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -46,8 +47,6 @@ Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.
 
 require __DIR__.'/auth.php';
 
-// Tasca Proposals Routes
-
 
 // Imagenes privadas
 
@@ -68,11 +67,14 @@ Route::get('/imagen-privada/{path}', function (Request $request, $path) {
 })->where('path', '.*')->middleware('auth');
 
 
-// Accesibilidad
+// Public
 
 Route::get('/accessibility', function () {
     return Inertia::render('Accessibility');
 })->name('accessibility');
+
+Route::get('/register/tascas-proposals', [TascaProposalController::class, 'registerForm'])->name('tascas-proposals.create');
+Route::post('/register/tascas-proposals', [TascaProposalController::class, 'store'])->name('tascas-proposals.store');
 
 // RUTAS
 

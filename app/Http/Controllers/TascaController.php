@@ -22,7 +22,7 @@ class TascaController extends Controller
                     if(auth()->check()) {
                         $user = auth()->user();
 
-                        if ($user->hasRole('admin')) {
+                        if ($user->hasRole(Role::ADMIN->value)) {
                             $tasca->is_favorite = true;
                         } else {
                             if($user->hasRole(Role::MANAGER->value) || $user->hasRole(Role::EMPLOYEE->value)) {
@@ -117,7 +117,7 @@ class TascaController extends Controller
 
         $user = auth()->user();
 
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole(Role::ADMIN->value)) {
             return Inertia::render('Tascas/TascasIndex', [
                 'tascas' => collect(),
             ]);

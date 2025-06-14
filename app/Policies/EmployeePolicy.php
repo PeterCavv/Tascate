@@ -39,7 +39,9 @@ class EmployeePolicy
     public function delete(User $user, Employee $employee): bool
     {
         return $user->isAdmin() ||
-            ($user->isTasca() && $user->tasca->id === $employee->tasca_id);
+            ($user->isTasca() && $user->tasca->id === $employee->tasca_id)
+            || ($user->isManager() && $user->manager->tasca_id === $employee->tasca_id
+                && $user->manager->delete_permission);
     }
 
     public function promote(User $user, Employee $employee): bool

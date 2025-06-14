@@ -23,7 +23,7 @@ const props = defineProps({
     can: Object,
 });
 
-const check = !!props.manager.delete_permission;
+const check = !!props.manager?.delete_permission;
 
 const showDeleteModal = ref(false);
 const employeeToDelete = ref(null);

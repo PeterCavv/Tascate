@@ -2,8 +2,24 @@
 
 return [
     'welcome' => '¡Bienvenido a Tascate!',
-    'logout' => 'Cerrar sesión',
-    'profile' => 'Tu perfil',
+    'layout' => [
+        'my_tasca' => 'Mi Tasca',
+        'tascas' => 'Tascas',
+        'tasca_proposal' => 'Propuesta de Tasca',
+        'employees' => 'Empleados',
+        'managers' => 'Managers',
+        'reservations' => 'Reservas',
+        'posts' => 'Posts',
+        'fav_posts' => 'Posts favoritos',
+        'profile' => 'Perfil',
+        'users' => 'Usuarios',
+        'tasca_proposal_list' => 'Propuestas de Tascas',
+        'register' => 'Registrarse',
+        'login' => 'Iniciar sesión',
+        'logout' => 'Cerrar sesión',
+        'accessibility' => 'Accesibilidad',
+        'stop_impersonation' => 'Volver',
+    ],
     'user_data' => [
         'name' => 'Nombre',
         'email' => 'Correo electrónico',

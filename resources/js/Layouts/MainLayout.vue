@@ -236,7 +236,7 @@ watch(isSidebarCollapsed, (newValue) => {
                               'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                               'jelly': !isSidebarCollapsed
                             }"
-                          >Tascas</span>
+                          >{{ t('messages.layout.tascas') }}</span>
 
                     </Link>
 
@@ -304,7 +304,7 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                             'jelly': !isSidebarCollapsed
                           }"
-                        >Usuarios</span>
+                        >{{ t('messages.layout.users') }}</span>
 
                     </Link>
 
@@ -337,7 +337,7 @@ watch(isSidebarCollapsed, (newValue) => {
                           'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                           'jelly': !isSidebarCollapsed
                         }"
-                      >Posts</span>
+                      >{{ t('messages.layout.posts') }}</span>
 
                     </Link>
 
@@ -371,9 +371,8 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                             'jelly': !isSidebarCollapsed
                           }"
-
                         >
-                            Posts Favoritos
+                            {{ t('messages.layout.fav_posts') }}
                         </span>
 
                     </Link>
@@ -401,7 +400,6 @@ watch(isSidebarCollapsed, (newValue) => {
                         <i class="pi pi-send text-lg"></i>
 
                         <span
-
                           v-show="!isSidebarCollapsed"
                           class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
                           :class="{
@@ -410,7 +408,7 @@ watch(isSidebarCollapsed, (newValue) => {
                             'jelly': !isSidebarCollapsed
                           }"
                         >
-                            Peticiones de Tascas
+                            {{ t('messages.layout.tasca_proposal_list') }}
                         </span>
 
                     </Link>
@@ -445,10 +443,9 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                             'jelly': !isSidebarCollapsed
                           }"
-
                         >
-                        Empleados
-                      </span>
+                            {{ t('messages.layout.employees') }}
+                        </span>
 
                     </Link>
 
@@ -482,7 +479,9 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                             'jelly': !isSidebarCollapsed
                           }"
-                        >Managers</span>
+                        >
+                            {{ t('messages.layout.managers') }}
+                        </span>
 
                     </Link>
 
@@ -509,15 +508,16 @@ watch(isSidebarCollapsed, (newValue) => {
                         <i class="pi pi-calendar text-lg"></i>
 
                         <span
-                        v-show="!isSidebarCollapsed"
-                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-                        :class="{
-                          'opacity-100 translate-x-0': !isSidebarCollapsed,
-                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-                          'jelly': !isSidebarCollapsed
-                        }"
-                      >Reservas</span>
-
+                            v-show="!isSidebarCollapsed"
+                            class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                            :class="{
+                              'opacity-100 translate-x-0': !isSidebarCollapsed,
+                              'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                              'jelly': !isSidebarCollapsed
+                            }"
+                        >
+                            {{ t('messages.layout.reservations') }}
+                        </span>
                     </Link>
 
                     <Link
@@ -550,8 +550,9 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                             'jelly': !isSidebarCollapsed
                           }"
-                        >Perfil</span>
-
+                        >
+                            {{ t('messages.layout.profile') }}
+                        </span>
                     </Link>
 
                     <Link
@@ -584,7 +585,9 @@ watch(isSidebarCollapsed, (newValue) => {
                           'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                           'jelly': !isSidebarCollapsed
                         }"
-                      >Login</span>
+                        >
+                            {{ t('messages.layout.login') }}
+                        </span>
 
                     </Link>
 
@@ -611,14 +614,16 @@ watch(isSidebarCollapsed, (newValue) => {
                         <i class="pi pi-user-plus text-lg"></i>
 
                         <span
-                        v-show="!isSidebarCollapsed"
-                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-                        :class="{
-                          'opacity-100 translate-x-0': !isSidebarCollapsed,
-                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-                          'jelly': !isSidebarCollapsed
-                        }"
-                      >Registro</span>
+                            v-show="!isSidebarCollapsed"
+                            class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                            :class="{
+                              'opacity-100 translate-x-0': !isSidebarCollapsed,
+                              'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                              'jelly': !isSidebarCollapsed
+                            }"
+                        >
+                            {{ t('messages.layout.register') }}
+                        </span>
 
                     </Link>
                 </div>
@@ -647,14 +652,16 @@ watch(isSidebarCollapsed, (newValue) => {
                         <i class="pi pi-home text-lg"></i>
 
                         <span
-                        v-show="!isSidebarCollapsed"
-                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-                        :class="{
-                          'opacity-100 translate-x-0': !isSidebarCollapsed,
-                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-                          'jelly': !isSidebarCollapsed
-                        }"
-                      >Mi Tasca</span>
+                            v-show="!isSidebarCollapsed"
+                            class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                            :class="{
+                              'opacity-100 translate-x-0': !isSidebarCollapsed,
+                              'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                              'jelly': !isSidebarCollapsed
+                            }"
+                        >
+                            {{ t('messages.layout.my_tasca') }}
+                        </span>
 
                     </Link>
 
@@ -680,14 +687,16 @@ watch(isSidebarCollapsed, (newValue) => {
                     >
                         <i class="pi pi-users text-lg"></i>
                         <span
-                        v-show="!isSidebarCollapsed"
-                        class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-                        :class="{
-                          'opacity-100 translate-x-0': !isSidebarCollapsed,
-                          'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-                          'jelly': !isSidebarCollapsed
-                        }"
-                      >Empleados</span>
+                            v-show="!isSidebarCollapsed"
+                            class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                            :class="{
+                              'opacity-100 translate-x-0': !isSidebarCollapsed,
+                              'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                              'jelly': !isSidebarCollapsed
+                            }"
+                        >
+                            {{ t('messages.layout.employees') }}
+                        </span>
 
                     </Link>
 
@@ -711,16 +720,19 @@ watch(isSidebarCollapsed, (newValue) => {
                             'hover:bg-gray-200/50 hover:text-gray-900': !isAuthenticated || isCustomer
                         }"
                     >
-                        <i class="pi pi-box text-lg"></i>
+                        <i class="pi pi-folder-open text-lg"></i>
+
                         <span
-                    v-show="!isSidebarCollapsed"
-                    class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
-                    :class="{
-                      'opacity-100 translate-x-0': !isSidebarCollapsed,
-                      'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
-                      'jelly': !isSidebarCollapsed
-                    }"
-                  >Stock</span>
+                            v-show="!isSidebarCollapsed"
+                            class="ml-3 transition-all duration-300 ease-soft text-sm inline-block opacity-0 translate-x-[-10px] link-text"
+                            :class="{
+                              'opacity-100 translate-x-0': !isSidebarCollapsed,
+                              'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
+                              'jelly': !isSidebarCollapsed
+                            }"
+                        >
+                            {{ t('messages.layout.reservations') }}
+                        </span>
 
                     </Link>
                 </div>
@@ -743,7 +755,9 @@ watch(isSidebarCollapsed, (newValue) => {
                       'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed,
                       'jelly': !isSidebarCollapsed
                     }"
-                  >Logout</span>
+                    >
+                        {{ t('messages.layout.logout') }}
+                    </span>
 
                 </Link>
             </nav>
@@ -762,7 +776,7 @@ watch(isSidebarCollapsed, (newValue) => {
                             'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed
                         }"
                     >
-                        Accesibilidad
+                        {{ t('messages.layout.accessibility') }}
                     </span>
                 </Link>
 
@@ -794,7 +808,7 @@ watch(isSidebarCollapsed, (newValue) => {
                                 'opacity-0 -translate-x-2 pointer-events-none': isSidebarCollapsed
                             }"
                         >
-                            Volver
+                            {{ t('messages.layout.stop_impersonation') }}
                         </span>
                     </Link>
                 </div>

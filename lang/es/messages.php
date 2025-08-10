@@ -32,6 +32,7 @@ return [
     ],
     'tascas' => [
         'list' => 'Lista de Tascas',
+        'show_favorites' => 'Mostrar solo tascas guardadas.',
         'desc' => 'Navega entre las tascas. ¡Descubre nuevos sabores y expande horizontes!',
         'no_tascas' => 'No hay Tascas disponibles. ¡Mantente atento a las actualizaciones!',
         'no_ratings' => 'Sin calificar',

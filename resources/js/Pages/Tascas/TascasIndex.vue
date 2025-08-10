@@ -63,7 +63,7 @@ const filteredTascas = computed(() => {
                 </IconField>
                 <template v-if="$page.props?.auth?.is_customer">
                     <ToggleSwitch inputId="checkbox" v-model="favoriteOnly" binary/>
-                    <label for="checkbox" class="ml-1">Mostrar solo tascas guardadas..</label>
+                    <label for="checkbox" class="ml-1">{{ t('messages.tascas.show_favorites') }}</label>
                 </template>
         </section>
 

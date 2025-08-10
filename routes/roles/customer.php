@@ -2,6 +2,8 @@
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OnlyCommentUserMiddleware;
 use App\Http\Middleware\OnlyPostUserMiddleware;
+use Illuminate\Http\Request;
+use App\Services\PayPalService;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostCommentController;
@@ -21,6 +23,18 @@ Route::put('/posts/{comment}/edit', [PostCommentController::class, 'update'])->n
 Route::delete('/posts/{comment}/delete', [PostCommentController::class, 'destroy'])->name('posts.comment.delete')->middleware(['auth', OnlyCommentUserMiddleware::class]);
 Route::post('/posts/comment/{comment}/response', [PostCommentController::class, 'response'])->name('posts.comment.response')->middleware('auth');
 
+// Payment Routes
+
+Route::post('/paypal/create-order', function (Request $request, PayPalService $paypal) {
+    $order = $paypal->createOrder($request->input('total', 10.00));
+    return response()->json($order);
+});
+
+Route::post('/paypal/capture-order', function (Request $request, PayPalService $paypal) {
+    $orderId = $request->input('orderID');
+    $capture = $paypal->captureOrder($orderId);
+    return response()->json($capture);
+});
 
 //  Review Routes
 

@@ -21,6 +21,16 @@ class Reservation extends Model
         'observations',
     ];
 
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function tasca(): BelongsTo
+    {
+        return $this->belongsTo(Tasca::class);
+    }
+
     #[Scope]
     public function filter(Builder $query, Collection $filters): void
     {
@@ -39,15 +49,5 @@ class Reservation extends Model
                     )
             )
         );
-    }
-
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class);
-    }
-
-    public function tasca(): BelongsTo
-    {
-        return $this->belongsTo(Tasca::class);
     }
 }

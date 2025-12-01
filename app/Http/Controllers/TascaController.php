@@ -7,44 +7,45 @@ use App\Http\Requests\Tasca\UpdateTascaRequest;
 use App\Models\Reservation;
 use App\Models\Tasca;
 use App\Models\User;
-use Exception;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 use Inertia\Response;
 
 class TascaController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index(#[CurrentUser] ?User $user): Response
+    public function index(#[CurrentUser] ?User $user = null): Response
     {
-        try {
-            $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
-                ->map(function ($tasca) use ($user) {
-                    $tasca->is_favorite = false;
+        $filters = collect([
+            'search' => request()->query('search'),
+            'only_favorites' => request('only_favorites'),
+        ]);
 
-                    if ($user && $user->hasRole(Role::CUSTOMER->value)) {
-                        $tasca->is_favorite = $user->customer?->favoriteTascas->contains($tasca->id) ?? false;
-                    }
+        $query = Tasca::with([
+                'reviews:id,rating,tasca_id',
+            ])
+            ->latest()
+            ->filter($filters, $user);
 
-                    return $tasca;
-                })
-                ->values();
+        $pagination = $query->paginate(10)
+            ->withQueryString()
+            ->through(fn ($tasca) => [
+                'id' => $tasca->id,
+                'name' => $tasca->name,
+                'address' => $tasca->address,
+                'picture' => $tasca->picture,
+                'average_rating' => $tasca->averageRating,
+                'is_favorite' => $tasca->isFavorite($user),
+        ]);
 
-            return Inertia::render('Tascas/TascasIndex', [
-                'tascas' => $tascas,
-                'userFavoriteIds' => $user && $user->customer
-                    ? $user->customer->favoriteTascas->pluck('id')
-                    : [],
-            ]);
-        } catch (Exception $e) {
-            Log::error('Error in TascaController@index: ' . $e->getMessage());
-            return back()->with('error', 'An error occurred while loading tascas.');
-        }
+        return inertia('Tascas/TascasIndex', [
+            'filters' => $filters,
+            'pagination' => $pagination,
+        ]);
     }
 
     public function show(#[CurrentUser] ?User $user, Tasca $tasca): Response

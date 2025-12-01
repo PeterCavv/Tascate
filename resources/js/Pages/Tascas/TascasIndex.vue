@@ -1,24 +1,57 @@
 <script setup>
 import {Head, router} from '@inertiajs/vue3'
 import MainLayout from "@/Layouts/MainLayout.vue";
-import { useRatingCalculator } from "@/Composables/useRatingCalculator.js";
 import {useI18n} from "vue-i18n";
-import {computed, ref} from "vue";
 import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import ToggleSwitch from "primevue/toggleswitch";
+import { reactive, ref } from "vue";
+import pickBy from 'lodash/pickBy';
+import { Paginator } from "primevue";
+import { watchThrottled } from '@vueuse/core';
 
-const {tascas} = defineProps({
-    tascas: Array,
-})
+defineOptions({
+    layout: MainLayout,
+});
 
 const { t } = useI18n();
 
-const { getRoundedRating } = useRatingCalculator();
+const props = defineProps({
+    filters: Object,
+    pagination: Object,
+})
 
-defineOptions({
-        layout: MainLayout,
+const params = reactive({
+    search: props.filters.search,
 });
+
+const rows = ref(props.pagination.per_page);
+const first = ref((props.pagination.current_page - 1) * props.pagination.per_page);
+
+const favoriteOnly = ref(props.filters.only_favorites ?? false)
+
+watchThrottled(
+    params,
+    () => {
+        first.value = 0;
+        router.get(
+            route('tascas.index'),
+            pickBy({
+                ...params,
+                only_favorites: favoriteOnly.value,
+            }),
+            {
+                preserveState: true,
+                replace: true,
+            }
+        )
+    },
+    { throttle: 300 }
+)
+
+const getRoundedRating = (tasca) => {
+    return tasca.average_rating ?? 0;
+};
 
 function toggleFavorite(tasca) {
   router.post(route('tascas.toggle-favorite', tasca), {}, {
@@ -26,20 +59,6 @@ function toggleFavorite(tasca) {
     preserveScroll: true,
   });
 }
-
-const search = ref('')
-const favoriteOnly = ref(false)
-
-// Filtro por favoritos y nombre
-const filteredTascas = computed(() => {
-    const base = favoriteOnly.value
-        ? tascas.filter(t => t.is_favorite)
-        : tascas
-
-    return base.filter(t =>
-        t.name?.toLowerCase().includes(search.value.toLowerCase())
-    )
-})
 </script>
 
 <template>
@@ -52,25 +71,24 @@ const filteredTascas = computed(() => {
         </section>
 
         <section class="flex items-center gap-2" aria-labelledby="search-filter">
-
                 <IconField>
                     <InputIcon class="pi pi-search" />
                     <InputText
-                        v-model="search"
+                        v-model="params.search"
                         placeholder="Busca una propuesta"
                         class="w-full max-w-[800px]"
                     />
                 </IconField>
                 <template v-if="$page.props?.auth?.is_customer">
-                    <ToggleSwitch inputId="checkbox" v-model="favoriteOnly" binary/>
-                    <label for="checkbox" class="ml-1">Mostrar solo tascas guardadas..</label>
+                    <ToggleSwitch inputId="checkbox" v-model="props.filters.only_favorites" binary/>
+                    <label for="checkbox" class="ml-1">Mostrar solo tascas guardadas.</label>
                 </template>
         </section>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-6">
             <div
-                v-if="tascas.length > 0"
-                v-for="tasca in filteredTascas"
+                v-if="pagination.data.length > 0"
+                v-for="tasca in pagination.data"
                 :key="tasca.id"
                 :title="t('messages.tascas.show_details')"
                 @click="router.visit(`/tascas/${tasca.id}`, { preserveState: true, preserveScroll: true })"
@@ -97,14 +115,12 @@ const filteredTascas = computed(() => {
                             <div class="flex items-center mb-1 ">
                                 <h2 class="text-2xl font-extrabold truncate">{{ tasca.name }}</h2>
                                 <div class="flex items-center ml-2">
-                                    <template v-if="tasca.reviews.length > 0" v-for="i in 5" :key="i">
+                                    <template v-for="i in 5" :key="i">
                                         <span v-if="i <= getRoundedRating(tasca)" class="text-yellow-400 text-base">★</span>
                                         <span v-else class="text-base">☆</span>
                                     </template>
-                                    <template v-else>
-                                        <span class="text-sm ml-2">
-                                            {{ t('messages.tascas.no_ratings') }}
-                                        </span>
+                                    <template v-if="getRoundedRating(tasca) === 0">
+                                        <span class="text-sm ml-2">{{ t('messages.tascas.no_ratings') }}</span>
                                     </template>
                                 </div>
                             </div>
@@ -118,6 +134,16 @@ const filteredTascas = computed(() => {
             </div>
         </div>
     </div>
+    <div class="w-full mt-6">
+        <Paginator
+            v-model:first="first"
+            :rows="rows"
+            :totalRecords="props.pagination.total"
+            currentPageReportTemplate="{first} de {last}"
+            template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            class="w-full bg-transparent border-0"
+        />
+    </div>
 </template>
 
 <style>
@@ -130,6 +156,17 @@ const filteredTascas = computed(() => {
 }
 .slide-leave-to {
     transform: translateX(100%);
+}
+</style>
+
+<style scoped>
+::v-deep(.p-paginator) {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+::v-deep(.p-paginator-pages) {
+    background-color: transparent !important;
 }
 </style>
 

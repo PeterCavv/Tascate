@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUserRequest extends FormRequest
 {
-
     public function prepareForValidation()
     {
         if ($this->has('_method')) {

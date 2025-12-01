@@ -6,7 +6,6 @@ use App\Http\Controllers\TascaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\TascaAccessMiddleware;
 
-
 // Tascas Routes
 
 Route::get('/tascas', [TascaController::class, 'index'])->name('tascas.index');
@@ -15,7 +14,7 @@ Route::get('/tascas/{tasca}', [TascaController::class, 'show'])->name('tascas.sh
 Route::get('/tascas/{tasca}/edit', [TascaController::class, 'edit'])->name('tascas.edit')->middleware(['auth', TascaAccessMiddleware::class]);
 Route::post('/tascas/{tasca}', [TascaController::class, 'update'])->name('tascas.update')->middleware(['auth', TascaAccessMiddleware::class]);
 Route::post('/tascas/{tasca}/toggle-favorite', [TascaController::class, 'toggleFavorite'])->name('tascas.toggle-favorite')->middleware('auth');
-Route::get('/{tasca}/map-set',[TascaController::class, 'editTascaLocation'])->name('tascas.map-set')->middleware(['auth', TascaAccessMiddleware::class]);
+Route::get('/{tasca}/map-set', [TascaController::class, 'editTascaLocation'])->name('tascas.map-set')->middleware(['auth', TascaAccessMiddleware::class]);
 Route::post('/{tasca}/map-set', [TascaController::class, 'setTascaLocation'])->name('update.map')->middleware(['auth', TascaAccessMiddleware::class]);
 
 Route::get('/gestion', [TascaController::class, 'gestion'])->name('tascas.gestion')->middleware(['auth', TascaAccessMiddleware::class]);

@@ -18,7 +18,6 @@ use Illuminate\Container\Attributes\CurrentUser;
 
 class ReservationController extends Controller
 {
-
     use AuthorizesRequests;
 
     public function index(#[CurrentUser] ?User $user): Response
@@ -68,12 +67,12 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function store(StoreReservationRequest $request, #[CurrentUser] ?User $user, ): RedirectResponse
+    public function store(StoreReservationRequest $request, #[CurrentUser] ?User $user): RedirectResponse
     {
         $this->authorize('create', Reservation::class);
 
         $validated = $request->validated();
-    
+
         $reservation = new Reservation($validated);
 
         $reservation->customer()->associate($user->customer);
@@ -96,7 +95,7 @@ class ReservationController extends Controller
                 $reservation->tasca
             )
         );
-      
+
         return redirect()->route('reservations.show', $reservation)
             ->with('toast', [
                 'severity' => 'success',
@@ -111,7 +110,8 @@ class ReservationController extends Controller
 
         event(new ReservationCancelEvent($reservation, $reservation->customer, $reservation->tasca));
 
-        return to_route('reservations.index',
+        return to_route(
+            'reservations.index',
         )->with('toast', [
             'severity' => 'success',
             'summary' => __('messages.toast.deleted'),

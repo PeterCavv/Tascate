@@ -18,4 +18,4 @@ class CommentSeeder extends Seeder
 
         \Database\Factories\CommentFactory::new()->count(20)->create();
     }
-} 
+}

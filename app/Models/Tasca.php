@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use \App\Traits\GetRandomOrCreate;
-
+use App\Traits\GetRandomOrCreate;
 
 class Tasca extends Model
 {
-    use HasFactory, GetRandomOrCreate;
+    use HasFactory;
+    use GetRandomOrCreate;
 
     protected $fillable = [
         'user_id',

@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Observers\PostObserver;
-use \App\Traits\GetRandomOrCreate;
-
+use App\Traits\GetRandomOrCreate;
 
 #[ObservedBy([PostObserver::class])]
 class Post extends Model
 {
-    use HasFactory, GetRandomOrCreate;
+    use HasFactory;
+    use GetRandomOrCreate;
 
     protected $fillable = [
        'user_id',

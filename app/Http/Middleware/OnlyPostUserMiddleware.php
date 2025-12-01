@@ -11,7 +11,7 @@ class OnlyPostUserMiddleware
     {
         if (auth()->user()->id === $request->route('post')->user_id) {
             return $next($request);
-        }else{
+        } else {
             return redirect()->route('tascas.index')->with('error', 'Solo puedes actuar sobre tus posts');
         }
     }

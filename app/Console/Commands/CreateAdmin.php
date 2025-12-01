@@ -67,7 +67,7 @@ class CreateAdmin extends Command
             'email_verified_at' => now(),
         ]);
 
-        $user->assignRole( \App\Enums\Role::ADMIN->value);
+        $user->assignRole(\App\Enums\Role::ADMIN->value);
 
         $this->info('Admin user created successfully!');
         $this->table(

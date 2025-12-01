@@ -7,10 +7,8 @@ use App\Models\Tasca;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 class TascaFactory extends Factory
 {
-
     protected $model = Tasca::class;
 
     public function definition(): array

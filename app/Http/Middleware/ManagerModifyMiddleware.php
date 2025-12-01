@@ -21,7 +21,7 @@ class ManagerModifyMiddleware
             return redirect()->route('tascas.index')->with('error', 'Acceso denegado.');
         }
 
-        if ($manager){
+        if ($manager) {
             if (auth()->user()->hasRole(Role::TASCA->value)) {
                 if ($manager->tasca_id !== auth()->user()->tasca->id) {
                     return redirect()->route('tascas.index')->with('error', 'No tienes acceso a este manager.');
@@ -30,7 +30,7 @@ class ManagerModifyMiddleware
             if (auth()->user()->hasRole(Role::MANAGER->value)) {
                 if ($manager->tasca_id !== auth()->user()->manager->tasca_id) {
                     return redirect()->route('tascas.index')->with('error', 'No tienes acceso a este manager.');
-                }else {
+                } else {
                     if (auth()->user()->hasRole(Role::MANAGER->value)) {
                         if ($manager->user->id === auth()->user()->id) {
                             return $next($request);

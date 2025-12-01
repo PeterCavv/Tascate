@@ -45,7 +45,7 @@ class PostController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        if ($request->hasFile('pictures')){
+        if ($request->hasFile('pictures')) {
             foreach ($validated['pictures'] as $picture) {
                 $post->pictures()->create([
                     'picture_path' => $picture->store('PicturePosts', 'public'),
@@ -60,7 +60,7 @@ class PostController extends Controller
             ]);
     }
 
-    public function show (Post $post)
+    public function show(Post $post)
     {
 
         $post->load('user', 'pictures', 'likedByUsers', 'comments');
@@ -106,7 +106,8 @@ class PostController extends Controller
                 'severity' => 'success',
                 'summary' => __('messages.toast.updated'),
                 'detail' => __('messages.toast.post_updated'),
-            ]);;
+            ]);
+        ;
     }
 
     public function destroy(Post $post)

@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Traits;
-use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Model;
 
 trait GetRandomOrCreate
 {
@@ -19,4 +19,3 @@ trait GetRandomOrCreate
         return $existingModel ?? static::create($attributes);
     }
 }
-

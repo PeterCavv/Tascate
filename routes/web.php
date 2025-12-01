@@ -9,7 +9,6 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-
 Route::get('/', function () {
     return app(TascaController::class)->index();
 })->name('welcome');
@@ -52,8 +51,9 @@ require __DIR__.'/auth.php';
 
 Route::get('/imagen-privada/{path}', function (Request $request, $path) {
 
-    if(!auth()->user() && auth()->user()->role !== Role::ADMIN->value)
+    if (!auth()->user() && auth()->user()->role !== Role::ADMIN->value) {
         abort(403);
+    }
 
     $path = str_replace('..', '', $path);
     if (!Storage::disk('private')->exists($path)) {

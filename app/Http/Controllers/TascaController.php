@@ -6,21 +6,23 @@ use App\Enums\Role;
 use App\Http\Requests\Tasca\UpdateTascaRequest;
 use App\Models\Reservation;
 use App\Models\Tasca;
+use App\Models\User;
 use Exception;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Log;
+use Illuminate\Support\Facades\Log;
+use Inertia\Response;
 
 class TascaController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index()
+    public function index(#[CurrentUser] ?User $user): Response
     {
         try {
-            $user = auth()->user();
-
             $tascas = Tasca::with('user', 'reservations', 'reviews.customer.user')->get()
                 ->map(function ($tasca) use ($user) {
                     $tasca->is_favorite = false;
@@ -45,37 +47,37 @@ class TascaController extends Controller
         }
     }
 
-    public function show(Tasca $tasca)
+    public function show(#[CurrentUser] ?User $user, Tasca $tasca): Response
     {
         if ($tasca->picture) {
             $tasca->picture = asset($tasca->picture);
         }
         $tasca_picture_path = $tasca->picture;
-        if (auth()->check()){
-            if(auth()->user()->hasRole(Role::CUSTOMER->value)) {
-            $tasca->is_favorite = auth()->user() ?
-            auth()->user()->customer->favoriteTascas->contains($tasca->id) : false;
+        if (auth()->check()) {
+            if (auth()->user()->hasRole(Role::CUSTOMER->value)) {
+                $tasca->is_favorite = auth()->user() ?
+                auth()->user()->customer->favoriteTascas->contains($tasca->id) : false;
             } else {
                 $tasca->is_favorite = false;
             }
         }
 
-        return Inertia::render('Tascas/TascaShow', [
+        return inertia('Tascas/TascaShow', [
             'tasca' => $tasca->load('user', 'reservations', 'reviews.customer.user'),
             'tasca_picture_path' => $tasca_picture_path,
-            'user_review' => auth()->user() ?
-                auth()->user()->customer?->reviews?->where('tasca_id', $tasca->id) : null,
+            'user_review' => $user ?
+                $user->customer?->reviews?->where('tasca_id', $tasca->id) : null,
         ]);
     }
 
-    public function edit(Tasca $tasca)
+    public function edit(Tasca $tasca): Response
     {
-        return Inertia::render('Tascas/TascaEdit', [
+        return inertia('Tascas/TascaEdit', [
             'tasca' => $tasca,
         ]);
     }
 
-    public function update(UpdateTascaRequest $request, Tasca $tasca)
+    public function update(UpdateTascaRequest $request, Tasca $tasca): RedirectResponse
     {
         $this->authorize('update', $tasca);
 
@@ -89,7 +91,7 @@ class TascaController extends Controller
 
         $tasca->update($validated);
 
-        return redirect()->route('tascas.show', $tasca)
+        return to_route('tascas.show', $tasca)
             ->with('toast', [
                 'severity' => 'success',
                 'summary' => __('messages.toast.updated'),
@@ -123,9 +125,9 @@ class TascaController extends Controller
         }
 
         $favoriteTascas = $user->customer->favoriteTascas->load('user', 'reservations', 'reviews.customer.user')
-            ->map(function ($tasca ) use ($user) {
-                    $tasca->is_favorite = true;
-                    return $tasca;
+            ->map(function ($tasca) use ($user) {
+                $tasca->is_favorite = true;
+                return $tasca;
             });
 
         return Inertia::render('Tascas/TascasIndex', [
@@ -133,7 +135,8 @@ class TascaController extends Controller
         ]);
     }
 
-    public function editTascaLocation(Tasca $tasca){
+    public function editTascaLocation(Tasca $tasca)
+    {
 
         $this->authorize('update', $tasca);
 
@@ -156,8 +159,10 @@ class TascaController extends Controller
 
         $tasca->save();
 
-        return redirect()->route('tascas.show', $tasca)->with('success',
-            'Ubicación de la tasca actualizada correctamente.');
+        return redirect()->route('tascas.show', $tasca)->with(
+            'success',
+            'Ubicación de la tasca actualizada correctamente.'
+        );
     }
     public function gestion()
     {

@@ -9,7 +9,8 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ReservationPolicy
 {
-    use HandlesAuthorization, OwnershipPolicy;
+    use HandlesAuthorization;
+    use OwnershipPolicy;
 
     public function viewAny(User $user): bool
     {

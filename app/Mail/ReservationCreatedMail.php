@@ -13,7 +13,8 @@ use App\Models\Tasca;
 
 class ReservationCreatedMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Tasca $tasca;
     public Customer $customer;

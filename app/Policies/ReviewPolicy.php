@@ -10,15 +10,16 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ReviewPolicy
 {
-    use HandlesAuthorization, OwnershipPolicy;
+    use HandlesAuthorization;
+    use OwnershipPolicy;
 
     public function create(User $user, Review $review): bool
     {
-        if(!$user->isCustomer() || !$user->customer){
+        if (!$user->isCustomer() || !$user->customer) {
             return false;
         }
 
-        if(!$review->tasca_id){
+        if (!$review->tasca_id) {
             return false;
         }
 

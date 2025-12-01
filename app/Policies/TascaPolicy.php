@@ -12,7 +12,7 @@ class TascaPolicy
 
     public function addFavorite(User $user, Tasca $tasca): bool
     {
-        if(!$user->isCustomer()) {
+        if (!$user->isCustomer()) {
             return false;
         }
 

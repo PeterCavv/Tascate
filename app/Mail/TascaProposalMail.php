@@ -11,11 +11,12 @@ use Illuminate\Queue\SerializesModels;
 
 class TascaProposalMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public TascaProposal $tascaProposal;
 
-    public function __construct( TascaProposal $tascaProposal )
+    public function __construct(TascaProposal $tascaProposal)
     {
         $this->tascaProposal = $tascaProposal;
         $this->onQueue('emails');

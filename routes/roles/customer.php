@@ -1,11 +1,11 @@
 <?php
+
 use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\OnlyCommentUserMiddleware;
 use App\Http\Middleware\OnlyPostUserMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostCommentController;
-
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index')->middleware('auth');
 Route::get('/posts/create-post', [PostController::class, 'create'])->name('posts.create')->middleware('auth');

@@ -13,15 +13,16 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Observers\UserObserver;
-use \App\Traits\GetRandomOrCreate;
-
-
+use App\Traits\GetRandomOrCreate;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, GetRandomOrCreate;
+    use HasFactory;
+    use Notifiable;
+    use HasRoles;
+    use GetRandomOrCreate;
 
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -132,10 +133,10 @@ class User extends Authenticatable
         return $this->hasOne(Tasca::class);
     }
 
-//    public function owner(): HasOne
-//    {
-//        return $this->hasOne(Owner::class);
-//    }
+    //    public function owner(): HasOne
+    //    {
+    //        return $this->hasOne(Owner::class);
+    //    }
 
     public function posts(): HasMany
     {

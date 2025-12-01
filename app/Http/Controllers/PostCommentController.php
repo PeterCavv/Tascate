@@ -17,7 +17,7 @@ class PostCommentController extends Controller
             'content' => $validated['content'],
         ]);
     }
-    public function update (CommentRequest $request, Comment $comment)
+    public function update(CommentRequest $request, Comment $comment)
     {
         $validated = $request->validated();
         $comment->update([
@@ -30,9 +30,9 @@ class PostCommentController extends Controller
         $comment->delete();
     }
 
-    public function response(CommentRequest $request,Comment $comment)
+    public function response(CommentRequest $request, Comment $comment)
     {
-        $validated= $request->validated();
+        $validated = $request->validated();
         Comment::create([
             'post_id' => $comment->post_id,
             'user_id' => auth()->id(),

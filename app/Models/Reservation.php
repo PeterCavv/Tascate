@@ -29,14 +29,16 @@ class Reservation extends Model
         }
 
         $query->when(
-            $filters->get('search'), 
+            $filters->get('search'),
             fn ($query, $search) => $query->where(
                 fn ($query) =>
-                    $query->whereHas('tasca', fn ($query) =>
+                    $query->whereHas(
+                        'tasca',
+                        fn ($query) =>
                         $query->where('name', 'like', '%' . $search . '%')
                     )
-                )
-            );
+            )
+        );
     }
 
     public function customer(): BelongsTo

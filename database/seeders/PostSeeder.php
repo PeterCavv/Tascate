@@ -16,7 +16,7 @@ class PostSeeder extends Seeder
             return;
         }
 
-        $posts =Post::factory()->count(10)->create();
+        $posts = Post::factory()->count(10)->create();
 
         $users = \App\Models\User::all();
 

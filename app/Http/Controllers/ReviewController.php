@@ -111,8 +111,10 @@ class ReviewController extends Controller
 
         $review->update($validated);
 
-        return redirect()->route('tascas.show', ['tasca' => $tasca->id])->with('success',
-            'Actualizada review con éxito. ¡Gracias por tu opinión!');
+        return redirect()->route('tascas.show', ['tasca' => $tasca->id])->with(
+            'success',
+            'Actualizada review con éxito. ¡Gracias por tu opinión!'
+        );
     }
 
     public function destroy(Tasca $tasca, $reviewId)

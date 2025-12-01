@@ -12,7 +12,7 @@ class TascaAccessMiddleware
     {
 
         $tasca = $request->route('tasca');
-        if (auth()->user()->hasRole(Role::TASCA->value)){
+        if (auth()->user()->hasRole(Role::TASCA->value)) {
             if ($tasca && $tasca->id !== auth()->user()->tasca->id) {
                 return redirect()->route('tascas.index')->with('error', 'No tienes acceso a esta Tasca.');
             }

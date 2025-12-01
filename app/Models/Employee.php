@@ -37,7 +37,7 @@ class Employee extends Model
         return $query->where('id', $employee_id)
             ->with('user:id,name,email,avatar')
             ->with('tasca:id,name')
-            ->with(['manager' => function($query) {
+            ->with(['manager' => function ($query) {
                 $query->with('user:id,name,email,avatar');
             }]);
     }
@@ -57,7 +57,7 @@ class Employee extends Model
 
     public function promote(Employee $employee): void
     {
-        if($employee->manager_id !== null){
+        if ($employee->manager_id !== null) {
             session()->flash('error', 'Esta Tasca ya tiene un manager, no puedes tener dos manager a la vez.');
             return;
         }

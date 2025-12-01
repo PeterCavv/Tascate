@@ -23,7 +23,7 @@ class ManagerAccessMiddleware
             return redirect()->route('tascas.index')->with('error', 'Acceso denegado.');
         }
 
-        if ($manager){
+        if ($manager) {
             if (auth()->user()->hasRole(Role::TASCA->value)) {
                 if ($manager->tasca_id !== auth()->user()->tasca->id) {
                     return redirect()->route('tascas.index')->with('error', 'No tienes acceso a este manager.');

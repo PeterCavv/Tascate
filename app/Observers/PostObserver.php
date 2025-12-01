@@ -19,7 +19,7 @@ class PostObserver
     public function deleting(Post $post): void
     {
 
-        if ($post->pictures()){
+        if ($post->pictures()) {
             foreach ($post->pictures as $picture) {
                 if ($picture->picture_path === null) {
                     return;

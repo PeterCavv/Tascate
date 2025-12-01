@@ -20,7 +20,7 @@ trait OwnershipPolicy
             return $user->id === $model->customer->user_id || $user->isAdmin();
         }
 
-        if(method_exists($model, 'tasca')) {
+        if (method_exists($model, 'tasca')) {
             return $user->id === $model->tasca->user_id || $user->isAdmin();
         }
 

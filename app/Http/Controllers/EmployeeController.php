@@ -25,7 +25,7 @@ class EmployeeController extends Controller
 
         $authUser = auth()->user();
 
-        if(!$authUser->isAdmin()) {
+        if (!$authUser->isAdmin()) {
             $tascaId = $authUser->tasca_id;
             $manager = Manager::where('tasca_id', $tascaId)
                 ->first();
@@ -33,11 +33,11 @@ class EmployeeController extends Controller
                 $manager->load('user:id,name,email');
             }
             $employees = Employee::tascaEmployees($tascaId)->get();
-        }else{
+        } else {
             $employees = Employee::allEmployees()->get();
         }
 
-        if ($authUser->isManager()){
+        if ($authUser->isManager()) {
             $manager = $authUser->manager;
             if ($manager) {
                 $manager->load('user:id,name,email');
@@ -49,9 +49,9 @@ class EmployeeController extends Controller
 
         if ($authUser->isTasca()) {
             $manager = $authUser->tasca->manager;
-             if ($manager) {
-                 $manager->load('user:id,name,email');
-             }
+            if ($manager) {
+                $manager->load('user:id,name,email');
+            }
             $employees = Employee::where('tasca_id', $authUser->tasca->id)
                 ->with(['user:id,name,email'])
                 ->get();
@@ -86,7 +86,7 @@ class EmployeeController extends Controller
 
         $authUser = auth()->user();
 
-        if($authUser->isAdmin()) {
+        if ($authUser->isAdmin()) {
             $tascas = Tasca::with(['manager.user:id,name,email'])->get();
             return Inertia::render('Employees/EmployeeForm', [
                 'tascas' => $tascas,
@@ -136,7 +136,8 @@ class EmployeeController extends Controller
                 'severity' => 'success',
                 'summary' => __('messages.toast.created'),
                 'detail' => __('messages.toast.employee_created'),
-            ]);;
+            ]);
+        ;
     }
 
     public function edit(Employee $employee)
@@ -227,13 +228,13 @@ class EmployeeController extends Controller
         $user->assignRole(Role::MANAGER->value);
 
         $employee->delete();
-            return redirect()
-                ->route('managers.show', $manager)
-                ->with('toast', [
-                    'severity' => 'success',
-                    'summary' => __('messages.toast.promoted'),
-                    'detail' => __('messages.toast.employee_promoted', ['name' => $employee->user->name]),
-                ]);
+        return redirect()
+            ->route('managers.show', $manager)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.promoted'),
+                'detail' => __('messages.toast.employee_promoted', ['name' => $employee->user->name]),
+            ]);
     }
     public function demote(Manager $manager)
     {

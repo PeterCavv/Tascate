@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Gate;
 
 class UserPolicy
 {
-    use OwnershipPolicy, HandlesAuthorization;
+    use OwnershipPolicy;
+    use HandlesAuthorization;
 
     public function impersonate(User $authUser, User $targetUser)
     {
@@ -24,8 +25,8 @@ class UserPolicy
     public function delete(User $authUser, User $userToDelete): bool
     {
         return !$userToDelete->isAdmin()
-            && ( $authUser->id === $userToDelete->id
-                    || $authUser->isTasca() && $userToDelete->isEmployee() );
+            && ($authUser->id === $userToDelete->id
+                    || $authUser->isTasca() && $userToDelete->isEmployee());
     }
 
     public function update(User $authUser, User $userToUpdate): bool

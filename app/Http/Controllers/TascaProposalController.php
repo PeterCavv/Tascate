@@ -20,7 +20,6 @@ use App\Mail\TascaProporsalRejectedMail;
 
 class TascaProposalController extends Controller
 {
-
     use AuthorizesRequests;
 
     public function index()
@@ -70,11 +69,11 @@ class TascaProposalController extends Controller
         $this->authorize('update', $tascaProposal);
 
         $tascaProposal->update($request->validated());
-       
+
         if ($tascaProposal->status === ManageStatus::REJECTED) {
             Mail::to($tascaProposal->owner_email)->queue(new TascaProporsalRejectedMail($tascaProposal));
         }
-      
+
         return redirect()->route('tascas-proposals.index')->with('toast', [
             'severity' => 'success',
             'summary' => __('messages.toast.updated'),
@@ -124,11 +123,11 @@ class TascaProposalController extends Controller
 
         Mail::to($tascaProposal->owner_email)->queue(new TascaProporsalAprovedMail($tascaProposal));
 
-         return redirect()->route('tascas-proposals.index')
-            ->with('toast', [
-                'severity' => 'success',
-                'summary' => __('messages.toast.updated'),
-                'detail' => __('messages.toast.tasca_created'),
-            ]);
+        return redirect()->route('tascas-proposals.index')
+           ->with('toast', [
+               'severity' => 'success',
+               'summary' => __('messages.toast.updated'),
+               'detail' => __('messages.toast.tasca_created'),
+           ]);
     }
 }

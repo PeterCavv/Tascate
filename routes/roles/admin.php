@@ -1,12 +1,12 @@
 <?php
+
 use App\Http\Controllers\TascaProposalController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminAccessMiddleware;
 use App\Http\Controllers\ManagerController;
 
-
-Route::middleware( AdminAccessMiddleware::class)->group(function () {
+Route::middleware(AdminAccessMiddleware::class)->group(function () {
     Route::get('/managers', [ManagerController::class, 'index'])
         ->name('managers.index');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

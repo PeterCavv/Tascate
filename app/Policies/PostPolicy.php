@@ -9,7 +9,8 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PostPolicy
 {
-    use HandlesAuthorization, OwnershipPolicy;
+    use HandlesAuthorization;
+    use OwnershipPolicy;
 
     public function create(User $user): bool
     {
@@ -35,4 +36,4 @@ class PostPolicy
     {
         return $post->likedByUsers()->where('user_id', $user->id)->exists();
     }
-} 
+}

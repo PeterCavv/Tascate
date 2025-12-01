@@ -20,8 +20,7 @@ trait ValidatesTascaReservation
             //Check if the reservation price is set and if it matches the tasca's reservation price
             if ($this->input('reservation_price') &&
                 $tasca &&
-                $tasca->reservation_price != $this->input('reservation_price'))
-            {
+                $tasca->reservation_price != $this->input('reservation_price')) {
                 $validator->errors()->add('reservation_price', 'El precio de la reserva no coincide con el precio propuesto por la tasca.');
             }
 

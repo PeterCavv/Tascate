@@ -24,13 +24,13 @@ class ManagerController extends Controller
 
         $authUser = auth()->user();
 
-        if($authUser->isAdmin()) {
+        if ($authUser->isAdmin()) {
             $managers = Manager::allManagers()->get();
-        }else{
+        } else {
             $tascaId = $authUser->tasca_id;
             $manager = Manager::tascaManagers($tascaId)->get();
 
-            if($manager->isEmpty()) {
+            if ($manager->isEmpty()) {
                 return redirect()
                     ->route('managers.index')
                     ->with('info', 'No hay managers asignados a esta Tasca. Por favor, crea uno.');
@@ -65,8 +65,7 @@ class ManagerController extends Controller
 
         if (auth()->user()->isAdmin()) {
             $tascas = Tasca::all();
-        }
-        else {
+        } else {
             $tascas = Tasca::where('id', $manager->tasca_id)->get();
         }
 
@@ -145,13 +144,13 @@ class ManagerController extends Controller
         $user->assignRole(Role::EMPLOYEE->value);
 
         $manager->delete();
-            return redirect()
-                ->route('employees.show', $employee)
-                ->with('toast', [
-                    'severity' => 'success',
-                    'summary' => __('messages.toast.demoted'),
-                    'detail' => __('messages.toast.manager_demoted', ['name' => $manager->user->name]),
-                ]);
+        return redirect()
+            ->route('employees.show', $employee)
+            ->with('toast', [
+                'severity' => 'success',
+                'summary' => __('messages.toast.demoted'),
+                'detail' => __('messages.toast.manager_demoted', ['name' => $manager->user->name]),
+            ]);
     }
 
     public function togglePermission(Request $request, Manager $manager)

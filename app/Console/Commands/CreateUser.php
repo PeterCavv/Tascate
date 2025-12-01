@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-use \App\Enums\Role as UseRole;
+use App\Enums\Role as UseRole;
 
 class CreateUser extends Command
 {
@@ -42,14 +42,14 @@ class CreateUser extends Command
         $email = $this->option('email') ?? $this->ask('What is the user email?');
         $password = $this->option('password') ?? $this->secret('What is the user password?');
 
-        $roleOptions = array_map(fn(UseRole $r) => $r->value, UseRole::cases());
+        $roleOptions = array_map(fn (UseRole $r) => $r->value, UseRole::cases());
 
         $role = $this->option('role')
             ?? $this->choice(
-            'What role should the user have?',
-            $roleOptions,
-            UseRole::CUSTOMER->value
-        );
+                'What role should the user have?',
+                $roleOptions,
+                UseRole::CUSTOMER->value
+            );
 
         $validator = Validator::make([
             'name' => $name,

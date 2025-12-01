@@ -9,7 +9,8 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EmployeePolicy
 {
-    use HandlesAuthorization, OwnershipPolicy;
+    use HandlesAuthorization;
+    use OwnershipPolicy;
 
 
     public function viewAny(User $user): bool
@@ -20,7 +21,7 @@ class EmployeePolicy
     public function view(User $user, Employee $employee): bool
     {
         return $user->isAdmin() ||
-               ($user->isTasca() && $user->tasca->id === $employee->tasca_id )||
+               ($user->isTasca() && $user->tasca->id === $employee->tasca_id) ||
                ($user->isManager() && $user->manager->tasca_id === $employee->tasca_id);
     }
 

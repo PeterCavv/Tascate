@@ -9,10 +9,10 @@ use App\Http\Middleware\TascaAccessMiddleware;
 
 // Manager routes
 Route::middleware(['auth'])->group(function () {
-//    Route::get('/managers/create', [ManagerController::class, 'create'])
-//        ->name('managers.create');
-//    Route::post('/managers', [ManagerController::class, 'store'])
-//        ->name('managers.store');
+    //    Route::get('/managers/create', [ManagerController::class, 'create'])
+    //        ->name('managers.create');
+    //    Route::post('/managers', [ManagerController::class, 'store'])
+    //        ->name('managers.store');
     Route::get('/managers/{manager}', [ManagerController::class, 'show'])
         ->name('managers.show')->middleware(['auth', ManagerAccessMiddleware::class]);
     Route::get('/managers/{manager}/edit', [ManagerController::class, 'edit'])
@@ -27,4 +27,3 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/managers/{manager}/toggle-permission', [ManagerController::class, 'togglePermission'])
         ->name('managers.toggle-permission')->middleware(['auth', TascaAdminOnlyManagerMiddleware::class]);
 });
-

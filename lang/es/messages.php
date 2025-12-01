@@ -137,6 +137,7 @@ return [
         'price_text' => 'Precio de la reserva: ',
         'picture_alt' =>'Foto de la tasca',
         'payment_info' => 'El pago de la reserva se realiza a través de una plataforma segura. Si decides cancelar con más de 2 horas de antelación, te reembolsaremos el importe total de la reserva. En caso contrario, no será posble realizar el reembolso.',
+        'no_reservations' => 'Aún no tienes reservas. ¡Empieza a explorar y reserva tu primera mesa!',
     ],
     'tasca' => [
         'edit' => 'Editar',

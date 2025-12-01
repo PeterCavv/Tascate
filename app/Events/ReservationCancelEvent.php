@@ -4,8 +4,6 @@ namespace App\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use App\Models\Reservation;
-use App\Models\Customer;
-use App\Models\Tasca;
 
 class ReservationCancelEvent
 {

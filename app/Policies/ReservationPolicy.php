@@ -11,6 +11,11 @@ class ReservationPolicy
 {
     use HandlesAuthorization, OwnershipPolicy;
 
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdmin() || $user->isTascaOwner() || $user->isCustomer();
+    }
+
     public function create(User $user): bool
     {
         return $user->isCustomer();

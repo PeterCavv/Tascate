@@ -8,6 +8,10 @@ return [
         'name' => 'Name',
         'email' => 'Email address',
     ],
+    'pagination' => [
+        'shoowing' => 'Showing',
+        'of' => 'Next',
+    ],
     'auth' => [
         'password' => 'Password',
         'remember' => 'Remember me',
@@ -125,6 +129,7 @@ return [
         'price_text' => 'Reservation price: ',
         'picture_alt' => 'Tasca picture',
         'payment_info' => 'The reservation payment is made through a secure platform. If you cancel more than 2 hours in advance, you will receive a full refund. Otherwise, a refund will not be possible.',
+        'no_reservations' => 'You have no reservations yet. Start exploring and book your first table!',
     ],
     'tasca' => [
         'edit' => 'Edit',

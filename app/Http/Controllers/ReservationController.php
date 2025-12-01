@@ -10,38 +10,47 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
-use Inertia\ResponseFactory;
+use App\Models\User;
 use App\Mail\ReservationCreatedMail;
-use App\Mail\ReservationCancelledMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationTascaMail;
+use Illuminate\Container\Attributes\CurrentUser;
 
 class ReservationController extends Controller
 {
 
     use AuthorizesRequests;
 
-    /**
-     * Display a listing of Reservations of the authenticated customer.
-     *
-     * @return Response|ResponseFactory
-     */
-    public function index()
+    public function index(#[CurrentUser] ?User $user): Response
     {
-        $reservations = auth()->user()->customer->reservations()->get();
+        $filters = collect([
+            'search' => request()->query('search')
+        ]);
+
+        $query = Reservation::with('tasca:id,name,address,picture')
+            ->where('customer_id', $user->customer->id)
+            ->latest()
+            ->filter($filters);
+
+        $pagination = $query->paginate(10)
+            ->withQueryString()
+            ->through(fn ($reservation) => [
+                'id' => $reservation->id,
+                'tasca' => [
+                    'id' => $reservation->tasca->id,
+                    'name' => $reservation->tasca->name,
+                    'address' => $reservation->tasca->address,
+                    'picture' => $reservation->tasca->picture,
+                ],
+        ]);
 
         return inertia('Reservations/ReservationIndex', [
-            'reservations' => $reservations->load('tasca', 'customer'),
+            'filters' => $filters,
+            'pagination' => $pagination,
         ]);
     }
 
-    /**
-     * Display the specified reservation.
-     *
-     * @param Reservation $reservation
-     * @return Response|ResponseFactory
-     */
-    public function show(Reservation $reservation)
+    public function show(Reservation $reservation): Response
     {
 
         $this->authorize('show', $reservation);
@@ -59,19 +68,18 @@ class ReservationController extends Controller
         ]);
     }
 
-    /**
-     * Saves a new reservation.
-     *
-     * @return RedirectResponse
-     */
-    public function store(StoreReservationRequest $request)
+    public function store(StoreReservationRequest $request, #[CurrentUser] ?User $user, ): RedirectResponse
     {
         $this->authorize('create', Reservation::class);
 
         $validated = $request->validated();
-        $validated['customer_id'] = auth()->user()->customer->id;
+    
+        $reservation = new Reservation($validated);
 
-        $reservation = Reservation::create($validated);
+        $reservation->customer()->associate($user->customer);
+        $reservation->tasca()->associate($validated['tasca_id']);
+
+        $reservation->save();
 
         Mail::to($reservation->customer->user->email)->queue(
             new ReservationCreatedMail(
@@ -97,21 +105,13 @@ class ReservationController extends Controller
             ]);
     }
 
-    /**
-     * Deletes the specified reservation.
-     *
-     * @param int $id
-     * @return RedirectResponse
-     */
-    public function destroy(int $id)
+    public function destroy(Reservation $reservation): RedirectResponse
     {
-        $reservation = Reservation::where('id', $id)->firstOrFail();
-
         $this->authorize('delete', $reservation);
 
         event(new ReservationCancelEvent($reservation, $reservation->customer, $reservation->tasca));
 
-        return redirect()->route('reservations.index',
+        return to_route('reservations.index',
         )->with('toast', [
             'severity' => 'success',
             'summary' => __('messages.toast.deleted'),
